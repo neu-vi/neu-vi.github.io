@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="PLACEHOLDER FOR DESCRIPTION">
+  <meta name="keywords" content="KEYWORD, KEYWORD, KEYWORD">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HouseCrafter: Lifting Floorplans to 3D Scenes with 2D Diffusion Models</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <style>
+    .center-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* This will make it take the full height of the viewport */
+    }
+
+    .sketchfab-embed-wrapper {
+        width: 80%; /* Adjust this value to change the size */
+        height: 80%; /* Adjust this value to change the size */
+    }
+    .center-image {
+    display: flex;
+    justify-content: center;
+    }
+</style>
+
+</head>
+
+
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">HouseCrafter: Lifting Floorplans to 3D Scenes with 2D Diffusion Models</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://placeholder.com">Trung-Hieu Nguyen</a><sup>1*</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.khoury.northeastern.edu/people/yiwen-chen/">Yiwen Chen</a><sup>1*</sup>,</span>
+            <span class="author-block">
+              <a href="https://voletiv.github.io/">Vikram Voleti</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://varunjampani.github.io/">Varun Jampani</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://jianghz.me/">Huaizu Jiang</a><sup>1</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Northeastern University,</span>
+            <span class="author-block"><sup>2</sup>Stability AI</span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">(* denotes equal contribution)</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- TODO: add arxiv link -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/placeholder" 
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/placeholder"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link.
+              <span class="link-block">
+                <a href="https://www.youtube.com/placeholder"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/google/placeholder"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code(coming soom)</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block"> -->
+                <!-- <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <!-- todo: change it to left-right layout? -->
+      <div class="center-image">
+        <img src="static/images/Layout_1.png" width="350" height="350">
+    </div>
+        <div class="sketchfab-embed-wrapper"> <iframe title="644dba87-0d65-4897-912c-38185791b3c2" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="720" height="480" src="https://sketchfab.com/models/e00f4eade9f64255a27d6af8b4f69a34/embed?autostart=1"> </iframe> </div>
+        <span class="dnerf">HouseCrafter</span> automatically converts a floorplan to a 3D house.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>We introduce HouseCrafter, an novel approach that can lift a floorplan into a complete large 3D indoor scene (\eg, a house).</p>
+          <p>Our key insight is to adapt a 2D diffusion model, which is trained on web-scale images, to generate consistent multi-view color (RGB) and depth (D) images across different locations of the scene.
+          Specifically, the RGB-D images are generated autoregressively in a batch-wise manner along sampled locations based on the floorplan, where previously generated images are used as condition to the diffusion model to produce images at nearby locations.
+          The global floorplan and attention design in the diffusion model ensures the consistency of the generated images, from which a 3D scene can be reconstructed.
+          </p>
+          <p>Through extensive evaluation on the 3D-Front dataset, we demonstrate that HouseCraft can generate high-quality house-scale 3D scenes.
+            Ablation studies also validate the effectiveness of different design choices. 
+            We will release our code and model weights.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Motivation. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+
+          <div class="center-image">
+            <img src="static/images/method.png" width="1000" height="500">
+        </div>
+    
+          <p> Our method first generate multi-view 2D observations of the scene and then reconstruct it
+            in 3D. We learn a diffusion model that can perform novel-view synthesis with RGBD images. Specifically,
+          the model takes multiple of RGBD images from nearby locations, as well as an encoded floorplan as condition, 
+        and outputs a batch of RGBD images that are consistent with each other and with the conditions. </p>
+          </p>
+
+          <div class="center-image">
+            <img src="static/images/pipeline_v2.png" width="1000" height="500">
+        </div>
+
+        <p>
+          The core of our method is a 2D diffusion model that can generate consistent multi-view RGBD images of a scene. 
+          We fine-tune from pre-trained StableDiffusion-v1.5, but make important modifications to the architecture.
+          The model is extended to take 2D floorplan
+          as an additional input, and to incorporate
+          depth information into both the input and output of novel view synthesis. Making it possible for us to merge its generated results into good-quality 3D scenes.
+          Please refer to our paper for more details.
+        </p>
+ 
+        </div>
+      </div>
+      </div>
+    </div>
+    <!--/ motivation. -->
+  </div>
+</section>
+
+
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+
+      <div class="center-image">
+        <h2 class="title is-3">More Results</h2>
+      </div>
+
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <div class="sketchfab-embed-wrapper"> <iframe title="o64cce374-230b-4fe2-8240-69f81c8cfb33" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="375" height="275" src="https://sketchfab.com/models/516743e06154483bbc5a6a39e39e722f/embed"> </iframe> </div>
+          <!-- <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="https://sketchfab.com/models/fff7cabdbf2a4958ba3033d95320a6c9/embed?autostart=1"
+                    type="video/mp4">
+          </video> -->
+        </div>
+        <div class="item item-chair-tp">
+          <div class="sketchfab-embed-wrapper"> <iframe title="6b5657_ours" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="375" height="275" src="https://sketchfab.com/models/1e6a968dafdc476582b307e496575354/embed"> </iframe> </div>          <!-- <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="https://sketchfab.com/models/fff7cabdbf2a4958ba3033d95320a6c9/embed?autostart=1"
+                    type="video/mp4">
+          </video> -->
+        </div>
+        <div class="item item-shiba">
+          <div class="sketchfab-embed-wrapper"> <iframe title="64b7a7_ours" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="375" height="275" src="https://sketchfab.com/models/33ba9ca7fd9842d086fa1f1e9baad5e1/embed"> </iframe> </div>          <!-- <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="https://sketchfab.com/models/fff7cabdbf2a4958ba3033d95320a6c9/embed?autostart=1"
+                    type="video/mp4">
+          </video> -->
+        </div>
+        <div class="item item-fullbody">
+          <div class="sketchfab-embed-wrapper"> <iframe title="64e2e0_ours" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="375" height="275" src="https://sketchfab.com/models/f0bf71e03ae24937985c2dc93a6aa9f1/embed"> </iframe> </div>          <!-- <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="https://sketchfab.com/models/fff7cabdbf2a4958ba3033d95320a6c9/embed?autostart=1"
+                    type="video/mp4">
+          </video> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <h2 class="title is-3">Inside of the house</h2>
+    </div>
+    <div class="columns is-centered">
+      <h5 class="title is-5">We show the scene's appearance and geometry from inside the house.</h5>
+    </div>
+
+    <div class="columns is-centered">
+      
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <h2 class="title is-3">In-scene Rendering</h2>
+        <div class="content">
+          <!-- <p>
+            With HouseCrafter, you can quickly generate a 3D environment to get immersed in:
+          </p> -->
+          <video id="matting-video" controls playsinline  width="320" height="320">
+            <source src="static/videos/644f3b6e-ad35-4254-92ea-626e3e8a65b1.mov"
+                    type="video/mp4">
+          </video>
+          <!-- <a href="index.html">Click here to see the viewing instruction again</a> -->
+        </div>
+      </div>
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <div class="column">
+        <h2 class="title is-3">Geometical Interaction</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <video id="matting-video" controls playsinline width="320" height="320">
+              <source src="static/videos/42.MP4"
+                      type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  <div class="column is-centered">
+      <h2 class="title is-3">Editability</h2>
+      <h5 class="title is-5">Users can easily edit the layout of the scene by moving furnitures on the floorplan. The generated scene changes correspondingly.</h5>
+  </div>
+
+  <div class="columns is-centered">
+    <!-- Visual Effects. -->
+    <div class="column">
+      <h4 class="title is-4">Original Layout</h4>
+      <div class="content">
+        <img src="static/images/layout_alterA.png" alt="Description of the image">
+      </div>
+    </div>
+    <!--/ Visual Effects. -->
+
+    <!-- Matting. -->
+    <div class="column">
+      <h4 class="title is-4">Generated Mesh</h4>
+      <div class="columns is-centered">
+        <div class="column content">
+          <div class="sketchfab-embed-wrapper"> <iframe title="644f3b6e-ad35-4254-92ea-626e3e8a65b1" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="500" height="350" src="https://sketchfab.com/models/fbd2f0a7b164481fb8604d2f5e586fc1/embed?autostart=1"> </iframe> </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="columns is-centered">
+    <!-- Visual Effects. -->
+    <div class="column">
+      <h4 class="title is-4">Edited Layout(Moving sofa on the floorplan)</h4>
+      <div class="content">
+        <img src="static/images/layout_alterB.png" alt="Description of the image">
+      </div>
+    </div>
+    <!--/ Visual Effects. -->
+
+    <!-- Matting. -->
+    <div class="column">
+      <h4 class="title is-4">Generated Mesh</h4>
+      <div class="columns is-centered">
+        <div class="column content">
+          <div class="sketchfab-embed-wrapper"> <iframe title="V2_final" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="500" height="350" src="https://sketchfab.com/models/dd42bb9ddea149b7befeaa8f241eb956/embed?autostart=1"> </iframe> </div>        
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+    
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{TBD,
+  author    = {TBD},
+  title     = {HouseCrafter: Lifting Floorplans to 3D Scenes with 2D Diffusion Models},
+  journal   = {TBD},
+  year      = {2024},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            We thank <a
+              href="https://github.com/nerfies/nerfies.github.io">nerfies</a> for the website template.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

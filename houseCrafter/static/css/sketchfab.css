@@ -1,0 +1,11 @@
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* This will make it take the full height of the viewport */
+}
+
+.sketchfab-embed-wrapper {
+    width: 80%; /* Adjust this value to change the size */
+    height: 80%; /* Adjust this value to change the size */
+}
