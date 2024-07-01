@@ -137,7 +137,7 @@
             <div class="publication-links">
               <!-- PDF Link. -->
               <!-- TODO: add arxiv link -->
-              <span class="link-block">
+              <!-- <span class="link-block">
                 <a href="https://arxiv.org/pdf/placeholder" 
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
@@ -145,9 +145,9 @@
                   </span>
                   <span>Paper</span>
                 </a>
-              </span>
+              </span> -->
               <span class="link-block">
-                <a href="https://arxiv.org/abs/placeholder"
+                <a href="https://arxiv.org/abs/2406.20077"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -172,7 +172,7 @@
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
-                  <span>Code(coming soom)</span>
+                  <span>Code(coming soon)</span>
                   </a>
               </span>
               <!-- Dataset Link. -->
@@ -217,7 +217,7 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
-          <p>We introduce HouseCrafter, an novel approach that can lift a floorplan into a complete large 3D indoor scene (\eg, a house).</p>
+          <p>We introduce HouseCrafter, an novel approach that can lift a floorplan into a complete large 3D indoor scene (e.g. a house).</p>
           <p>Our key insight is to adapt a 2D diffusion model, which is trained on web-scale images, to generate consistent multi-view color (RGB) and depth (D) images across different locations of the scene.
           Specifically, the RGB-D images are generated autoregressively in a batch-wise manner along sampled locations based on the floorplan, where previously generated images are used as condition to the diffusion model to produce images at nearby locations.
           The global floorplan and attention design in the diffusion model ensures the consistency of the generated images, from which a 3D scene can be reconstructed.
@@ -238,7 +238,7 @@
         <div class="content has-text-justified">
 
           <div class="center-image">
-            <img src="static/images/method.png" width="1000" height="500">
+            <img src="static/images/teaser.svg" width="1000" height="500">
         </div>
     
           <p> Our method first generate multi-view 2D observations of the scene and then reconstruct it
@@ -248,7 +248,7 @@
           </p>
 
           <div class="center-image">
-            <img src="static/images/pipeline_v2.png" width="1000" height="500">
+            <img src="static/images/arch.svg" width="1000" height="500">
         </div>
 
         <p>
