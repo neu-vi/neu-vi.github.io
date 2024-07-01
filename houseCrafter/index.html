@@ -111,7 +111,7 @@
           <h1 class="title is-1 publication-title">HouseCrafter: Lifting Floorplans to 3D Scenes with 2D Diffusion Models</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://scholar.google.com/citations?user=69p7fJ0AAAAJ&hl=en&authuser=1">Trung-Hieu Nguyen</a><sup>1*</sup>,</span>
+              <a href="https://scholar.google.com/citations?user=69p7fJ0AAAAJ&hl=en&authuser=1">Hieu T. Nguyen</a><sup>1*</sup>,</span>
             <span class="author-block">
               <a href="https://yiwenchen1999.github.io">Yiwen Chen</a><sup>1*</sup>,</span>
             <span class="author-block">
@@ -242,7 +242,7 @@
         </div>
     
           <p> Our method first generate multi-view 2D observations of the scene and then reconstruct it
-            in 3D. We learn a diffusion model that can perform novel-view synthesis with RGBD images. Specifically,
+            in 3D. We train a diffusion model that can perform novel-view synthesis with RGBD images. Specifically,
           the model takes multiple of RGBD images from nearby locations, as well as an encoded floorplan as condition, 
         and outputs a batch of RGBD images that are consistent with each other and with the conditions. </p>
           </p>
@@ -252,14 +252,8 @@
         </div>
 
         <p>
-          The core of our method is a 2D diffusion model that can generate consistent multi-view RGBD images of a scene. 
-          We fine-tune from pre-trained StableDiffusion-v1.5, but make important modifications to the architecture.
-          The model is extended to take 2D floorplan
-          as an additional input, and to incorporate
-          depth information into both the input and output of novel view synthesis. Making it possible for us to merge its generated results into good-quality 3D scenes.
-          Please refer to our paper for more details.
+          The core of our method is a 2D diffusion model that can generate consistent multi-view RGBD images of a scene. Our model architecture is inspired by designs of SOTA object-centric novel view synthesis models, but re-designed for the geometric and semantic complexity of scene-level contents. First, we change both the reference conditioning and image generation to the RGB-D setting instead of RGB only as RGB-D images provide strong cues for 3D scene reconstruction. Second, we insert a layout attention layer at the beginning of each unet block to encourage the generated images to be faithful to the floorplan, ensuring global consistency in generating a house-scale scene. Moreover, the cross-attention layer, which is introduced in prior works for reference-novel view attention, is updated to leverage geometry from the reference depth, leading to higher-quality image generation. Please refer to our paper for more details.
         </p>
- 
         </div>
       </div>
       </div>
