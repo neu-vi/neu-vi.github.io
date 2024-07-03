@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="SMooDi: Stylized Motion Diffusion Model">
+  <meta name="keywords" content="SMooDi">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SMooDi</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">SMooDi: Stylized Motion Diffusion Model</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://zhongleilz.github.io/">Lei Zhong</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://ymingxie.github.io/">Yiming Xie</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://varunjampani.github.io/">Varun Jampani</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://deqings.github.io/">Deqing Sun</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://jianghz.me/">Huaizu Jiang</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Northeastern University,</span>
+            <span class="author-block"><sup>2</sup>Stability AI,</span>
+            <span class="author-block"><sup>3</sup>Google Research</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2310.08580"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/neu-vi/SMooDi"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light is-small" style="background-color: white;">
+  <div class="hero-body" style="background-color: white;">
+    <!-- <section class="hero teaser"> -->
+    <div class="container is-max-desktop" style="background-color: white;">
+      <div class="hero-body" style="background-color: white;">
+        <video id="teaser" autoplay muted loop height="100%" style="background-color: white;">
+          <source src="./static/images/teaser_all.mp4" type="video/mp4">
+        </video>
+        <h2 class="subtitle has-text-centered">
+          <span class="dnerf">SMooDi</span> can generate stylized motion given a content text and a style motion sequence.
+        </h2>
+        <h5 class="has-text-centered">
+          Style labels are not used as model input and shown here for visualization purpose.
+        </h5>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+           
+            We introduce a novel Stylized Motion Diffusion model, dubbed SMooDi, to generate stylized motion driven by content texts and style motion sequences.
+            Unlike existing methods that either generate motion of various content or transfer style from one sequence to another, SMooDi can rapidly generate motion across a broad range of content and diverse styles.
+            To this end, we tailor a pre-trained text-to-motion model for stylization. Specifically, we propose style guidance to ensure that the generated motion closely matches the reference style, alongside a lightweight style adaptor that directs the motion towards the desired style while ensuring realism.
+            Experiments across various applications demonstrate that our proposed framework outperforms existing methods in stylized motion generation. 
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <div class="column">
+            <img src="./static/images/overview.png" />
+          </div>
+          <p>
+            <!-- Our model generates human motions from the text prompt and spatial control signal.
+            At the denoising diffusion step, the model takes the text prompt and a noised motion sequence as input and estimates the clean motion.
+            To incorporate flexible spatial control signals into the generation process, a hybrid guidance, consisting of realism and spatial guidance, is used to encourage motions to conform to the control signals while being realistic. -->
+            Our model generates stylized human motions from content text and a style motion sequence. 
+            At the denoising step, our model takes the content text, 
+            style motion, and noisy latent as input and predicts 
+            the noise, which is then transferred to the predicted noisy latent for the next step. 
+            This denoising step is repeated T times to obtain the noise-free motion latent, 
+            which is fed into a motion decoder to produce the final stylized motion.
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-3">Results</h2>
+    </div>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4"><i>(all results are generated using one model)</i></h2>
+    </div>    
+    <br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4"><span style="color:#6F864D";>Dense</span> signals on <span style="color:#6C91C2";>pelvis</span></h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 4602">
+          <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_circle.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 559">
+          <video poster="" id="pelvis1" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_longs.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 277">
+          <video poster="" id="pelvis2" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_runlong.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="pelvis3" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_s.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="pelvis4" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_duck_walk.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="pelvis5" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_step_hold.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+<br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4"><span style="color:#6F864D";>Sparse</span> signals on <span style="color:#6C91C2";>pelvis</span></h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 4602">
+          <video poster="" id="pelvis6" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_sparse_run.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 559">
+          <video poster="" id="pelvis7" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_sparse_sit.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 277">
+          <video poster="" id="pelvis8" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_sparse_s.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="pelvis9" autoplay controls muted loop height="100%">
+            <source src="./static/images/pelvis_sparse_lineseg.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+      </div>
+    </div>
+
+
+<br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4"><span style="color:#6F864D";>Dense/Sparse</span> signals on left/right <span style="color:#6C91C2";>wrist</span></h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 4602">
+          <video poster="" id="wrist" autoplay controls muted loop height="100%">
+            <source src="./static/images/leftwrist_sparse_pick.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 559">
+          <video poster="" id="wrist1" autoplay controls muted loop height="100%">
+            <source src="./static/images/leftwrist_dense_pick.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 277">
+          <video poster="" id="wrist2" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightwrist_dense_armrest.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="wrist3" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightwrist_sparse_move.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="wrist4" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightwrist_sparse_pickoff.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+      </div>
+    </div>
+
+
+<br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4"><span style="color:#6F864D";>Dense/Sparse</span> signals on <span style="color:#6C91C2";>head</span></h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 100">
+          <video poster="" id="head" autoplay controls muted loop height="100%">
+            <source src="./static/images/head_sparse_bow.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+        <div class="item 559">
+          <video poster="" id="head1" autoplay controls muted loop height="100%">
+            <source src="./static/images/head_dense_s.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 277">
+          <video poster="" id="head2" autoplay controls muted loop height="100%">
+            <source src="./static/images/head_sparse_jump.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="head3" autoplay controls muted loop height="100%">
+            <source src="./static/images/head_dense_injured.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+        <div class="item 4602">
+          <video poster="" id="head4" autoplay controls muted loop height="100%">
+            <source src="./static/images/head_dense_walk.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+
+<br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4"><span style="color:#6F864D";>Dense/Sparse</span> signals on left/right <span style="color:#6C91C2";>foot</span></h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 4602">
+          <video poster="" id="foot" autoplay controls muted loop height="100%">
+            <source src="./static/images/leftfoot_sparse_kick.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 559">
+          <video poster="" id="foot1" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightfoot_sparse_kick.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 277">
+          <video poster="" id="foot2" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightfoot_sparse_jump.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="foot3" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightfoot_sparse_walk.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+      </div>
+    </div>
+
+
+<br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-4">Control <span style="color:#6F864D";>multiple joints</h2>
+    </div>
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item 4602">
+          <video poster="" id="multiple" autoplay controls muted loop height="100%">
+            <source src="./static/images/rightwrist_head_walk.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 559">
+          <video poster="" id="multiple1" autoplay controls muted loop height="100%">
+            <source src="./static/images/all_sparse_move.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 277">
+          <video poster="" id="multiple2" autoplay controls muted loop height="100%">
+            <source src="./static/images/wrist_dense_pick.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item 100">
+          <video poster="" id="multiple3" autoplay controls muted loop height="100%">
+            <source src="./static/images/lrwrist_sparse_push.mp4"
+                    type="video/mp4">
+        </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-3">Comparing to other methods on <span style="color:#FFA500";>Styliezed</span> Text2Motion</h2>
+    </div>
+  
+    <div class="columns is-centered has-text-centered">
+      <!-- <h2 class="title is-5"><i>(Our model can generate interactions with both dynamic and static objects)</i></h2> -->
+    </div>    
+    <br>
+    <div class="container">
+    <div class="columns is-centered">
+      <!-- <h2 class="subtitle is-5">The previous text-to-motion approaches primarily concentrated on generating human motions in isolation. Thus, we adapt two conventional methods, MDM [Tevet et al. (2023)] and PriorMDM [Shafir et al. (2023)], as our baseline models for comparative evaluation concerning human-object interactions.</h2> -->
+      <h2 class="subtitle is-5">We compare our method against baselines that generate stylized motion from content text and style sequences. These baselines apply motion style transfer methods, including Motion Puzzle [Jang et al. (2022)] and [Aberman et al. (2020)], to sequences generated by the Text2Motion model, MLD [Chen et al. (2023)].</h2>
+    </div>
+     
+
+    <div class="has-text-centered" style="margin-bottom: 14px;">
+      <h2 class="subtitle is-5 handwriting" style="font-weight: bold; font-size: 1.5em;">
+        <i>A person <span style="color:#5e7dbd;">walks</span> backward.</i>
+      </h2>
+    </div>
+    
+    <div class="columns is-centered">
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group1/Chicken_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">Style Motion</h2>
+          </div>
+        </div>       
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group1/mld_backward_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">MLD</h2>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group1/ChickenWalkBPuzzle_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">MLD + Motion Puzzle</h2>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group1/ChickenWalkB1D_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">MLD + [Aberman et al.]</h2>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group1/ChickenBWalk_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">Ours</h2>
+          </div>
+        </div>
+    </div>
+
+    <div class="has-text-centered" style="margin-bottom: 14px;">
+      <h2 class="subtitle is-5 handwriting" style="font-weight: bold; font-size: 1.5em;">
+        <i>A person <span style="color:#5e7dbd;">bows</span>.</i>
+      </h2>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group2/Aeroplane_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">Style Motion</h2>
+        </div>
+      </div>       
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group2/mld_bows_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">MLD</h2>
+        </div>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group2/AeroplaneBowsPuzzle_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">MLD + Motion Puzzle</h2>
+        </div>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group2/AeroplaneBow1D_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">MLD + [Aberman et al.]</h2>
+        </div>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group2/AeroplaneBow_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">Ours</h2>
+        </div>
+      </div>
+  </div>
+
+  <div class="has-text-centered" style="margin-bottom: 14px;">
+    <h2 class="subtitle is-5 handwriting" style="font-weight: bold; font-size: 1.5em;">
+      <i>A person <span style="color:#5e7dbd;">walks forward</span> and then <span style="color:#5e7dbd;">sit</span> down.</i>
+    </h2>
+  </div>
+
+  <div class="columns is-centered">
+    <div class="column">
+      <div class="content has-text-centered">
+        <div class="videobox">
+          <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+            <source src="./static/images/compare/group3/RaisedLeftArm_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <h2 class="subtitle is-5">Style Motion</h2>
+      </div>
+    </div>       
+    <div class="column">
+      <div class="content has-text-centered">
+        <div class="videobox">
+          <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+            <source src="./static/images/compare/group3/mld_walk_sit_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <h2 class="subtitle is-5">MLD</h2>
+      </div>
+    </div>
+    <div class="column">
+      <div class="content has-text-centered">
+        <div class="videobox">
+          <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+            <source src="./static/images/compare/group3/RLHWalkSitDownBack2Puzzle_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <h2 class="subtitle is-5">MLD + Motion Puzzle</h2>
+      </div>
+    </div>
+    <div class="column">
+      <div class="content has-text-centered">
+        <div class="videobox">
+          <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+            <source src="./static/images/compare/group3/RaiseLHWalkSitDownBack21D_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <h2 class="subtitle is-5">MLD + [Aberman et al.]</h2>
+      </div>
+    </div>
+    <div class="column">
+      <div class="content has-text-centered">
+        <div class="videobox">
+          <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+            <source src="./static/images/compare/group3/RaisedLeftHandWalkSitDownBack2_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <h2 class="subtitle is-5">Ours</h2>
+      </div>
+    </div>
+</div>
+
+  </div>
+</div>
+</section>
+
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-3">Comparing to other methods on motion <span style="color:#FFA500";>style</span> transfer</h2>
+    </div>
+  
+    <div class="columns is-centered has-text-centered">
+      <!-- <h2 class="title is-5"><i>(Our model can generate interactions with both dynamic and static objects)</i></h2> -->
+    </div>    
+    <br>
+    <div class="container">
+    <div class="columns is-centered">
+      <h2 class="subtitle is-5">SMooDi can support motion style transfer without additional training by using DDIM reversion to obtain the noised latent code for the content motion sequence. Here, we adapt Motion Puzzle [Jang et al. (2022)] and [Aberman et al. (2020)] for comparison.</h2>
+      <h2 class="subtitle is-5">.</h2>
+    </div>
+     
+
+    <div class="columns is-centered">
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group4/Chicken_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">Style Motion</h2>
+          </div>
+        </div>       
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group4/WalkFB_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">Content Motion</h2>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group4/ChickenWalkFBPuzzle_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">Motion Puzzle</h2>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group4/ChickenWalkFB1D_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">[Aberman et al.]</h2>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content has-text-centered">
+            <div class="videobox">
+              <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+                <source src="./static/images/compare/group4/ChickenWalkFB_mesh.mp4"
+                        type="video/mp4">
+              </video>
+            </div>
+            <h2 class="subtitle is-5">Ours</h2>
+          </div>
+        </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group5/RaisedLeftArm_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">Style Motion</h2>
+        </div>
+      </div>       
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group5/WalkSitDownBack2_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">Content Motion</h2>
+        </div>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group5/RLeftHandWalkSitDownBack2Puzzle_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">Motion Puzzle</h2>
+        </div>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group5/RaiseLHWalkSitDownBack21D_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">[Aberman et al.]</h2>
+        </div>
+      </div>
+      <div class="column">
+        <div class="content has-text-centered">
+          <div class="videobox">
+            <video poster="" id="pelvis" autoplay controls muted loop height="100%">
+              <source src="./static/images/compare/group5/RWalkSitDownBack2_mesh.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+          <h2 class="subtitle is-5">Ours</h2>
+        </div>
+      </div>
+  </div>
+
+  </div>
+</div>
+</section>
+
+
+<!-- <section class="hero teaser">
+  <br>
+  <div class="container is-max-desktop">
+    <br>
+    <div class="columns is-centered has-text-centered">
+      <h2 class="title is-3">Comparing to other methods on <span style="color:#FFA500";>Styliezed</span> Text2Motion</h2>
+    </div>
+    <div class="content has-text-justified">
+      <p>
+        Previous methods mainly focus on incorporating global spatial control signals on <i>pelvis</i>. 
+        So we compare to GMD [Karunratanakul et al. (2023)] only on pelvis control. We also show the results without the spatial control signal for reference.
+      </p>
+    </div>
+    <div class="content has-text-justified">
+    </div>
+    <div class="content has-text-centered">
+      <video id="replay-video"
+              autoplay  
+              controls
+              muted
+              preload
+              loop
+              playsinline
+              width="100%">
+        <source src="./static/images/comparison.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+    <div class="content has-text-justified">
+      <p>
+        Compared to the results without spatial constraints, the controllable motion generation can produce the motions that follow the given trajectory.
+        The upper body motion of ours is more consistent to the input text prompt. 
+      </p>
+    </div>
+    <div class="content has-text-centered">
+      <video id="replay-video"
+              autoplay  
+              controls
+              muted
+              preload
+              loop
+              playsinline
+              width="100%">
+        <source src="./static/images/comparison1.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+    <div class="content has-text-justified">
+      <p>
+        More comparison examples:
+      </p>
+    </div>
+    <div class="content has-text-centered">
+      <video id="replay-video"
+              autoplay  
+              controls
+              muted
+              preload
+              loop
+              playsinline
+              width="100%">
+        <source src="./static/images/comparison2.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+    <div class="content has-text-centered">
+      <video id="replay-video"
+              autoplay  
+              controls
+              muted
+              preload
+              loop
+              playsinline
+              width="100%">
+        <source src="./static/images/comparison3.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+    <div class="content has-text-centered">
+      <video id="replay-video"
+              autoplay  
+              controls
+              muted
+              preload
+              loop
+              playsinline
+              width="100%">
+        <source src="./static/images/comparison4.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section> -->
+
+
+
+<section class="hero is-light is-small" style="background-color: white;">
+  <div class="container is-max-desktop" style="background-color: white;">
+    <br>
+    <br>
+    <div class="columns is-centered has-text-centered" style="background-color: white;">
+      <h2 class="title is-3">Ablation studies</h2>
+    </div>
+    <div class="content has-text-justified">
+      <!-- <p>
+        <b>Text prompt</b>: A person walks forward and then sits down. 
+      </p> -->
+    </div>
+    <div class="columns is-centered">
+      <!-- Full model. -->
+      <div class="column">
+        <!-- <h2 class="title is-4">Full model</h2> -->
+        <div class="columns is-centered">
+          <div class="column content">
+            <!-- <p>
+              The visualization validates that our full model is much more effective in terms of both realism and controlling accuracy.
+            </p> -->
+            <video id="full" autoplay controls muted loop playsinline style="width: 180%; height: auto; max-height: 70vh; background-color: white;">
+              <source src="./static/images/ablation_studies.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+      <!--/ Full model. -->
+    </div>
+    <br>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{xie2024omnicontrol,
+      title={OmniControl: Control Any Joint at Any Time for Human Motion Generation},
+      author={Yiming Xie and Varun Jampani and Lei Zhong and Deqing Sun and Huaizu Jiang},
+      booktitle={The Twelfth International Conference on Learning Representations},
+      year={2024}
+}</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <!-- <div class="content has-text-centered">
+      <a class="icon-link"
+         href="https://homes.cs.washington.edu/~kpar/nerfies/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            Thanks to <a href="https://keunhong.com/">Keunhong Park</a> for the <a href="https://nerfies.github.io/">website template</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
