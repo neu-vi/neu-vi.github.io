@@ -179,7 +179,7 @@
 </section>
 
 
-<!-- <section class="hero is-light is-small">
+
   <div class="hero-body">
     <br>
     <div class="columns is-centered has-text-centered">
@@ -839,102 +839,6 @@
 </section>
 
 
-<!-- <section class="hero teaser">
-  <br>
-  <div class="container is-max-desktop">
-    <br>
-    <div class="columns is-centered has-text-centered">
-      <h2 class="title is-3">Comparing to other methods on <span style="color:#FFA500";>Styliezed</span> Text2Motion</h2>
-    </div>
-    <div class="content has-text-justified">
-      <p>
-        Previous methods mainly focus on incorporating global spatial control signals on <i>pelvis</i>. 
-        So we compare to GMD [Karunratanakul et al. (2023)] only on pelvis control. We also show the results without the spatial control signal for reference.
-      </p>
-    </div>
-    <div class="content has-text-justified">
-    </div>
-    <div class="content has-text-centered">
-      <video id="replay-video"
-              autoplay  
-              controls
-              muted
-              preload
-              loop
-              playsinline
-              width="100%">
-        <source src="./static/images/comparison.mp4"
-                type="video/mp4">
-      </video>
-    </div>
-    <div class="content has-text-justified">
-      <p>
-        Compared to the results without spatial constraints, the controllable motion generation can produce the motions that follow the given trajectory.
-        The upper body motion of ours is more consistent to the input text prompt. 
-      </p>
-    </div>
-    <div class="content has-text-centered">
-      <video id="replay-video"
-              autoplay  
-              controls
-              muted
-              preload
-              loop
-              playsinline
-              width="100%">
-        <source src="./static/images/comparison1.mp4"
-                type="video/mp4">
-      </video>
-    </div>
-    <div class="content has-text-justified">
-      <p>
-        More comparison examples:
-      </p>
-    </div>
-    <div class="content has-text-centered">
-      <video id="replay-video"
-              autoplay  
-              controls
-              muted
-              preload
-              loop
-              playsinline
-              width="100%">
-        <source src="./static/images/comparison2.mp4"
-                type="video/mp4">
-      </video>
-    </div>
-    <div class="content has-text-centered">
-      <video id="replay-video"
-              autoplay  
-              controls
-              muted
-              preload
-              loop
-              playsinline
-              width="100%">
-        <source src="./static/images/comparison3.mp4"
-                type="video/mp4">
-      </video>
-    </div>
-    <div class="content has-text-centered">
-      <video id="replay-video"
-              autoplay  
-              controls
-              muted
-              preload
-              loop
-              playsinline
-              width="100%">
-        <source src="./static/images/comparison4.mp4"
-                type="video/mp4">
-      </video>
-    </div>
-  </div>
-</section> -->
-
-
-
 <section class="hero is-light is-small" style="background-color: white;">
   <div class="container is-max-desktop" style="background-color: white;">
     <br>
@@ -953,11 +857,38 @@
         <!-- <h2 class="title is-4">Full model</h2> -->
         <div class="columns is-centered">
           <div class="column content">
-            <!-- <p>
-              The visualization validates that our full model is much more effective in terms of both realism and controlling accuracy.
-            </p> -->
             <video id="full" autoplay controls muted loop playsinline style="width: 450%; height: auto; max-height: 70vh; background-color: white;">
               <source src="./static/images/ablation_studies.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+      <!--/ Full model. -->
+    </div>
+    <br>
+  </div>
+</section>
+
+<section class="hero is-light is-small" style="background-color: white;">
+  <div class="container is-max-desktop" style="background-color: white;">
+    <br>
+    <br>
+    <div class="columns is-centered has-text-centered" style="background-color: white;">
+      <h2 class="title is-3">Ablation Studies</h2>
+    </div>
+    <div class="content has-text-justified">
+      <!-- <p>
+        <b>Text prompt</b>: A person walks forward and then sits down. 
+      </p> -->
+    </div>
+    <div class="columns is-centered">
+      <!-- Full model. -->
+      <div class="column">
+        <!-- <h2 class="title is-4">Full model</h2> -->
+        <div class="columns is-centered">
+          <div class="column content">
+            <video id="full" autoplay controls muted loop playsinline style="width: 450%; height: auto; max-height: 70vh; background-color: white;">
+              <source src="./static/images/ablation_studies2.mp4" type="video/mp4">
             </video>
           </div>
         </div>
@@ -971,6 +902,21 @@
 
 
 
+
+<!--Concurrent Works-->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="columns is-centered has-text-centered" style="background-color: white;">
+        <h2 class="title is-3">Concurrent Stylized Motion Works</h2>
+      </div>
+      <!-- <h2 class="title is-3">Concurrent Stylized Motion Works</h2> -->
+        <li><a href="https://arxiv.org/pdf/2405.06646/">(ArXiv 2024) On-The-Fly Learning To Transfer Motion Style With Diffusion Models: A Semantic Guidance Approach</a> </li>
+        <li><a href="https://arxiv.org/pdf/2403.11469/">(ArXiv 2024) Generative Motion Stylization within Canonical Motion Space</a></li>
+        <li><a href="https://yxmu.foo/GenMoStyle/">(ICLR 2024) Generative Human Motion Stylization in Latent Space</a> </li>
+        <li><a href="https://boeun-kim.github.io/page-MoST/">(CVPR 2024) MoST: Motion Style Transformer between Diverse Action Contents</a></li>
+        <li><a href="https://xingliangjin.github.io/MCM-LDM-Web/">(CVPR 2024) Arbitrary Motion Style Transfer with Multi-condition Motion Latent Diffusion Model</a></li>
+    </div>
+</section>
 
 
 
@@ -992,15 +938,7 @@
 
 <footer class="footer">
   <div class="container">
-    <!-- <div class="content has-text-centered">
-      <a class="icon-link"
-         href="https://homes.cs.washington.edu/~kpar/nerfies/videos/nerfies_paper.pdf">
-        <i class="fas fa-file-pdf"></i>
-      </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div> -->
+
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content">
