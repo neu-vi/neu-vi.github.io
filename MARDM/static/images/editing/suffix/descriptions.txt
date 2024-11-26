@@ -1,0 +1,2 @@
+0: Original:a person is walking across a narrow beam. Suffix: a person raises his hands.
+1: Original:a man rises from the ground, walks in a circle and sits back down on the ground Suffix: a man starts to run.

@@ -1,0 +1,3 @@
+jump0-2: A person jumps up and then lands.
+walk0-2: A person walks around.
+push0-2: The person was pushed but did not fall.

@@ -1,0 +1,2 @@
+0: Original:a person walks in a circular counterclockwise direction one time before returning back to his/her original position. Prefix: a person dances around.
+1: Original:the man takes 4 steps backwards. Prefix: the man waves both hands.
