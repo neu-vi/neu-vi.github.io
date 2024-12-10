@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="FleVRS: Towards Flexible Visual Relationship Segmentation">
+  <meta name="keywords" content="FleVRS">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FleVRS</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <style>
+    .teaser-caption {
+        font-family: 'YourFontName', sans-serif;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">FleVRS: Towards Flexible Visual Relationship Segmentation</h1>
+          <h2 class="title is-2 publication-title" style="font-size: 1.5rem;">NeurIPS 2024</h2>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://fangruizhu.github.io/">Fangrui Zhu</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://jwyang.github.io/">Jianwei Yang</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://jianghz.me/">Huaizu Jiang</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Northeastern University,</span>
+            <span class="author-block"><sup>2</sup>Microsoft Research</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2408.08305"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/neu-vi/FleVRS"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/fangruiz/FleVRS_data/tree/main"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face" style="height: 1em;">
+                  </span>
+                  <span>Dataset</span>
+                </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section">
+<!-- <section class="hero teaser"> -->
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+    <div class="column is-four-fifths">
+      <img width="110%" src="./static/images/teaser.png" />
+      <h6 class="teaser-caption">
+        <b>FleVRS</b> is a single model trained to support standard, promptable and open-vocabulary
+        fine-grained visual relationship segmentation (subject mask, relationship categories, object
+        mask). It can take images only or images with structured prompts as inputs, and segment all existing
+        relationships or the ones subject to the text prompts.
+    </h6>
+    </div>
+  </div>
+</div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3"><img id="painting_icon" width="3.5%" src="https://cdn-icons-png.flaticon.com/512/4143/4143879.png"> Introduction</h2> 
+        <div class="content has-text-justified">
+          <p>
+            Visual relationship understanding has been studied separately in human-object interaction(HOI) detection, scene graph generation(SGG), and referring relationships(RR) tasks. 
+            Given the complexity and interconnectedness of these tasks, it is crucial to have a flexible framework 
+            that can effectively address these tasks in a cohesive manner. In this work, we propose FleVRS, 
+            a single model that seamlessly integrates the above three aspects in standard and promptable visual 
+            relationship segmentation, and further possesses the capability for open-vocabulary segmentation to 
+            adapt to novel scenarios. FleVRS leverages the synergy between text and image modalities, to ground 
+            various types of relationships from images and use textual features from vision-language models to 
+            visual conceptual understanding. Empirical validation across various datasets demonstrates that our 
+            framework outperforms existing models in standard, promptable, and open-vocabulary tasks, e.g., +1.9 mAP 
+            on HICO-DET, +11.4 Acc on VRD, +4.7 mAP on unseen HICO-DET. Our FleVRS represents a significant step towards a more intuitive, comprehensive, and scalable understanding of visual relationships.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- <br>
+    <br> -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+    <!-- Paper video. -->
+    <h2 class="title is-3"><img id="painting_icon" width="3.5%" src="https://cdn-icons-png.flaticon.com/512/4143/4143879.png"> Structure</h2>
+        <div class="content has-text-justified">
+            <img width="150%" src="./static/images/architecture.png" />
+            <h6 class="subtitle has-text-centered">
+              Overview of FleVRS.
+            </h6>    
+            <div class="content has-text-justified">
+              <!-- <ul>
+                <li> <b>Standard VRD</b>: without textual queries, the latent queries perform self- and cross-attention within the relationship decoder to output a triplet for each query. </li>
+                <li> <b>Promptable VRD</b>: Sophisticated appearance adaptation process to adapt the concept image into the source object.</li>
+                <li> <b>open-vocabulary VRD</b>The framework applied to single object swapping, multi-object swapping, partial-object swapping, cross-domain swapping, text-based swapping, and tasks beyond swapping such as object insersion.</li>
+              </ul> -->
+              <div>
+                <img id="painting_icon" width="2%" src="https://cdn-icons-png.flaticon.com/512/5379/5379860.png"> 
+                <b>Standard VRS</b>: without textual queries, the latent queries perform self- and cross-attention within the relationship decoder to output a triplet for each query.
+              </div>
+              <div>
+                <img id="painting_icon" width="2%" src="https://cdn-icons-png.flaticon.com/512/5379/5379860.png"> 
+                <b>Promptable VRS</b>: the decoder additionally incorporates textual queries \( \mathbf{Q}^{\mathbf{t}} \), concatenated with latent queries \( \mathbf{Q}^{\mathbf{v}} \).
+                This setup similarly predicts triplets, each based on \( \mathbf{Q}^{\mathbf{v}} \) outputs aligned with features from the
+                optional textual prompt \( \mathbf{Q}^{\mathbf{t}} \).
+              </div>
+              <div>
+                <img id="painting_icon" width="2%" src="https://cdn-icons-png.flaticon.com/512/5379/5379860.png"> 
+                <b>Open-vocabulary VRS</b>: it computes matching scores between predicted class embeddings and textual features from CLIP, facilitating open-vocabulary VRS.
+              </div>
+            </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- <br>
+    <br> -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3"><img id="painting_icon" width="3.5%" src="https://cdn-icons-png.flaticon.com/512/4143/4143879.png"> Qualitative Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            For flexible visual relationship segmentation, we show visualizations of subject masks, object masks and relationship category outputs, given three types of 
+            text prompts. In (c), we show the predicted predicates in bold characters. Unseen objects and predicates are denoted in red characters.
+          </p>
+          <div style="text-align: center;">
+            <img width="90%" src="./static/images/hico_vis.png" />
+          </div>
+            <h6 class="subtitle has-text-centered">
+              Promptable VRS on HICO-DET dataset.
+            </h6>   
+            <div style="text-align: center;">
+            <img width="90%" src="./static/images/psg_vis.png" />
+            </div> 
+            <h6 class="subtitle has-text-centered">
+              Promptable VRS on PSG dataset.
+            </h6> 
+        </div>
+          
+      </div>
+    </div>
+
+  </div>
+<br>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- <br>
+    <br> -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3"><img id="painting_icon" width="3.5%" src="https://cdn-icons-png.flaticon.com/512/4143/4143879.png"> Quantitative Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            We show quantitative results of standard VRS on HICO-DET, V-COCO, PSG datasets and open-vocabulary VRS on HICO-DET dataset. Please check our paper 📄 for more details.
+          </p>
+          <div style="text-align: center;">
+            <img width="80%" src="./static/images/res_1.png" />
+          </div>
+            <h6 class="subtitle has-text-centered">
+              Standard VRS on HICO-DET dataset.
+            </h6>   
+            <div style="text-align: center;">
+            <img width="50%" src="./static/images/res_2.png" />
+            </div> 
+            <h6 class="subtitle has-text-centered">
+              Standard VRS on V-COCO dataset.
+            </h6> 
+            <div style="text-align: center;">
+              <img width="60%" src="./static/images/res_3.png" />
+              </div> 
+              <h6 class="subtitle has-text-centered">
+                Standard VRS on PSG dataset.
+              </h6> 
+              <div style="text-align: center;">
+                <img width="40%" src="./static/images/res_4.png" />
+                </div> 
+                <h6 class="subtitle has-text-centered">
+                  Open-vocabulary VRS on HICO-DET dataset.
+                </h6>
+        </div>
+          
+      </div>
+    </div>
+
+  </div>
+<br>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Citation</h2>
+    <p>If you found our work useful in your research, please consider starring ⭐ us on <a href="https://github.com/neu-vi/FleVRS" target="_blank">GitHub</a> and citing 📚 us in your research!</p>
+    <pre><code> @inproceedings{zhu2024towards,
+      author = {Zhu, Fangrui and Yang, Jianwei and Jiang, Huaizu},
+      title = {Towards Flexible Visual Relationship Segmentation},
+      booktitle = {NeurIPS},
+      year = {2024}
+    }
+    </code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <!-- <div class="content has-text-centered">
+      <a class="icon-link"
+         href="https://homes.cs.washington.edu/~kpar/nerfies/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            Thanks to <a href="https://keunhong.com/">Keunhong Park</a> for the <a href="https://nerfies.github.io/">website template</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
