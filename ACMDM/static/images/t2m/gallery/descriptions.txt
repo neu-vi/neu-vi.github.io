@@ -1,0 +1,9 @@
+0: the person puts something on its side and then brings it back to normal.
+1: a person walks forward slowly, their arms swinging slightly, then they turn around.
+2: a person stands still and the takes one quick step forward.
+3: an individual takes a long slow drink of something.
+4: a person jumps in the air, then abruptly stumbles to his left as if he had been pushed, and finally he regains his balance.
+5: a person runs to their right, then left, then right again, and finally walk abck to their starting position.
+6: a person is bent over forward and moves their body left to right like a snake several times.
+7: a person is sitting down, using a phone with their hands and puts it up to their ear.
+8: a person who is standing with his hands by his sides turns to the left as he takes four steps and stops.

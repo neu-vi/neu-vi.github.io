@@ -1,0 +1,9 @@
+0: man extends right arm direcly in front of him, moves it in front of his body from left to right and back down
+1: a person steps forward and leans over; they grad a cup with their left hand and empty it before putting it down and stepping back to their original position.
+2: a person who is standing with his hands at this sides reaches down to his right, picks up something, moves to his left and places it down and retun to his standing position.
+3: a person raises his left hand to shoulder height and raises his right hand and impersonates strumming a guitar
+4: a person is pushed hard to their left and they recover into a standing position.
+5: a man switches his standing position towards the right and then towards the left.
+6: a person stands up from a sit down position, then sits back down.
+7: a person is walking upstairs in a straight line.
+8: a person walks forward the turns to the left.

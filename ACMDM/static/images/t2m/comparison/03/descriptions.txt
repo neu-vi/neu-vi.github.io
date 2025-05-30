@@ -1,0 +1,1 @@
+person turns to left, takes three steps forward, sits down, and then walks back to starting place.

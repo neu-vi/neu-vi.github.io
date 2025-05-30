@@ -1,0 +1,12 @@
+0: a person slowly walks forward with arms swinging. turns in a clockwise circle
+1: person walks quickly down a short incline
+2: a person takes eight steps forming a complete circle
+3: a person shifts rightwards and then shifts back.
+4: the toon is walking acroos the plane at a diagonal pattern, reaching the end of the plane & turning around.
+5: a person walks in a curve to the left.
+6: this person stumbles right and left while moving forward.
+7: a person carefully stepping backwards.
+8: a person picks something up with each hand and then stacks the item from their left hand on top of the item their right hand.
+9: a person jogging in place.
+10: the person is moving from side to side
+11: a person jumped on the place
