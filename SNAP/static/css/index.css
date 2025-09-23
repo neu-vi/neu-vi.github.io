@@ -195,3 +195,22 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.scene-thumb {
+  height: 120px;       
+  width: auto;
+  object-fit: contain;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.scene-thumb:hover {
+  transform: scale(1.05);
+}
+
+.scene-thumb.selected {
+  border-color: #209CEE;
+  transform: scale(1.05);
+}
