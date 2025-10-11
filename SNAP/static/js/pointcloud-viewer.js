@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!predDataForClick) return;
         // masks
         predDataForClick.masks.forEach(mask => {
-            const pts = viewers.pred._renderPoints(mask.positions, mask.colors, 0.025, true);
+            const pts = viewers.pred._renderPoints(mask.positions, mask.colors, 0.03, true);
             if (!pts) return;
             pts.visible = false; // Initially off, controlled by logic
             pts.userData.maskId = mask.id;
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const maskIds = gtData.masks.map(m => m.id).sort((a, b) => a - b);
         maskIds.forEach(id => {
-            selectedClickByObj[id] = 1;
+            selectedClickByObj[id] = 5;
             objVisible[id] = true;
             if (viewers.gt.objects[`mask-${id}`]) {
                 viewers.gt.objects[`mask-${id}`].visible = true;
