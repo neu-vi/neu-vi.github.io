@@ -1,11 +1,7 @@
 /* --- CAROUSEL WRAPPER --- */
 .carousel-outer {
-    width: 90vw;
-    max-width: 1400px;
-
+    width: 95%;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
     margin: 2rem auto;
     overflow: visible; /* Allows buttons to sit outside if needed */
 }
@@ -26,7 +22,7 @@
 
 /* --- INDIVIDUAL CARDS (Important!) --- */
 .carousel-card {
-    flex: 0 0 50%; 
+    flex: 0 0 100%; 
     background: #000;
     border-radius: 8px;
     overflow: hidden;
