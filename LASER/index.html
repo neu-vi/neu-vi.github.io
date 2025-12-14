@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <link rel="stylesheet" href="static/css/bibtex.css">
+    <script src="static/js/bibtex.js"></script>
+    <link rel="stylesheet" href="static/css/carousel.css">
+
+    <title>LASER: Layer-wise Scale Alignment for Training-Free Streaming 4D Reconstruction</title>
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            height: auto;
+            overflow-x: hidden;
+        }
+
+        /* --- THE VIDEO CONTAINER --- */
+        #video-wrapper {
+            position: fixed; 
+            z-index: 10;
+            overflow: hidden;
+            background: #000;
+            
+            /* Enforce aspect ratio visually */
+            aspect-ratio: 16 / 9;
+            
+            /* Remove any default transformations that confuse calculations */
+            transform: none; 
+            margin: 0;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        #landing-pad {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-bottom: 6rem;
+            
+            background: transparent;
+            border-radius: 12px;
+        }
+
+        /* --- THE DARK OVERLAY --- */
+        .video-overlay {
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Adjust darkness (0.6 = 60%) */
+            z-index: 2; /* Sits on top of video */
+            pointer-events: none; /* Allows clicking through if needed */
+        }
+
+        /* --- THE CONTAINER --- */
+        .video-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 90vw;
+            max-width: 1400px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 2rem;
+        }
+
+        /* --- THE COLUMNS --- */
+        .video-column {
+            flex: 1;               /* Forces both columns to be equal width */
+            max-width: 50%;        /* Prevents them from exceeding half width */
+        }
+
+        /* --- THE VIDEO ELEMENTS --- */
+        .video-column video {
+            width: 100%;           /* Fills the column width */
+            height: auto;          /* Maintains aspect ratio */
+            border-radius: 8px;    /* Optional: rounded corners */
+            display: block;        /* Removes bottom gap typical of inline elements */
+        }
+
+        /* --- THE CAPTIONS --- */
+        .video-column .caption {
+            margin-top: 8px;       /* Space between video and text */
+            text-align: center;    /* Center the caption text */
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        /* --- THE TITLE (HERO TEXT) --- */
+        .hero-text {
+            position: fixed;
+            max-width: 1200px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            text-align: center;
+            pointer-events: none; /* Let scroll pass through */
+        }
+
+        h1.project-title {
+            font-size: 3.5rem; /* Slightly smaller to fit lines */
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.1; /* Tighter line spacing for multi-line titles */
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        /* --- AUTHOR STYLING --- */
+        .author-row {
+            font-size: 1.5rem;
+            font-weight: 400;
+            max-width: 1200px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .author {
+            margin: 0 10px; /* Spacing between names */
+            white-space: nowrap; /* Don't break individual names */
+        }
+
+        /* --- AFFILIATION STYLING --- */
+        .affiliation-row {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.9; /* Slightly dimmer than authors */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px; /* Spacing between universities */
+        }
+
+        /* --- NOTE STYLING --- */
+        .note-row {
+            /* FORCE CENTERING */
+            width: 100%;
+            text-align: center;
+
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Superscript styling tweaks */
+        sup {
+            font-size: 0.6em;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        /* --- BUTTON GROUP --- */
+        .button-row {
+            display: flex;
+            justify-content: center; /* Center buttons horizontally */
+            gap: 15px;               /* Space between buttons */
+            margin-top: -4rem;       /* Pull them UP closer to video if needed */
+            margin-bottom: 3rem;     /* Push text down */
+            flex-wrap: wrap;
+        }
+
+        /* --- THE BUTTON --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #363636; /* Dark Grey (Nerfies style) */
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;       /* Pill shape */
+            padding: 10px 24px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Hover Effect */
+        .btn:hover {
+            background-color: #000;    /* Darker on hover */
+            transform: translateY(-2px); /* Slight lift */
+        }
+
+        /* --- ICON STYLING --- */
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px; /* Space between icon and text */
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        /* --- MAIN CONTENT (Appears after scroll) --- */
+        .main-content {
+            position: relative;
+            z-index: 1; 
+            margin-top: 40vh; 
+            
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+        }
+
+        .main-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .abstract-section {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .abstract-section h2 {
+            text-align: center;
+            border-bottom: none;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        p {
+            text-align: justify;
+            text-justify: inter-word;
+            max-width: 1000px;
+            font-size: 1.2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .grey-section {
+            width: 100%;  
+            max-width: 100%;
+            position: relative;
+            
+            /* 2. Paint the Background */
+            background: #f5f5f5; 
+            
+            /* 3. The Magic: Use shadow to fill left/right edges */
+            /* This creates a solid grey color extending 4000px to the left and right */
+            box-shadow: 0 0 0 4000px #f5f5f5; 
+            
+            /* 4. Clip Vertical Bleed */
+            clip-path: inset(0 -4000px 0 -4000px); 
+            padding: 0.1rem 0;
+    </style>
+</head>
+
+<body>
+
+    <div id="video-wrapper">
+        <div class="video-overlay" id="overlay"></div>
+        <video autoplay muted loop playsinline>
+            <source src="./assets/videos/teaser.mp4" type="video/mp4"> 
+            <div style="width:100%; height:100%; background: linear-gradient(to bottom right, #4facfe, #00f2fe);"></div>
+        </video>
+    </div>
+
+    <div class="hero-text" id="hero-text">
+        <h1 class="project-title">LASER: Layer-wise Scale Alignment for Training-Free Streaming 4D Reconstruction</h1>
+
+        <div class="author-row">
+            <span class="author">Tianye Ding<sup>1*</sup></span>
+            <span class="author">Yiming Xie<sup>1*</sup></span>
+            <span class="author">Yiqing Liang<sup>2*</sup></span>
+            <span class="author">Moitreya Chatterjee<sup>3</sup></span>
+            <span class="author">Pedro Miraldo<sup>3</sup></span>
+            <span class="author">Huaizu Jiang<sup>1</sup></span>
+        </div>
+
+        <div class="affiliation-row">
+            <span class="affil"><sup>1</sup> Northeastern University</span>
+            <span class="affil"><sup>2</sup> Independent Researcher</span>
+            <span class="affil"><sup>3</sup> Mitsubishi Electric Research Laboratories</span>
+        </div>
+
+        <div class="note-row">
+            <sup>*</sup> Equal Contribution
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div id="landing-pad"></div>
+
+        <div class="button-row">
+            <a href="" class="btn disabled">
+                <span class="btn-icon">
+                    <i class="ai ai-arxiv"></i>
+                </span>
+                <span>arXiv</span>
+            </a>
+
+            <a href="" class="btn disabled">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.05-.015-2.055-3.33.72-4.035-1.605-4.035-1.605-.54-1.38-1.335-1.755-1.335-1.755-1.085-.735.09-.72.09-.72 1.2.075 1.83 1.23 1.83 1.23 1.065 1.815 2.805 1.29 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.28-1.545 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                </span>
+                <span>Code (Coming soon)</span>
+            </a>
+        </div>
+
+        <div class="abstract-section">
+            <h2>Abstract</h2>
+            <p>
+                Recent feed-forward reconstruction models like VGGT and $\pi^3$ achieve impressive reconstruction quality but cannot process streaming videos due to quadratic memory complexity, limiting their practical deployment. 
+                While existing streaming methods address this through learned memory mechanisms or causal attention, they require extensive retraining and may not fully leverage the strong geometric priors of state-of-the-art offline models. 
+            </p>
+            <p>
+                We propose LASER, a training-free framework that converts an offline reconstruction model into a streaming system by aligning predictions across consecutive temporal windows. 
+                We observe that simple similarity transformation ($\mathrm{Sim}(3)$) alignment fails due to layer depth misalignment: monocular scale ambiguity causes relative depth scales of different scene layers to vary inconsistently between windows. 
+                To address this, we introduce layer-wise scale alignment, which segments depth predictions into discrete layers, computes per-layer scale factors, and propagates them across both adjacent windows and timestamps.
+                Extensive experiments show that LASER achieves state-of-the-art performance on camera pose estimation and point map reconstruction while operating at 14 FPS with 6 GB peak memory on a RTX A6000 GPU, enabling practical deployment for kilometer-scale streaming videos.
+            </p>
+        </div>
+        
+        <div class="main-section">
+            <img src="assets/pipeline.png" alt="Pipeline" style="width: 100%; margin-bottom: 2rem">
+
+            <h3 style="margin-bottom: 1rem">Overview</h3>
+            <p>
+                Given a video stream, we process frames in overlapping temporal windows with a frozen feed-forward reconstructor. 
+                We incrementally register the submap to the global map with $\mathrm{Sim}(3)$ estimation and our proposed layer-wise scale alignment.
+            </p>
+
+            <h2 style="margin-top: 2rem">Layer-wise Scale Alignment</h2>
+            <div class="video-row">
+                <div class="video-column">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/videos/unaligned.mp4" type="video/mp4">
+                    </video>
+                    <p class="caption">Raw</p>
+                </div>
+
+                <div class="video-column">
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/videos/aligned.mp4" type="video/mp4">
+                    </video>
+                    <p class="caption">Layer-wise aligned</p>
+                </div>
+
+            </div>
+            <p>
+                After the global $\mathrm{Sim}(3)$ alignment, surfaces at different depths may exhibit <em>layer-wise scale inconsistency</em>: 
+                foreground regions appear over- or under-scaled relative to background structures across consecutive windows. 
+                This anisotropic scaling leads to visible distortions and metric drift in the fused reconstruction. We introduce <b>Layer-wise Scale Alignment (LSA)</b>, a geometry-driven refinement that corrects distortions based on a layer graph.
+            </p>
+
+            <h2>Qualitative Results</h2>
+            <div class="grey-section">
+                <div class="carousel-outer">
+                    <div class="carousel-nav left" onclick="scrollCarousel(-1)">&#10094;</div>
+
+                    <div class="carousel-track-container" id="carousel-container">
+                        <div class="carousel-track" id="track">
+                            <div class="carousel-card">
+                              <video poster="" video autoplay muted loop playsinline height="100%">
+                                <source src="assets/videos/soapbox_ours.mp4"
+                                        type="video/mp4">
+                              </video>
+                            </div>
+                            <div class="carousel-card">
+                              <video poster="" video autoplay muted loop playsinline height="100%">
+                                <source src="assets/videos/parkour_ours.mp4"
+                                        type="video/mp4">
+                              </video>
+                            </div>
+                            <div class="carousel-card">
+                              <video poster="" video autoplay muted loop playsinline height="100%">
+                                <source src="assets/videos/waymo_ours.mp4"
+                                        type="video/mp4">
+                              </video>
+                            </div>
+                            <div class="carousel-card">
+                              <video poster="" video autoplay muted loop playsinline height="100%">
+                                <source src="assets/videos/garden_ours.mp4"
+                                        type="video/mp4">
+                              </video>
+                            </div>
+                            <div class="carousel-card">
+                              <video poster="" video autoplay muted loop playsinline height="100%">
+                                <source src="assets/videos/scannet0800_00_ours.mp4"
+                                        type="video/mp4">
+                              </video>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-nav right" onclick="scrollCarousel(1)">&#10095;</div>
+                </div>
+            </div>
+        </div>
+
+    <section class="bibtex-section">
+        <h2>BibTeX</h2>
+        <div class="bibtex-container">
+            <pre id="bibtex-text"><code>
+        @article{ding2025laser,
+            title={LASER: Layer-wise Scale Alignment for Training-Free Streaming 4D Reconstruction},
+            author={Ding, Tianye and Xie, Yiming and Liang, Yiqing and Chatterjee, Moitreya and Miraldo, Pedro and Jiang, Huaizu},
+            year={2025}
+        }
+            </code></pre>
+            <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+        </div>
+    </section>
+    </main>
+
+    <script>
+        // --- ELEMENTS ---
+        const videoWrapper = document.getElementById('video-wrapper');
+        const landingPad = document.getElementById('landing-pad');
+        const heroText = document.getElementById('hero-text');
+        const overlay = document.getElementById('overlay');
+
+        // --- CONFIGURATION ---
+        const aspectRatio = 16 / 9;
+        const scrollDist = 400; // Pixels to scroll to complete animation
+
+        function update() {
+            const scrollY = window.scrollY;
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+
+            // 0. CALCULATE PROGRESS
+            let progress = Math.min(scrollY / scrollDist, 1);
+
+            // 1. START STATE (Full Screen Cover)
+            const startW = Math.max(winW, winH * aspectRatio);
+            const startH = startW / aspectRatio;
+            const startTop = (winH - startH) / 2;
+            const startLeft = (winW - startW) / 2;
+
+            // 2. END STATE (Global Position of Landing Pad)
+            // We need the position of the pad relative to the entire document.
+            const rect = landingPad.getBoundingClientRect();
+            
+            // GLOBAL coordinates = Visual Position (rect) + Scroll Amount
+            const endTopGlobal = rect.top + scrollY;
+            const endLeftGlobal = rect.left + window.scrollX;
+            const endW = rect.width;
+            const endH = rect.height;
+
+            // 3. INTERPOLATION
+            // We want to interpolate between "Fixed Center" and "Global Landing Pad".
+            // HOWEVER: To animate smoothly, we calculate the "Target" as if 
+            // we were already at the end of the scroll (scrollDist).
+            
+            // This is tricky: as we scroll, 'rect.top' changes. 
+            // We want the target to be stable. 
+            // The landing pad's position in the document (endTopGlobal) is stable.
+            
+            if (progress < 1) {
+                // --- ANIMATION PHASE (Fixed Mode) ---
+                heroText.style.opacity = 1 - (progress * 2.5);
+                overlay.style.opacity = 1 - progress;
+
+                // We need to interpolate "Visual Top".
+                // Start Visual Top = startTop (Centered in screen)
+                // End Visual Top = Where the pad WILL be on screen when scrollY = scrollDist.
+                
+                // At scrollDist, the pad is at (endTopGlobal - scrollDist) relative to viewport.
+                const endTopVisual = endTopGlobal - scrollDist;
+
+                // Interpolate Dimensions
+                const currW = startW + (endW - startW) * progress;
+                const currH = startH + (endH - startH) * progress;
+                
+                // Interpolate Position
+                // We use 'fixed' so we are positioning relative to the Viewport (Window)
+                const currTop = startTop + (endTopVisual - startTop) * progress;
+                const currLeft = startLeft + (endLeftGlobal - startLeft) * progress;
+
+                videoWrapper.style.position = 'fixed';
+                videoWrapper.style.width = `${currW}px`;
+                videoWrapper.style.height = `${currH}px`;
+                videoWrapper.style.top = `${currTop}px`;
+                videoWrapper.style.left = `${currLeft}px`;
+                videoWrapper.style.borderRadius = `${progress * 12}px`;
+
+            } else {
+                // --- DOCKED PHASE (Absolute Mode) ---
+                
+                // Now we attach it to the page permanently.
+                videoWrapper.style.position = 'absolute';
+                
+                // Use the Global Coordinates we calculated earlier
+                videoWrapper.style.top = `${endTopGlobal}px`;
+                videoWrapper.style.left = `${endLeftGlobal}px`;
+                videoWrapper.style.width = `${endW}px`;
+                videoWrapper.style.height = `${endH}px`;
+                videoWrapper.style.borderRadius = '12px';
+                
+                heroText.style.opacity = 0;
+                overlay.style.opacity = 0;
+            }
+        }
+
+        window.addEventListener('scroll', update);
+        window.addEventListener('resize', update);
+        
+        // Run once on load to set initial state
+        update();
+
+        // --- CAROUSEL LOGIC ---
+        let currentOffset = 0;
+        const track = document.getElementById('track');
+        let isAnimating = false;
+
+        function scrollCarousel(direction) {
+            // 1. Block clicks during animation to prevent glitching
+            if (isAnimating) return;
+            isAnimating = true;
+
+            // 2. Measure the width of one card (including the gap)
+            const card = track.querySelector('.carousel-card');
+            // We assume gap is 15px from your CSS. 
+            // If you change CSS gap, update this number or calculate it dynamically.
+            const cardWidth = card.offsetWidth + 15; 
+
+            if (direction === 1) {
+                // --- NEXT (Slide Left) ---
+                
+                // A. Animate the track moving left
+                track.style.transition = 'transform 0.5s ease-in-out';
+                track.style.transform = `translateX(-${cardWidth}px)`;
+
+                // B. After animation (500ms), shuffle the DOM
+                setTimeout(() => {
+                    track.style.transition = 'none'; // Disable animation
+                    
+                    // Move the first element to the very end
+                    track.appendChild(track.firstElementChild); 
+                    
+                    // Reset track position to 0 (user won't notice the swap)
+                    track.style.transform = 'translateX(0)';
+                    
+                    isAnimating = false;
+                }, 500); // This 500 must match the transition time in step A
+
+            } else {
+                // --- PREV (Slide Right) ---
+
+                // A. Instantly move last item to the front (hidden off-screen left)
+                track.style.transition = 'none';
+                track.prepend(track.lastElementChild);
+                
+                // B. Push track left by 1 card width so the new item is hidden
+                track.style.transform = `translateX(-${cardWidth}px)`;
+
+                // C. Small delay to let browser accept the position change
+                setTimeout(() => {
+                    // Enable animation and slide back to 0
+                    track.style.transition = 'transform 0.5s ease-in-out';
+                    track.style.transform = 'translateX(0)';
+                    
+                    // D. Finish
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 500);
+                }, 10);
+            }
+        }
+    </script>
+</body>
+</html>
