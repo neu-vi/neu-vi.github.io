@@ -1,0 +1,115 @@
+/* --- CAROUSEL WRAPPER --- */
+.carousel-outer {
+    width: 90vw;
+    max-width: 1400px;
+
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 2rem auto;
+    overflow: visible; /* Allows buttons to sit outside if needed */
+}
+
+/* --- THE VIEWPORT (Hides overflow) --- */
+.carousel-track-container {
+    overflow: hidden;
+    width: 100%;
+    border-radius: 8px; /* Optional rounded corners */
+}
+
+/* --- THE MOVING TRACK --- */
+.carousel-track {
+    display: flex;
+    gap: 15px; /* Space between videos */
+    transform: translateX(0);
+}
+
+/* --- INDIVIDUAL CARDS (Important!) --- */
+.carousel-card {
+    flex: 0 0 50%; 
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-card video {
+    width: 100%;
+    height: 100%; /* Ensures video fills the card */
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-card p {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 0;
+    margin: 0;
+}
+
+/* --- NAVIGATION ARROWS --- */
+/* --- NAVIGATION ARROWS (Blob Style) --- */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* 1. White Background & Dark Icon */
+    background: #ffffff;
+    color: #333;
+    
+    width: 50px; 
+    height: 50px;
+    
+    /* 2. Start as a Perfect Circle */
+    border-radius: 50%;
+    
+    /* Flexbox to center the arrow symbol */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.2rem;
+    
+    /* 3. Soft Shadow (Neumorphic feel) */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    
+    /* Smooth transition for the blob morph */
+    transition: all 0.3s ease-in-out;
+    
+    /* Prevent selection */
+    user-select: none;
+    border: 1px solid rgba(0,0,0,0.05); /* Subtle border definition */
+}
+
+/* --- HOVER EFFECT (The Blob) --- */
+.carousel-nav:hover {
+    /* Make the shadow deeper */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    
+    /* Slightly scale up */
+    transform: translateY(-50%) scale(1.1);
+    
+    /* MORPH SHAPE: This creates the wobbly blob look */
+    /* Syntax: Top-Left Top-Right Bot-Right Bot-Left / ... vertical radii */
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; 
+    
+    background: #f8f8f8; /* Slight dim on hover */
+}
+
+/* --- ACTIVE CLICK EFFECT --- */
+.carousel-nav:active {
+    transform: translateY(-50%) scale(0.95); /* Press in */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Positioning remains the same */
+.carousel-nav.left { left: -60px; }
+.carousel-nav.right { right: -60px; }
