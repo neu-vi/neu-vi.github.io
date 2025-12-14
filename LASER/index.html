@@ -25,6 +25,78 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scroll-margin-top: 100px;
+        }
+        a {
+            color: #555;           /* Professional Blue (or use #333 for dark grey) */
+            text-decoration: none;    /* REMOVES THE UNDERLINE */
+            transition: color 0.2s ease-in-out; /* Smooth transition */
+        }
+
+        /* Hover State */
+        a:hover {
+            /* 1. DISPLACEMENT: Move up by 3 pixels */
+            transform: translateY(-2px);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            
+            /* Optional: Change color */
+            color: #3273dc;
+        }
+        /* --- THE STICKY NAV BAR --- */
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+            
+            /* Animation state (keep your existing JS logic) */
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sticky-nav.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .nav-container {
+            max-width: 1000px; /* Limits width so it doesn't stretch too wide */
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column; /* Stacks the rows vertically */
+            gap: 8px; /* Space between Title and Links */
+        }
+
+        /* --- ROW 1: CENTERED TITLE --- */
+        .top-row {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #333;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- ROW 2: LINKS (LEFT & RIGHT) --- */
+        .bottom-row {
+            display: flex;
+            justify-content: space-between; /* Pushes groups to edges */
+            align-items: center;
+            padding-top: 8px;
+            font-weight: 600;
+            border-top: 1px solid #eee;
         }
 
         body {
@@ -34,6 +106,8 @@
             height: auto;
             overflow-x: hidden;
         }
+
+
 
         /* --- THE VIDEO CONTAINER --- */
         #video-wrapper {
@@ -112,6 +186,8 @@
             color: #555;
         }
 
+
+
         /* --- THE TITLE (HERO TEXT) --- */
         .hero-text {
             position: fixed;
@@ -182,6 +258,8 @@
             margin-left: 2px;
         }
 
+
+
         /* --- BUTTON GROUP --- */
         .button-row {
             display: flex;
@@ -233,6 +311,8 @@
             opacity: 0.5;
             cursor: default;
         }
+
+
 
         /* --- MAIN CONTENT (Appears after scroll) --- */
         .main-content {
@@ -292,6 +372,20 @@
 </head>
 
 <body>
+    <div id="top-bar" class="sticky-nav">
+        <div class="nav-container">
+            <div class="nav-row top-row">
+                <span class="nav-title">LASER: Layer-wise Scale Alignment for Training-Free Streaming 4D Reconstruction</span>
+            </div>
+
+            <div class="nav-row bottom-row">
+                <a href="#video-wrapper">Teaser</a>
+                <a href="#abstract">Abstract</a>
+                <a href="#lsa">Layer-wise Scale Alignment</a>
+                <a href="#qualitative">Qualitative Results</a>
+            </div>
+        </div>
+    </div>
 
     <div id="video-wrapper">
         <div class="video-overlay" id="overlay"></div>
@@ -345,9 +439,9 @@
             </a>
         </div>
 
-        <h1 style="text-align: center; font-size: 2rem; font-weight: 800">LASER: Layer-wise Scale Alignment for<br>Training-Free Streaming 4D Reconstruction</h1>
+        <!-- <h1 style="text-align: center; font-size: 2rem; font-weight: 800">LASER: Layer-wise Scale Alignment for<br>Training-Free Streaming 4D Reconstruction</h1> -->
 
-        <div class="abstract-section">
+        <div class="abstract-section" id="abstract">
             <h2>Abstract</h2>
             <p>
                 Recent feed-forward reconstruction models like VGGT and $\pi^3$ achieve impressive reconstruction quality but cannot process streaming videos due to quadratic memory complexity, limiting their practical deployment. 
@@ -370,7 +464,7 @@
                 We incrementally register the submap to the global map with $\mathrm{Sim}(3)$ estimation and our proposed layer-wise scale alignment.
             </p>
 
-            <h2 style="margin-top: 2rem">Layer-wise Scale Alignment</h2>
+            <h2 style="margin-top: 2rem", id="lsa">Layer-wise Scale Alignment</h2>
             <div class="video-row">
                 <div class="video-column">
                     <video autoplay muted loop playsinline>
@@ -393,7 +487,7 @@
                 This anisotropic scaling leads to visible distortions and metric drift in the fused reconstruction. We introduce <b>Layer-wise Scale Alignment (LSA)</b>, a geometry-driven refinement that corrects distortions based on a layer graph.
             </p>
 
-            <h2>Qualitative Results</h2>
+            <h2 id="qualitative">Qualitative Results</h2>
             <div class="grey-section">
                 <div class="carousel-outer">
                     <div class="carousel-nav left" onclick="scrollCarousel(-1)">&#10094;</div>
@@ -453,6 +547,39 @@
     </main>
 
     <script>
+        /* --- THE STICKY NAV BAR --- */
+        // 1. Select the elements
+        const mainTitle = document.getElementById('hero-text');
+        const topBar = document.getElementById('top-bar');
+
+        // 2. Define the threshold
+        // The "fade out" happens over the first 300 pixels of scrolling
+        const fadeHeight = 300; 
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+
+            // --- PART A: FADE OUT THE MAIN TITLE ---
+            // Calculate opacity: 1 when at top, 0 when at fadeHeight
+            // Math.max(0, ...) ensures it never goes negative
+            const newOpacity = Math.max(0, 1 - (scrollY / fadeHeight));
+            
+            // Apply it
+            mainTitle.style.opacity = newOpacity;
+            // Optional: add a slight blur for a cool effect
+            mainTitle.style.filter = `blur(${scrollY / 20}px)`;
+
+
+            // --- PART B: FADE IN THE TOP BAR ---
+            // If we have scrolled past the threshold (e.g., 200px), show the bar
+            if (scrollY > 200) {
+                topBar.classList.add('visible');
+            } else {
+                topBar.classList.remove('visible');
+            }
+        });
+
+
         // --- ELEMENTS ---
         const videoWrapper = document.getElementById('video-wrapper');
         const landingPad = document.getElementById('landing-pad');
