@@ -38,9 +38,6 @@
             /* 1. DISPLACEMENT: Move up by 3 pixels */
             transform: translateY(-2px);
             text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            
-            /* Optional: Change color */
-            color: #3273dc;
         }
         /* --- THE STICKY NAV BAR --- */
         .sticky-nav {
@@ -156,7 +153,7 @@
         .video-row {
             display: flex;
             justify-content: center;
-            gap: 0px;
+            gap: 10px;
             max-width: 1100px;
             position: relative;
             left: 50%;
@@ -429,13 +426,13 @@
                 <span>arXiv</span>
             </a>
 
-            <a href="" class="btn disabled">
+            <a href="https://github.com/neu-vi/LASER" class="btn">
                 <span class="btn-icon">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.05-.015-2.055-3.33.72-4.035-1.605-4.035-1.605-.54-1.38-1.335-1.755-1.335-1.755-1.085-.735.09-.72.09-.72 1.2.075 1.83 1.23 1.83 1.23 1.065 1.815 2.805 1.29 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.28-1.545 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
                     </svg>
                 </span>
-                <span>Code (Coming soon)</span>
+                <span>Code</span>
             </a>
         </div>
 
@@ -468,14 +465,20 @@
             <div class="video-row">
                 <div class="video-column">
                     <video autoplay muted loop playsinline>
-                        <source src="assets/videos/unaligned.mp4" type="video/mp4">
+                        <source src="assets/videos/sintel_unaligned.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/videos/bonn_unaligned.mp4" type="video/mp4">
                     </video>
                     <p class="caption">Raw</p>
                 </div>
 
                 <div class="video-column">
                     <video autoplay muted loop playsinline>
-                        <source src="assets/videos/aligned.mp4" type="video/mp4">
+                        <source src="assets/videos/sintel_aligned.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline>
+                        <source src="assets/videos/bonn_aligned.mp4" type="video/mp4">
                     </video>
                     <p class="caption">Layer-wise aligned</p>
                 </div>
