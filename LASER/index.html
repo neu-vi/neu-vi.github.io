@@ -196,7 +196,7 @@
             display: flex;
             flex-wrap: wrap;
             text-align: center;
-            pointer-events: none; /* Let scroll pass through */
+            pointer-events: none;
         }
 
         h1.project-title {
@@ -222,6 +222,18 @@
         .author {
             margin: 0 10px; /* Spacing between names */
             white-space: nowrap; /* Don't break individual names */
+        }
+
+        .author a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            pointer-events: auto;
+        }
+
+        /* Optional: Slight color change or underline on hover so people know it's clickable */
+        .author a:hover {
+            color: #66ccff;
         }
 
         /* --- AFFILIATION STYLING --- */
@@ -396,12 +408,12 @@
         <h1 class="project-title">LASER: Layer-wise Scale Alignment for Training-Free Streaming 4D Reconstruction</h1>
 
         <div class="author-row">
-            <span class="author">Tianye Ding<sup>1*</sup></span>
-            <span class="author">Yiming Xie<sup>1*</sup></span>
-            <span class="author">Yiqing Liang<sup>2*</sup></span>
-            <span class="author">Moitreya Chatterjee<sup>3</sup></span>
-            <span class="author">Pedro Miraldo<sup>3</sup></span>
-            <span class="author">Huaizu Jiang<sup>1</sup></span>
+            <span class="author"><a href="https://jerrygcding.github.io/", target="_blank" rel="noopener noreferrer">Tianye Ding<sup>1*</sup></a></span>
+            <span class="author"><a href="https://ymingxie.github.io/", target="_blank" rel="noopener noreferrer">Yiming Xie<sup>1*</sup></a></span>
+            <span class="author"><a href="https://lynl7130.github.io/", target="_blank" rel="noopener noreferrer">Yiqing Liang<sup>2*</sup></a></span>
+            <span class="author"><a href="https://sites.google.com/site/metrosmiles/", target="_blank" rel="noopener noreferrer">Moitreya Chatterjee<sup>3</sup></a></span>
+            <span class="author"><a href="https://pmiraldo.github.io/", target="_blank" rel="noopener noreferrer">Pedro Miraldo<sup>3</sup></a></span>
+            <span class="author"><a href="https://jianghz.me/", target="_blank" rel="noopener noreferrer">Huaizu Jiang<sup>1</sup></a></span>
         </div>
 
         <div class="affiliation-row">
