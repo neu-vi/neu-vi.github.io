@@ -103,6 +103,11 @@ button:disabled {
   margin: 0.4rem 0;
 }
 
+.metric-description {
+  margin: 0.35rem 0 0.45rem;
+  color: var(--muted);
+}
+
 .progress {
   display: flex;
   justify-content: space-between;
@@ -157,6 +162,24 @@ video {
   color: #174a8f;
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
+}
+
+.arrow-guide {
+  margin-top: 0.9rem;
+  border: 1px solid #d7e6fb;
+  background: #f7fbff;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+}
+
+.arrow-guide p {
+  margin: 0;
+  color: #174a8f;
+}
+
+.arrow-guide ul {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
 }
 
 .completion-code {

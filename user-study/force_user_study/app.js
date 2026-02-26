@@ -3,6 +3,7 @@ const MANIFEST_PATH = "manifest.json";
 const STORAGE_KEY = "force_user_study_participant_id";
 const LABELS = ["A", "B", "C", "D"];
 const CONDITION_ORDER = ["wind", "point", "wind_change", "point_change"];
+const DEBUG_CONDITION_ONLY = ""; // Set to "" to disable debug restriction.
 
 const appEl = document.getElementById("app");
 const statusEl = document.getElementById("status");
@@ -70,6 +71,7 @@ function renderManifestError(msg) {
     <h2>Manifest Not Available</h2>
     <p>${escapeHtml(msg)}</p>
     <p class="notice">Expected file: <code>user_study/manifest.json</code></p>
+    ${renderArrowGuide()}
     <div class="controls">
       <button id="retry" class="secondary">Retry</button>
     </div>
@@ -92,11 +94,12 @@ function renderIntro() {
       <li><strong>Visual Quality</strong><br>How visually realistic and overall high-quality is the video?</li>
     </ol>
     <p>
-      For each question, you will be shown 3 or 4 videos generated under the same force condition. For each of the three criteria above, please select the video that best satisfies the criterion. If none of the videos are satisfactory, you may choose \"None / All are poor.\"
+      For each question, you will be shown 3 or 4 videos generated under the same force condition. For each criterion, you may select one or more videos as best. If none are satisfactory, choose \"None / All are poor\" only.
     </p>
-    <p><strong>Estimated time:</strong> approximately 15-20 minutes to complete.</p>
+    <p><strong>Estimated time:</strong> approximately 20-25 minutes to complete.</p>
     <p>All responses are anonymous and will be used solely for research purposes.</p>
     <p>Thank you for your time and valuable contribution.</p>
+    ${renderArrowGuide()}
 
     <div class="controls">
       <button id="start-study">I Consent, Start Study</button>
@@ -119,6 +122,9 @@ function getAvailableConditionOptions() {
 }
 
 function startStudy() {
+  if (DEBUG_CONDITION_ONLY && CONDITION_ORDER.includes(DEBUG_CONDITION_ONLY)) {
+    state.selectedCondition = DEBUG_CONDITION_ONLY;
+  }
   state.questions = buildQuestions();
   state.answersByQuestion = {};
   state.index = 0;
@@ -127,6 +133,7 @@ function startStudy() {
     appEl.innerHTML = `
       <h2>No Questions Available</h2>
       <p class="notice">The selected condition set has no valid cases in the manifest.</p>
+      ${renderArrowGuide()}
       <div class="controls"><button id="back" class="secondary">Back</button></div>
     `;
     document.getElementById("back").addEventListener("click", () => renderIntro());
@@ -136,10 +143,14 @@ function startStudy() {
 }
 
 function buildQuestions() {
-  const selectedConditions =
+  let selectedConditions =
     state.selectedCondition === "all"
       ? CONDITION_ORDER.filter((c) => state.manifest.conditions[c])
       : [state.selectedCondition];
+
+  if (DEBUG_CONDITION_ONLY && CONDITION_ORDER.includes(DEBUG_CONDITION_ONLY)) {
+    selectedConditions = selectedConditions.filter((c) => c === DEBUG_CONDITION_ONLY);
+  }
 
   const items = [];
   for (const condition of selectedConditions) {
@@ -167,13 +178,17 @@ function buildQuestions() {
 }
 
 function renderQuestion() {
+  scrollToTop();
   const q = state.questions[state.index];
   const answer =
     state.answersByQuestion[state.index] || {
-      force: "",
-      physics: "",
-      visual: ""
+      force: [],
+      physics: [],
+      visual: []
     };
+  answer.force = normalizeAnswerList(answer.force);
+  answer.physics = normalizeAnswerList(answer.physics);
+  answer.visual = normalizeAnswerList(answer.visual);
   state.answersByQuestion[state.index] = answer;
 
   const hasArrowlessVideo = q.shownOrder.some((method) => method === "kling_motion_brush");
@@ -204,6 +219,7 @@ function renderQuestion() {
     </div>
 
     <p><strong>Case:</strong> ${escapeHtml(q.caseId)}</p>
+    ${renderArrowGuide(q.condition)}
     ${
       hasArrowlessVideo
         ? '<p class="notice arrow-note"><strong>Important:</strong> If one video has no arrows, evaluate it using the <strong>same target force input</strong> indicated by arrows in the other videos for this question.</p>'
@@ -214,6 +230,7 @@ function renderQuestion() {
     ${renderPromptBlock(
       "force",
       "1) Force adherence: Which video best follows the force condition?",
+      "How well do the motions in the video follow the specified input force conditions (indicated by arrows shown in the video)?",
       choiceValues,
       answer.force
     )}
@@ -221,6 +238,7 @@ function renderQuestion() {
     ${renderPromptBlock(
       "physics",
       "2) Physics awareness: Which video is most physically plausible?",
+      "How consistent are the motions with real-world physical laws and intuitive physical behavior?",
       choiceValues,
       answer.physics
     )}
@@ -228,6 +246,7 @@ function renderQuestion() {
     ${renderPromptBlock(
       "visual",
       "3) Visual quality: Which video looks best overall?",
+      "How visually realistic and overall high-quality is the video?",
       choiceValues,
       answer.visual
     )}
@@ -242,16 +261,22 @@ function renderQuestion() {
   `;
 
   ["force", "physics", "visual"].forEach((name) => {
-    const radios = appEl.querySelectorAll(`input[name="${name}"]`);
-    radios.forEach((radio) => {
-      radio.addEventListener("change", (evt) => {
+    const inputs = appEl.querySelectorAll(`input[name="${name}"]`);
+    inputs.forEach((input) => {
+      input.addEventListener("change", (evt) => {
         const existing = state.answersByQuestion[state.index] || {};
+        const currentValues = normalizeAnswerList(existing[name]);
+        const value = evt.target.value;
+        const checked = evt.target.checked;
+        const nextValues = computeNextValues(currentValues, value, checked);
+
         state.answersByQuestion[state.index] = {
-          force: existing.force || "",
-          physics: existing.physics || "",
-          visual: existing.visual || "",
-          [name]: evt.target.value
+          force: normalizeAnswerList(existing.force),
+          physics: normalizeAnswerList(existing.physics),
+          visual: normalizeAnswerList(existing.visual),
+          [name]: nextValues
         };
+        syncChoiceInputs(name, nextValues);
         syncNextButtonState();
       });
     });
@@ -282,14 +307,15 @@ function renderQuestion() {
   });
 }
 
-function renderPromptBlock(name, prompt, choices, selectedValue) {
+function renderPromptBlock(name, prompt, description, choices, selectedValue) {
+  const selectedValues = normalizeAnswerList(selectedValue);
   const options = choices
     .map((value) => {
-      const checked = value === selectedValue ? "checked" : "";
+      const checked = selectedValues.includes(value) ? "checked" : "";
       const label = value === "NONE" ? "None (all are bad)" : value;
       return `
       <label class="radio-line">
-        <input type="radio" name="${name}" value="${value}" ${checked}>
+        <input type="checkbox" name="${name}" value="${value}" ${checked}>
         ${escapeHtml(label)}
       </label>`;
     })
@@ -297,7 +323,8 @@ function renderPromptBlock(name, prompt, choices, selectedValue) {
 
   return `
     <fieldset class="fieldset">
-      <legend>${escapeHtml(prompt)}</legend>
+      <legend>${escapeHtml(prompt)} (select one or more; NONE is exclusive)</legend>
+      <p class="metric-description">${escapeHtml(description)}</p>
       ${options}
     </fieldset>
   `;
@@ -322,22 +349,35 @@ function playVisibleVideos() {
 }
 
 function isQuestionComplete(answer) {
-  return !!(answer && answer.force && answer.physics && answer.visual);
+  return Boolean(
+    answer &&
+      normalizeAnswerList(answer.force).length > 0 &&
+      normalizeAnswerList(answer.physics).length > 0 &&
+      normalizeAnswerList(answer.visual).length > 0,
+  );
 }
 
 async function finishStudy() {
   const now = new Date().toISOString();
   const responses = state.questions.map((q, idx) => {
     const answer = state.answersByQuestion[idx] || {};
+    const forceChoices = normalizeAnswerList(answer.force);
+    const physicsChoices = normalizeAnswerList(answer.physics);
+    const visualChoices = normalizeAnswerList(answer.visual);
     return {
       participant_id: state.participantId,
       condition: q.condition,
       case_id: q.caseId,
       shown_order: q.shownOrder,
       answers: {
-        force: answer.force,
-        physics: answer.physics,
-        visual: answer.visual
+        force: forceChoices[0] || "",
+        physics: physicsChoices[0] || "",
+        visual: visualChoices[0] || ""
+      },
+      answers_multi: {
+        force: forceChoices,
+        physics: physicsChoices,
+        visual: visualChoices
       },
       timestamp_iso: now,
       user_agent: navigator.userAgent
@@ -392,6 +432,7 @@ async function trySubmitOnline(payload) {
 }
 
 function renderComplete(postResult, downloaded) {
+  scrollToTop();
   const completionCode = state.participantId.replace(/-/g, "").slice(0, 8).toUpperCase();
 
   let message = "Responses saved locally as a downloaded JSON file.";
@@ -413,6 +454,7 @@ function renderComplete(postResult, downloaded) {
     <p>${escapeHtml(message)}</p>
     ${fallback}
     ${downloadNote}
+    ${renderArrowGuide()}
     <p>Your completion code:</p>
     <div class="completion-code">${completionCode}</div>
   `;
@@ -433,6 +475,78 @@ function downloadJson(data, filename) {
 function setStatus(text, isError) {
   statusEl.textContent = text;
   statusEl.className = isError ? "status error" : "status";
+}
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+function normalizeAnswerList(value) {
+  if (Array.isArray(value)) {
+    return value.slice();
+  }
+  if (!value) {
+    return [];
+  }
+  return [value];
+}
+
+function computeNextValues(currentValues, changedValue, isChecked) {
+  if (changedValue === "NONE") {
+    return isChecked ? ["NONE"] : [];
+  }
+
+  const withoutNone = currentValues.filter((v) => v !== "NONE");
+  if (isChecked) {
+    if (!withoutNone.includes(changedValue)) {
+      withoutNone.push(changedValue);
+    }
+  } else {
+    return withoutNone.filter((v) => v !== changedValue);
+  }
+  return withoutNone;
+}
+
+function syncChoiceInputs(name, selectedValues) {
+  const selected = new Set(selectedValues);
+  const inputs = appEl.querySelectorAll(`input[name="${name}"]`);
+  inputs.forEach((input) => {
+    input.checked = selected.has(input.value);
+  });
+}
+
+function renderArrowGuide(condition) {
+  const singleConditionText = {
+    wind:
+      "<strong>Wind force:</strong> The arrow indicates the force direction, and its length indicates the force magnitude.",
+    point:
+      "<strong>Point force:</strong> The arrow indicates the force direction, and its length indicates the force magnitude. The circle around the starting point indicates the location of the local force.",
+    wind_change:
+      "<strong>Wind force change:</strong> The arrow indicates the force direction, and its length indicates the force magnitude. A change of the arrow means the global wind force has changed.",
+    point_change:
+      "<strong>Point force change:</strong> The arrow indicates the force direction, and its length indicates the force magnitude. The second force is applied to the same object, and is shown at the original position for reference.",
+  };
+
+  const guideBody = condition && singleConditionText[condition]
+    ? `<ul><li>${singleConditionText[condition]}</li></ul>`
+    : `
+      <ul>
+        <li><strong>Wind force:</strong> The arrow indicates the force direction, and its length indicates the force magnitude.</li>
+        <li><strong>Point force:</strong> The arrow indicates the force direction, and its length indicates the force magnitude. The circle around the starting point indicates the location of the local force.</li>
+        <li><strong>Wind force change:</strong> The arrow indicates the force direction, and its length indicates the force magnitude. A change of the arrow means the global wind force has changed.</li>
+        <li><strong>Point force change:</strong> The arrow indicates the force direction, and its length indicates the force magnitude. The second force is applied to the same object, and is shown at the original position for reference.</li>
+      </ul>
+    `;
+
+  return `
+    <div class="arrow-guide">
+      <p><strong>Arrow meaning guide</strong></p>
+      ${guideBody}
+    </div>
+  `;
 }
 
 function shuffleArray(arr) {
