@@ -14,7 +14,8 @@ const state = {
   selectedCondition: "all",
   questions: [],
   index: 0,
-  answersByQuestion: {}
+  answersByQuestion: {},
+  isSubmitting: false
 };
 
 boot();
@@ -292,12 +293,21 @@ function renderQuestion() {
   });
 
   document.getElementById("next").addEventListener("click", async () => {
+    if (state.isSubmitting) {
+      return;
+    }
+
     const currentAnswer = state.answersByQuestion[state.index];
     if (!isQuestionComplete(currentAnswer)) {
       return;
     }
 
     if (state.index === state.questions.length - 1) {
+      const nextBtn = document.getElementById("next");
+      if (nextBtn) {
+        nextBtn.disabled = true;
+        nextBtn.textContent = "Submitting...";
+      }
       await finishStudy();
       return;
     }
@@ -358,6 +368,11 @@ function isQuestionComplete(answer) {
 }
 
 async function finishStudy() {
+  if (state.isSubmitting) {
+    return;
+  }
+  state.isSubmitting = true;
+
   const now = new Date().toISOString();
   const responses = state.questions.map((q, idx) => {
     const answer = state.answersByQuestion[idx] || {};
@@ -391,18 +406,22 @@ async function finishStudy() {
     responses
   };
 
-  let postResult = null;
-  if (SUBMIT_ENDPOINT.trim()) {
-    postResult = await trySubmitOnline(payload);
-  }
+  try {
+    let postResult = null;
+    if (SUBMIT_ENDPOINT.trim()) {
+      postResult = await trySubmitOnline(payload);
+    }
 
-  let downloaded = false;
-  if (!postResult || !postResult.ok) {
-    downloadJson(payload, `user_study_${state.participantId.slice(0, 8)}.json`);
-    downloaded = true;
-  }
+    let downloaded = false;
+    if (!postResult || !postResult.ok) {
+      downloadJson(payload, `user_study_${state.participantId.slice(0, 8)}.json`);
+      downloaded = true;
+    }
 
-  renderComplete(postResult, downloaded);
+    renderComplete(postResult, downloaded);
+  } finally {
+    state.isSubmitting = false;
+  }
 }
 
 async function trySubmitOnline(payload) {
