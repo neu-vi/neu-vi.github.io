@@ -94,7 +94,7 @@ function renderIntro() {
       <li><strong>Visual Quality</strong><br>How visually realistic and overall high-quality is the video?</li>
     </ol>
     <p>
-      For each question, you will be shown 3 or 4 videos generated under the same force condition. For each criterion, you may select one or more videos as best. If none are satisfactory, choose \"None / All are poor\" only.
+      For each question, you will be shown 3 or 4 videos generated under the same force condition. For each criterion, you may select one or more videos that satisfy the metric. If none are satisfactory, choose \"None / All are poor\" only.
     </p>
     <p><strong>Estimated time:</strong> approximately 20-25 minutes to complete.</p>
     <p>All responses are anonymous and will be used solely for research purposes.</p>
@@ -229,7 +229,7 @@ function renderQuestion() {
 
     ${renderPromptBlock(
       "force",
-      "1) Force adherence: Which video best follows the force condition?",
+      "1) Force adherence: Which video(s) satisfy this metric?",
       "How well do the motions in the video follow the specified input force conditions (indicated by arrows shown in the video)?",
       choiceValues,
       answer.force
@@ -237,7 +237,7 @@ function renderQuestion() {
 
     ${renderPromptBlock(
       "physics",
-      "2) Physics awareness: Which video is most physically plausible?",
+      "2) Physics awareness: Which video(s) satisfy this metric?",
       "How consistent are the motions with real-world physical laws and intuitive physical behavior?",
       choiceValues,
       answer.physics
@@ -245,7 +245,7 @@ function renderQuestion() {
 
     ${renderPromptBlock(
       "visual",
-      "3) Visual quality: Which video looks best overall?",
+      "3) Visual quality: Which video(s) satisfy this metric?",
       "How visually realistic and overall high-quality is the video?",
       choiceValues,
       answer.visual
@@ -454,7 +454,7 @@ function renderComplete(postResult, downloaded) {
     <p>${escapeHtml(message)}</p>
     ${fallback}
     ${downloadNote}
-    ${renderArrowGuide()}
+    <p>Thank you for completing the user study. Your participation and feedback are highly valuable to our research.</p>
     <p>Your completion code:</p>
     <div class="completion-code">${completionCode}</div>
   `;
