@@ -1,0 +1,383 @@
+{
+  "version": 1,
+  "conditions": {
+    "wind": {
+      "methods": [
+        "force_prompting",
+        "text_inference",
+        "ours_autoregressive"
+      ],
+      "cases": [
+        {
+          "id": "0.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/0.mp4",
+            "text_inference": "videos/wind/text_inference/0.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/0.mp4"
+          }
+        },
+        {
+          "id": "1579.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/1579.mp4",
+            "text_inference": "videos/wind/text_inference/1579.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/1579.mp4"
+          }
+        },
+        {
+          "id": "1910.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/1910.mp4",
+            "text_inference": "videos/wind/text_inference/1910.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/1910.mp4"
+          }
+        },
+        {
+          "id": "2020.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/2020.mp4",
+            "text_inference": "videos/wind/text_inference/2020.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/2020.mp4"
+          }
+        },
+        {
+          "id": "216.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/216.mp4",
+            "text_inference": "videos/wind/text_inference/216.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/216.mp4"
+          }
+        },
+        {
+          "id": "336.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/336.mp4",
+            "text_inference": "videos/wind/text_inference/336.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/336.mp4"
+          }
+        },
+        {
+          "id": "472.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/472.mp4",
+            "text_inference": "videos/wind/text_inference/472.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/472.mp4"
+          }
+        },
+        {
+          "id": "5074.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/5074.mp4",
+            "text_inference": "videos/wind/text_inference/5074.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/5074.mp4"
+          }
+        },
+        {
+          "id": "55.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/55.mp4",
+            "text_inference": "videos/wind/text_inference/55.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/55.mp4"
+          }
+        },
+        {
+          "id": "864.mp4",
+          "videos": {
+            "force_prompting": "videos/wind/force_prompting/864.mp4",
+            "text_inference": "videos/wind/text_inference/864.mp4",
+            "ours_autoregressive": "videos/wind/ours_autoregressive/864.mp4"
+          }
+        }
+      ]
+    },
+    "wind_change": {
+      "methods": [
+        "force_prompting",
+        "text_inference",
+        "ours_autoregressive"
+      ],
+      "cases": [
+        {
+          "id": "1304.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/1304.mp4",
+            "text_inference": "videos/wind_change/text_inference/1304.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/1304.mp4"
+          }
+        },
+        {
+          "id": "3097.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/3097.mp4",
+            "text_inference": "videos/wind_change/text_inference/3097.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/3097.mp4"
+          }
+        },
+        {
+          "id": "3709.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/3709.mp4",
+            "text_inference": "videos/wind_change/text_inference/3709.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/3709.mp4"
+          }
+        },
+        {
+          "id": "4141.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/4141.mp4",
+            "text_inference": "videos/wind_change/text_inference/4141.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/4141.mp4"
+          }
+        },
+        {
+          "id": "4550.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/4550.mp4",
+            "text_inference": "videos/wind_change/text_inference/4550.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/4550.mp4"
+          }
+        },
+        {
+          "id": "4789.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/4789.mp4",
+            "text_inference": "videos/wind_change/text_inference/4789.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/4789.mp4"
+          }
+        },
+        {
+          "id": "5192.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/5192.mp4",
+            "text_inference": "videos/wind_change/text_inference/5192.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/5192.mp4"
+          }
+        },
+        {
+          "id": "5322.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/5322.mp4",
+            "text_inference": "videos/wind_change/text_inference/5322.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/5322.mp4"
+          }
+        },
+        {
+          "id": "5329.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/5329.mp4",
+            "text_inference": "videos/wind_change/text_inference/5329.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/5329.mp4"
+          }
+        },
+        {
+          "id": "62.mp4",
+          "videos": {
+            "force_prompting": "videos/wind_change/force_prompting/62.mp4",
+            "text_inference": "videos/wind_change/text_inference/62.mp4",
+            "ours_autoregressive": "videos/wind_change/ours_autoregressive/62.mp4"
+          }
+        }
+      ]
+    },
+    "point": {
+      "methods": [
+        "force_prompting",
+        "text_inference",
+        "ours_autoregressive",
+        "kling_motion_brush"
+      ],
+      "cases": [
+        {
+          "id": "185.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/185.mp4",
+            "text_inference": "videos/point/text_inference/185.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/185.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/185.mp4"
+          }
+        },
+        {
+          "id": "188.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/188.mp4",
+            "text_inference": "videos/point/text_inference/188.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/188.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/188.mp4"
+          }
+        },
+        {
+          "id": "21.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/21.mp4",
+            "text_inference": "videos/point/text_inference/21.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/21.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/21.mp4"
+          }
+        },
+        {
+          "id": "2252.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/2252.mp4",
+            "text_inference": "videos/point/text_inference/2252.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/2252.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/2252.mp4"
+          }
+        },
+        {
+          "id": "449.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/449.mp4",
+            "text_inference": "videos/point/text_inference/449.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/449.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/449.mp4"
+          }
+        },
+        {
+          "id": "60.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/60.mp4",
+            "text_inference": "videos/point/text_inference/60.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/60.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/60.mp4"
+          }
+        },
+        {
+          "id": "68.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/68.mp4",
+            "text_inference": "videos/point/text_inference/68.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/68.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/68.mp4"
+          }
+        },
+        {
+          "id": "83.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/83.mp4",
+            "text_inference": "videos/point/text_inference/83.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/83.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/83.mp4"
+          }
+        },
+        {
+          "id": "971.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/971.mp4",
+            "text_inference": "videos/point/text_inference/971.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/971.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/971.mp4"
+          }
+        },
+        {
+          "id": "99.mp4",
+          "videos": {
+            "force_prompting": "videos/point/force_prompting/99.mp4",
+            "text_inference": "videos/point/text_inference/99.mp4",
+            "ours_autoregressive": "videos/point/ours_autoregressive/99.mp4",
+            "kling_motion_brush": "videos/point/kling_motion_brush/99.mp4"
+          }
+        }
+      ]
+    },
+    "point_change": {
+      "methods": [
+        "force_prompting",
+        "text_inference",
+        "ours_autoregressive",
+        "kling_motion_brush"
+      ],
+      "cases": [
+        {
+          "id": "1311.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/1311.mp4",
+            "text_inference": "videos/point_change/text_inference/1311.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/1311.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/1311.mp4"
+          }
+        },
+        {
+          "id": "16.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/16.mp4",
+            "text_inference": "videos/point_change/text_inference/16.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/16.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/16.mp4"
+          }
+        },
+        {
+          "id": "1638.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/1638.mp4",
+            "text_inference": "videos/point_change/text_inference/1638.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/1638.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/1638.mp4"
+          }
+        },
+        {
+          "id": "247.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/247.mp4",
+            "text_inference": "videos/point_change/text_inference/247.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/247.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/247.mp4"
+          }
+        },
+        {
+          "id": "249.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/249.mp4",
+            "text_inference": "videos/point_change/text_inference/249.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/249.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/249.mp4"
+          }
+        },
+        {
+          "id": "2624.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/2624.mp4",
+            "text_inference": "videos/point_change/text_inference/2624.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/2624.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/2624.mp4"
+          }
+        },
+        {
+          "id": "35.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/35.mp4",
+            "text_inference": "videos/point_change/text_inference/35.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/35.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/35.mp4"
+          }
+        },
+        {
+          "id": "41.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/41.mp4",
+            "text_inference": "videos/point_change/text_inference/41.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/41.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/41.mp4"
+          }
+        },
+        {
+          "id": "42.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/42.mp4",
+            "text_inference": "videos/point_change/text_inference/42.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/42.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/42.mp4"
+          }
+        },
+        {
+          "id": "88.mp4",
+          "videos": {
+            "force_prompting": "videos/point_change/force_prompting/88.mp4",
+            "text_inference": "videos/point_change/text_inference/88.mp4",
+            "ours_autoregressive": "videos/point_change/ours_autoregressive/88.mp4",
+            "kling_motion_brush": "videos/point_change/kling_motion_brush/88.mp4"
+          }
+        }
+      ]
+    }
+  }
+}
