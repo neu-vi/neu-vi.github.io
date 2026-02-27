@@ -210,6 +210,7 @@ function renderQuestion() {
     .join("");
 
   const choiceValues = LABELS.slice(0, q.shownOrder.length).concat(["NONE"]);
+  const referenceImageCandidates = buildReferenceImageCandidates(q.condition, q.caseId);
 
   const gridClass = q.shownOrder.length === 4 ? "video-grid four-grid" : "video-grid";
 
@@ -226,6 +227,7 @@ function renderQuestion() {
         ? '<p class="notice arrow-note"><strong>Important:</strong> If one video has no arrows, evaluate it using the <strong>same target force input</strong> indicated by arrows in the other videos for this question.</p>'
         : ""
     }
+    ${renderReferenceImage(referenceImageCandidates[0])}
     <div class="${gridClass}">${cards}</div>
 
     ${renderPromptBlock(
@@ -260,6 +262,7 @@ function renderQuestion() {
     </div>
     <p class="notice">Method identities are hidden. Labels A/B/C/D are randomized per question.</p>
   `;
+  setupReferenceImageFallback(referenceImageCandidates);
 
   ["force", "physics", "visual"].forEach((name) => {
     const inputs = appEl.querySelectorAll(`input[name="${name}"]`);
@@ -494,6 +497,51 @@ function downloadJson(data, filename) {
 function setStatus(text, isError) {
   statusEl.textContent = text;
   statusEl.className = isError ? "status error" : "status";
+}
+
+function buildReferenceImageCandidates(condition, caseId) {
+  const base = String(caseId || "").replace(/\.[^.]+$/, "");
+  return [
+    `imgs/${condition}/${base}.png`,
+    `imgs/${condition}/${base}.jpg`,
+    `imgs/${condition}/${base}.jpeg`,
+    `imgs/${condition}/${base}.webp`
+  ];
+}
+
+function renderReferenceImage(imagePath) {
+  return `
+    <section class="reference-panel" id="reference-panel">
+      <p class="reference-title"><strong>Reference image</strong> (same case for context)</p>
+      <img
+        id="reference-image"
+        src="${escapeHtml(imagePath)}"
+        alt="Reference image for this case"
+        loading="lazy"
+      />
+      <p class="notice" id="reference-fallback" hidden>Reference image not available for this case.</p>
+    </section>
+  `;
+}
+
+function setupReferenceImageFallback(candidates) {
+  const imageEl = document.getElementById("reference-image");
+  const fallbackEl = document.getElementById("reference-fallback");
+  const panelEl = document.getElementById("reference-panel");
+  if (!imageEl || !fallbackEl || !panelEl) {
+    return;
+  }
+
+  let idx = 0;
+  imageEl.addEventListener("error", () => {
+    idx += 1;
+    if (idx < candidates.length) {
+      imageEl.src = candidates[idx];
+      return;
+    }
+    imageEl.hidden = true;
+    fallbackEl.hidden = false;
+  });
 }
 
 function scrollToTop() {
