@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "conditions": {
+    "wind_change_ablation": {
+      "task_type": "change_following",
+      "methods": [
+        "ours",
+        "ours_no_change"
+      ],
+      "cases": [
+        {
+          "id": "232.mp4",
+          "videos": {
+            "ours": "videos/wind_change_ablation/ours/232.mp4",
+            "ours_no_change": "videos/wind_change_ablation/ours_no_change/232.mp4"
+          },
+          "reference_image": "imgs/wind_change_ablation/232.png"
+        },
+        {
+          "id": "3630.mp4",
+          "videos": {
+            "ours": "videos/wind_change_ablation/ours/3630.mp4",
+            "ours_no_change": "videos/wind_change_ablation/ours_no_change/3630.mp4"
+          },
+          "reference_image": "imgs/wind_change_ablation/3630.png"
+        }
+      ]
+    },
+    "point_change_ablation": {
+      "task_type": "change_following",
+      "methods": [
+        "ours",
+        "ours_no_change"
+      ],
+      "cases": [
+        {
+          "id": "290.mp4",
+          "videos": {
+            "ours": "videos/point_change_ablation/ours/290.mp4",
+            "ours_no_change": "videos/point_change_ablation/ours_no_change/290.mp4"
+          },
+          "reference_image": "imgs/point_change_ablation/290.png"
+        },
+        {
+          "id": "792.mp4",
+          "videos": {
+            "ours": "videos/point_change_ablation/ours/792.mp4",
+            "ours_no_change": "videos/point_change_ablation/ours_no_change/792.mp4"
+          },
+          "reference_image": "imgs/point_change_ablation/792.png"
+        }
+      ]
+    },
+    "wind_magnitude": {
+      "task_type": "magnitude_adaptation",
+      "methods": [
+        "ours",
+        "force_prompting",
+        "text_inference"
+      ],
+      "cases": [
+        {
+          "id": "216",
+          "pairs": {
+            "ours": {
+              "small": "videos/wind_magnitude/ours/216_0.mp4",
+              "large": "videos/wind_magnitude/ours/216_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/wind_magnitude/force_prompting/216_0.mp4",
+              "large": "videos/wind_magnitude/force_prompting/216_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/wind_magnitude/text_inference/216_0.mp4",
+              "large": "videos/wind_magnitude/text_inference/216_1.mp4"
+            }
+          },
+          "reference_image": "imgs/wind_magnitude/216.png"
+        },
+        {
+          "id": "472",
+          "pairs": {
+            "ours": {
+              "small": "videos/wind_magnitude/ours/472_0.mp4",
+              "large": "videos/wind_magnitude/ours/472_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/wind_magnitude/force_prompting/472_0.mp4",
+              "large": "videos/wind_magnitude/force_prompting/472_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/wind_magnitude/text_inference/472_0.mp4",
+              "large": "videos/wind_magnitude/text_inference/472_1.mp4"
+            }
+          },
+          "reference_image": "imgs/wind_magnitude/472.png"
+        }
+      ]
+    },
+    "point_magnitude": {
+      "task_type": "magnitude_adaptation",
+      "methods": [
+        "ours",
+        "force_prompting",
+        "text_inference"
+      ],
+      "cases": [
+        {
+          "id": "21",
+          "pairs": {
+            "ours": {
+              "small": "videos/point_magnitude/ours/21_0.mp4",
+              "large": "videos/point_magnitude/ours/21_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/point_magnitude/force_prompting/21_0.mp4",
+              "large": "videos/point_magnitude/force_prompting/21_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/point_magnitude/text_inference/21_0.mp4",
+              "large": "videos/point_magnitude/text_inference/21_1.mp4"
+            }
+          },
+          "reference_image": "imgs/point_magnitude/21.png"
+        },
+        {
+          "id": "971",
+          "pairs": {
+            "ours": {
+              "small": "videos/point_magnitude/ours/971_0.mp4",
+              "large": "videos/point_magnitude/ours/971_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/point_magnitude/force_prompting/971_0.mp4",
+              "large": "videos/point_magnitude/force_prompting/971_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/point_magnitude/text_inference/971_0.mp4",
+              "large": "videos/point_magnitude/text_inference/971_1.mp4"
+            }
+          },
+          "reference_image": "imgs/point_magnitude/971.png"
+        }
+      ]
+    }
+  }
+}
