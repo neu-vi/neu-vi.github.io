@@ -23,6 +23,22 @@
             "ours_no_change": "videos/wind_change_ablation/ours_no_change/3630.mp4"
           },
           "reference_image": "imgs/wind_change_ablation/3630.png"
+        },
+        {
+          "id": "6.mp4",
+          "videos": {
+            "ours": "videos/wind_change_ablation/ours/6.mp4",
+            "ours_no_change": "videos/wind_change_ablation/ours_no_change/6.mp4"
+          },
+          "reference_image": "imgs/wind_change_ablation/6.png"
+        },
+        {
+          "id": "30.mp4",
+          "videos": {
+            "ours": "videos/wind_change_ablation/ours/30.mp4",
+            "ours_no_change": "videos/wind_change_ablation/ours_no_change/30.mp4"
+          },
+          "reference_image": "imgs/wind_change_ablation/30.png"
         }
       ]
     },
@@ -48,6 +64,22 @@
             "ours_no_change": "videos/point_change_ablation/ours_no_change/792.mp4"
           },
           "reference_image": "imgs/point_change_ablation/792.png"
+        },
+        {
+          "id": "8.mp4",
+          "videos": {
+            "ours": "videos/point_change_ablation/ours/8.mp4",
+            "ours_no_change": "videos/point_change_ablation/ours_no_change/8.mp4"
+          },
+          "reference_image": "imgs/point_change_ablation/8.png"
+        },
+        {
+          "id": "24.mp4",
+          "videos": {
+            "ours": "videos/point_change_ablation/ours/24.mp4",
+            "ours_no_change": "videos/point_change_ablation/ours_no_change/24.mp4"
+          },
+          "reference_image": "imgs/point_change_ablation/24.png"
         }
       ]
     },
@@ -94,6 +126,42 @@
             }
           },
           "reference_image": "imgs/wind_magnitude/472.png"
+        },
+        {
+          "id": "cloth",
+          "pairs": {
+            "ours": {
+              "small": "videos/wind_magnitude/ours/cloth_0.mp4",
+              "large": "videos/wind_magnitude/ours/cloth_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/wind_magnitude/force_prompting/cloth_0.mp4",
+              "large": "videos/wind_magnitude/force_prompting/cloth_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/wind_magnitude/text_inference/cloth_0.mp4",
+              "large": "videos/wind_magnitude/text_inference/cloth_1.mp4"
+            }
+          },
+          "reference_image": "imgs/wind_magnitude/cloth.png"
+        },
+        {
+          "id": "napkin",
+          "pairs": {
+            "ours": {
+              "small": "videos/wind_magnitude/ours/napkin_0.mp4",
+              "large": "videos/wind_magnitude/ours/napkin_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/wind_magnitude/force_prompting/napkin_0.mp4",
+              "large": "videos/wind_magnitude/force_prompting/napkin_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/wind_magnitude/text_inference/napkin_0.mp4",
+              "large": "videos/wind_magnitude/text_inference/napkin_1.mp4"
+            }
+          },
+          "reference_image": "imgs/wind_magnitude/napkin.png"
         }
       ]
     },
@@ -140,6 +208,42 @@
             }
           },
           "reference_image": "imgs/point_magnitude/971.png"
+        },
+        {
+          "id": "jug",
+          "pairs": {
+            "ours": {
+              "small": "videos/point_magnitude/ours/jug_0.mp4",
+              "large": "videos/point_magnitude/ours/jug_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/point_magnitude/force_prompting/jug_0.mp4",
+              "large": "videos/point_magnitude/force_prompting/jug_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/point_magnitude/text_inference/jug_0.mp4",
+              "large": "videos/point_magnitude/text_inference/jug_1.mp4"
+            }
+          },
+          "reference_image": "imgs/point_magnitude/jug.png"
+        },
+        {
+          "id": "tape",
+          "pairs": {
+            "ours": {
+              "small": "videos/point_magnitude/ours/tape_0.mp4",
+              "large": "videos/point_magnitude/ours/tape_1.mp4"
+            },
+            "force_prompting": {
+              "small": "videos/point_magnitude/force_prompting/tape_0.mp4",
+              "large": "videos/point_magnitude/force_prompting/tape_1.mp4"
+            },
+            "text_inference": {
+              "small": "videos/point_magnitude/text_inference/tape_0.mp4",
+              "large": "videos/point_magnitude/text_inference/tape_1.mp4"
+            }
+          },
+          "reference_image": "imgs/point_magnitude/tape.png"
         }
       ]
     }
