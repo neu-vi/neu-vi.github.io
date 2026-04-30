@@ -1,0 +1,5 @@
+{
+  "schema": "corr3d3d.v1",
+  "pcd": {"src":"assets/examples/3d3d/pcd/pcd_0.json"},
+  "kpts": {"src":"assets/examples/3d3d/kpts/kpts_0.json"}
+}

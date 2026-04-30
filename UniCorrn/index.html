@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="static/css/bibtex.css">
+    <script src="static/js/bibtex.js"></script>
+    <link rel="stylesheet" href="static/css/carousel.css">
+    <link rel="stylesheet" href="static/css/correspondence.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TrackballControls.js"></script>
+    <script src="static/js/correspondence-viewer.js"></script>
+
+    <title>UniCorrn: Unified Correspondence Transformer Across 2D and 3D</title>
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-margin-top: 100px;
+        }
+        a {
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+        a:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- THE STICKY NAV BAR --- */
+        .sticky-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.3s ease-in-out;
+        }
+        .sticky-nav.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .top-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #333;
+            letter-spacing: 0.5px;
+        }
+        .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            font-weight: 600;
+            border-top: 1px solid #eee;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            height: auto;
+            overflow-x: hidden;
+        }
+
+        /* --- THE VIDEO CONTAINER --- */
+        #video-wrapper {
+            position: fixed;
+            z-index: 10;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 16 / 9;
+            transform: none;
+            margin: 0;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        #landing-pad {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-bottom: 6rem;
+            background: transparent;
+            border-radius: 12px;
+        }
+
+        /* --- THE DARK OVERLAY --- */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* --- VIDEO ROW (for method/comparison videos) --- */
+        .video-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 1100px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 2rem;
+        }
+        .video-column {
+            flex: 1;
+            max-width: 50%;
+        }
+        .video-column video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        .video-column .caption {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* --- THE TITLE (HERO TEXT) --- */
+        .hero-text {
+            position: fixed;
+            max-width: 1200px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            pointer-events: none;
+        }
+        h1.project-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        /* --- AUTHOR STYLING --- */
+        .author-row {
+            font-size: 1.5rem;
+            font-weight: 400;
+            max-width: 1200px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .author {
+            margin: 0 10px;
+            white-space: nowrap;
+        }
+        .author a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            pointer-events: auto;
+        }
+        .author a:hover {
+            color: #66ccff;
+        }
+
+        /* --- AFFILIATION STYLING --- */
+        .affiliation-row {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.9;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* --- NOTE STYLING --- */
+        .note-row {
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        sup {
+            font-size: 0.6em;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        /* --- BUTTON GROUP --- */
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: -4rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #363636;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            padding: 10px 24px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background-color: #000;
+            transform: translateY(-2px);
+        }
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .btn-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 40vh;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+        }
+        .main-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+            font-weight: 800;
+        }
+        .main-section h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #444;
+        }
+        .abstract-section {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .abstract-section h2 {
+            text-align: center;
+            border-bottom: none;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        p {
+            text-align: justify;
+            text-justify: inter-word;
+            font-size: 1rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* --- METHOD VIDEO --- */
+        .method-video {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        /* --- GREY SECTION (full-width background) --- */
+        .grey-section {
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            background: #f5f5f5;
+            box-shadow: 0 0 0 4000px #f5f5f5;
+            clip-path: inset(0 -4000px 0 -4000px);
+            padding: 0.1rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="top-bar" class="sticky-nav">
+        <div class="nav-container">
+            <div class="nav-row top-row">
+                <span class="nav-title">🦄 UniCorrn: Unified Correspondence Transformer Across 2D and 3D</span>
+            </div>
+            <div class="nav-row bottom-row">
+                <a href="#video-wrapper">Teaser</a>
+                <a href="#abstract">Abstract</a>
+                <a href="#method">Method</a>
+                <a href="#results">Qualitative Results</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="video-wrapper">
+        <div class="video-overlay" id="overlay"></div>
+        <video autoplay muted loop playsinline>
+            <source src="./assets/videos/teaser.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="hero-text" id="hero-text">
+        <h1 class="project-title">🦄 UniCorrn: Unified Correspondence Transformer Across 2D and 3D</h1>
+
+        <div class="author-row">
+            <span class="author"><a href="https://prajnancv.github.io/" target="_blank" rel="noopener noreferrer">Prajnan Goswami<sup>1*</sup></a></span>
+            <span class="author"><a href="https://jerrygcding.github.io/" target="_blank" rel="noopener noreferrer">Tianye Ding<sup>1*</sup></a></span>
+            <span class="author"><a href="https://scholar.google.com/citations?&user=uiqXutMAAAAJ" target="_blank" rel="noopener noreferrer">Feng Liu<sup>2</sup></a></span>
+            <span class="author"><a href="https://jianghz.me/" target="_blank" rel="noopener noreferrer">Huaizu Jiang<sup>1</sup></a></span>
+        </div>
+
+        <div class="affiliation-row">
+            <span class="affil"><sup>1</sup> Northeastern University</span>
+            <span class="affil"><sup>2</sup> Adobe Research</span>
+        </div>
+
+        <div class="note-row">
+            <sup>*</sup> Equal Contribution
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div id="landing-pad"></div>
+
+        <div class="button-row">
+            <a href="#" class="btn disabled">
+                <span class="btn-icon">
+                    <i class="ai ai-arxiv"></i>
+                </span>
+                <span>arXiv</span>
+            </a>
+
+            <a href="#" class="btn disabled">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.05-.015-2.055-3.33.72-4.035-1.605-4.035-1.605-.54-1.38-1.335-1.755-1.335-1.755-1.085-.735.09-.72.09-.72 1.2.075 1.83 1.23 1.83 1.23 1.065 1.815 2.805 1.29 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.28-1.545 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                </span>
+                <span>Code</span>
+            </a>
+
+            <a href="#" class="btn disabled">
+                <span style="margin-right: 8px; font-size: 1.1rem;">🤗</span>
+                <span>Demo</span>
+            </a>
+        </div>
+
+        <div class="abstract-section" id="abstract">
+            <h2>Abstract</h2>
+            <p>
+                Visual correspondence across image-to-image (2D-2D), image-to-point cloud (2D-3D), and point cloud-to-point cloud (3D-3D) geometric matching forms the foundation for numerous 3D vision tasks. Despite sharing a similar problem structure, current methods use task-specific designs with separate models for each modality combination.
+            </p>
+            <p>
+                We present UniCorrn, the first correspondence model with shared weights that unifies geometric matching across all three tasks. Our key insight is that Transformer attention naturally captures cross-modal feature similarity. We propose a dual-stream decoder that maintains separate appearance and positional feature streams. This design enables end-to-end learning through stackable layers while supporting flexible query-based correspondence estimation across heterogeneous modalities. Our architecture employs modality-specific backbones followed by shared encoder and decoder components, trained jointly on diverse data combining pseudo point clouds from depth maps with real 3D correspondence annotations. UniCorrn achieves competitive performance on 2D-2D matching and surpasses prior state-of-the-art by 8% on 7Scenes (2D-3D) and 10% on 3DLoMatch (3D-3D) in registration recall.
+            </p>
+        </div>
+
+        <div class="main-section">
+            <h2 id="method">Method</h2>
+            <video class="method-video" autoplay muted loop playsinline>
+                <source src="assets/videos/method.mp4" type="video/mp4">
+            </video>
+
+            <h2 id="results">Qualitative Results</h2>
+
+            <h3 id="results-2d2d">2D-2D Matching</h3>
+            <div class="grey-section">
+                <div class="carousel-outer">
+                    <div class="carousel-nav left" onclick="scrollCarousel('track-2d2d', -1)">&#10094;</div>
+                    <div class="carousel-track-container">
+                        <div class="carousel-track" id="track-2d2d"></div>
+                    </div>
+                    <div class="carousel-nav right" onclick="scrollCarousel('track-2d2d', 1)">&#10095;</div>
+                </div>
+                <div id="controls-2d2d" class="cv-controls"></div>
+            </div>
+
+            <h3 id="results-2d3d">2D-3D Matching</h3>
+            <div class="grey-section">
+                <div class="carousel-outer">
+                    <div class="carousel-nav left" onclick="scrollCarousel('track-2d3d', -1)">&#10094;</div>
+                    <div class="carousel-track-container">
+                        <div class="carousel-track" id="track-2d3d"></div>
+                    </div>
+                    <div class="carousel-nav right" onclick="scrollCarousel('track-2d3d', 1)">&#10095;</div>
+                </div>
+                <div id="controls-2d3d" class="cv-controls"></div>
+            </div>
+
+            <h3 id="results-3d3d">3D-3D Matching</h3>
+            <div class="grey-section">
+                <div class="carousel-outer">
+                    <div class="carousel-nav left" onclick="scrollCarousel('track-3d3d', -1)">&#10094;</div>
+                    <div class="carousel-track-container">
+                        <div class="carousel-track" id="track-3d3d"></div>
+                    </div>
+                    <div class="carousel-nav right" onclick="scrollCarousel('track-3d3d', 1)">&#10095;</div>
+                </div>
+                <div id="controls-3d3d" class="cv-controls"></div>
+            </div>
+        </div>
+
+        <section class="bibtex-section">
+            <h2>BibTeX</h2>
+            <div class="bibtex-container">
+                <pre id="bibtex-text"><code>% BibTeX entry coming soon</code></pre>
+                <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        /* --- STICKY NAV & HERO FADE --- */
+        const mainTitle = document.getElementById('hero-text');
+        const topBar = document.getElementById('top-bar');
+        const fadeHeight = 300;
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const newOpacity = Math.max(0, 1 - (scrollY / fadeHeight));
+            mainTitle.style.opacity = newOpacity;
+            mainTitle.style.filter = `blur(${scrollY / 20}px)`;
+            if (scrollY > 200) {
+                topBar.classList.add('visible');
+            } else {
+                topBar.classList.remove('visible');
+            }
+        });
+
+        /* --- VIDEO SCROLL ANIMATION --- */
+        const videoWrapper = document.getElementById('video-wrapper');
+        const landingPad = document.getElementById('landing-pad');
+        const heroText = document.getElementById('hero-text');
+        const overlay = document.getElementById('overlay');
+
+        const aspectRatio = 16 / 9;
+        const scrollDist = 400;
+
+        function update() {
+            const scrollY = window.scrollY;
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            let progress = Math.min(scrollY / scrollDist, 1);
+
+            const startW = Math.max(winW, winH * aspectRatio);
+            const startH = startW / aspectRatio;
+            const startTop = (winH - startH) / 2;
+            const startLeft = (winW - startW) / 2;
+
+            const rect = landingPad.getBoundingClientRect();
+            const endTopGlobal = rect.top + scrollY;
+            const endLeftGlobal = rect.left + window.scrollX;
+            const endW = rect.width;
+            const endH = rect.height;
+
+            if (progress < 1) {
+                heroText.style.opacity = 1 - (progress * 2.5);
+                overlay.style.opacity = 1 - progress;
+
+                const endTopVisual = endTopGlobal - scrollDist;
+                const currW = startW + (endW - startW) * progress;
+                const currH = startH + (endH - startH) * progress;
+                const currTop = startTop + (endTopVisual - startTop) * progress;
+                const currLeft = startLeft + (endLeftGlobal - startLeft) * progress;
+
+                videoWrapper.style.position = 'fixed';
+                videoWrapper.style.width = `${currW}px`;
+                videoWrapper.style.height = `${currH}px`;
+                videoWrapper.style.top = `${currTop}px`;
+                videoWrapper.style.left = `${currLeft}px`;
+                videoWrapper.style.borderRadius = `${progress * 12}px`;
+            } else {
+                videoWrapper.style.position = 'absolute';
+                videoWrapper.style.top = `${endTopGlobal}px`;
+                videoWrapper.style.left = `${endLeftGlobal}px`;
+                videoWrapper.style.width = `${endW}px`;
+                videoWrapper.style.height = `${endH}px`;
+                videoWrapper.style.borderRadius = '12px';
+                heroText.style.opacity = 0;
+                overlay.style.opacity = 0;
+            }
+        }
+
+        window.addEventListener('scroll', update);
+        window.addEventListener('resize', update);
+        update();
+
+        /* --- CAROUSEL LOGIC (parameterised by track ID) --- */
+        const carouselAnimating = {};
+
+        function scrollCarousel(trackId, direction) {
+            if (carouselAnimating[trackId]) return;
+            carouselAnimating[trackId] = true;
+
+            const track = document.getElementById(trackId);
+            const card = track.querySelector('.carousel-card');
+            const cardWidth = card.offsetWidth + 15;
+
+            if (direction === 1) {
+                track.style.transition = 'transform 0.5s ease-in-out';
+                track.style.transform = `translateX(-${cardWidth}px)`;
+                setTimeout(() => {
+                    track.style.transition = 'none';
+                    track.appendChild(track.firstElementChild);
+                    track.style.transform = 'translateX(0)';
+                    carouselAnimating[trackId] = false;
+                    track.dispatchEvent(new CustomEvent('carousel:settled'));
+                }, 500);
+            } else {
+                track.style.transition = 'none';
+                track.prepend(track.lastElementChild);
+                track.style.transform = `translateX(-${cardWidth}px)`;
+                setTimeout(() => {
+                    track.style.transition = 'transform 0.5s ease-in-out';
+                    track.style.transform = 'translateX(0)';
+                    setTimeout(() => {
+                        carouselAnimating[trackId] = false;
+                        track.dispatchEvent(new CustomEvent('carousel:settled'));
+                    }, 500);
+                }, 10);
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = [
+                { trackId: 'track-2d2d', kind: '2d2d', controlsId: 'controls-2d2d',
+                  pairs: [{ url: 'assets/examples/2d2d/corr_0.json' }] },
+                { trackId: 'track-2d3d', kind: '2d3d', controlsId: 'controls-2d3d',
+                  pairs: [{ url: 'assets/examples/2d3d/corr_0.json' }] },
+                { trackId: 'track-3d3d', kind: '3d3d', controlsId: 'controls-3d3d',
+                  pairs: [{ url: 'assets/examples/3d3d/corr_0.json' }] }
+            ];
+            for (const row of rows) {
+                window.createCorrespondenceRow({
+                    trackId: row.trackId,
+                    kind: row.kind,
+                    pairs: row.pairs,
+                    controlsEl: document.getElementById(row.controlsId)
+                }).catch(err => console.error(`Row ${row.trackId} failed:`, err));
+            }
+        });
+    </script>
+</body>
+</html>

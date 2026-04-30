@@ -1,0 +1,106 @@
+.carousel-card.cv-card {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.carousel-card.cv-card-2d2d,
+.carousel-card.cv-card-2d3d {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  align-items: start;
+}
+
+.carousel-card.cv-card-3d3d {
+  display: block;
+  aspect-ratio: 16 / 9;
+}
+
+.cv-half,
+.cv-3d-slot {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.cv-card-3d3d .cv-3d-slot {
+  width: 100%;
+  height: 100%;
+}
+
+.cv-3d-slot {
+  background: #d0d0d0;
+}
+
+.cv-card-2d2d .cv-half,
+.cv-card-2d3d .cv-half {
+  width: 100%;
+}
+
+.cv-card-2d2d .cv-half img,
+.cv-card-2d3d .cv-half img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: unset;
+}
+
+.cv-card-2d3d .cv-3d-slot {
+  width: 100%;
+  /* aspect-ratio set inline by JS to match image */
+}
+
+.cv-overlay-side,
+.cv-overlay-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cv-overlay-card {
+  z-index: 2;
+}
+
+.cv-3d-slot canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.cv-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  margin: 0 auto 2rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  width: max-content;
+  max-width: 95%;
+  font-size: 0.9rem;
+  color: #333;
+  user-select: none;
+}
+
+.cv-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.cv-controls input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.cv-controls input[type="range"] {
+  width: 120px;
+  cursor: pointer;
+}
