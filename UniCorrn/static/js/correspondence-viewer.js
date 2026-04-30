@@ -291,7 +291,7 @@
     if (Array.isArray(pair.offset) && pair.offset.length === 3) {
       offset = new THREE.Vector3().fromArray(pair.offset);
     } else {
-      offset = new THREE.Vector3(sA.x / 2 + sB.x / 2 + Math.max(sA.x, sB.x) * 0.25, 0, 0);
+      offset = new THREE.Vector3(sA.x / 2 + sB.x / 2 + Math.max(sA.x, sB.x) * 0.25, 1, 0);
     }
     pB.position.copy(offset);
 

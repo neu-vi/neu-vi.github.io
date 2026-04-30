@@ -511,8 +511,11 @@
             const endH = rect.height;
 
             if (progress < 1) {
-                heroText.style.opacity = 1 - (progress * 2.5);
+                const heroOpacity = 1 - (progress * 2.5);
+                heroText.style.opacity = heroOpacity;
                 overlay.style.opacity = 1 - progress;
+                heroText.style.pointerEvents = heroOpacity > 0 ? 'auto' : 'none';
+                overlay.style.pointerEvents = (1 - progress) > 0 ? 'auto' : 'none';
 
                 const endTopVisual = endTopGlobal - scrollDist;
                 const currW = startW + (endW - startW) * progress;
@@ -535,6 +538,8 @@
                 videoWrapper.style.borderRadius = '12px';
                 heroText.style.opacity = 0;
                 overlay.style.opacity = 0;
+                heroText.style.pointerEvents = 'none';
+                overlay.style.pointerEvents = 'none';
             }
         }
 
