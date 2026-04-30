@@ -187,17 +187,28 @@
       imgA.addEventListener('load', check);
       imgB.addEventListener('load', check);
     }
-    new ResizeObserver(() => { if (imgA.naturalWidth && imgB.naturalWidth) drawLines(); }).observe(cardEl);
+    let lastState = null;
+    const applyCount = (n) => {
+      for (let i = 0; i < gA.children.length; i++) gA.children[i].style.display = (i < n) ? '' : 'none';
+      for (let i = 0; i < gB.children.length; i++) gB.children[i].style.display = (i < n) ? '' : 'none';
+      for (let i = 0; i < gL.children.length; i++) gL.children[i].style.display = (i < n) ? '' : 'none';
+    };
+    new ResizeObserver(() => {
+      if (imgA.naturalWidth && imgB.naturalWidth) {
+        drawLines();
+        if (lastState) applyCount(lastState.count);
+      }
+    }).observe(cardEl);
 
     return {
       element: cardEl, kind: '2d2d',
+      totalCorrs: pair.kpts1.length,
       apply(s) {
+        lastState = s;
         gA.style.display = s.kpts1 ? '' : 'none';
         gB.style.display = s.kpts2 ? '' : 'none';
         gL.style.display = s.lines ? '' : 'none';
-        gA.setAttribute('opacity', s.opacity);
-        gB.setAttribute('opacity', s.opacity);
-        gL.setAttribute('opacity', s.opacity);
+        applyCount(s.count);
       },
       onActivate() {}, onDeactivate() {}
     };
@@ -258,11 +269,13 @@
     return {
       element: cardEl, kind: '2d3d',
       slot3D, scene, camera, bbox,
+      totalCorrs: pair.kpts1.length,
       apply(s) {
+        const n = s.count;
         gK1.style.display = s.kpts1 ? '' : 'none';
-        gK1.setAttribute('opacity', s.opacity);
         kptGroup.visible = s.kpts2;
-        kptGroup.children.forEach(sp => { sp.material.opacity = s.opacity; });
+        for (let i = 0; i < gK1.children.length; i++) gK1.children[i].style.display = (i < n) ? '' : 'none';
+        kptGroup.children.forEach((sp, i) => { sp.visible = (i < n); });
       },
       onActivate() { ctx.attach(this); },
       onDeactivate() {}
@@ -314,13 +327,15 @@
     return {
       element: cardEl, kind: '3d3d',
       slot3D, scene, camera, bbox: fullBox,
+      totalCorrs: pair.kpts1.length,
       apply(s) {
+        const n = s.count;
         k1.visible = s.kpts1;
         k2.visible = s.kpts2;
         lines.visible = s.lines;
-        k1.children.forEach(sp => { sp.material.opacity = s.opacity; });
-        k2.children.forEach(sp => { sp.material.opacity = s.opacity; });
-        lines.material.opacity = s.opacity;
+        k1.children.forEach((sp, i) => { sp.visible = (i < n); });
+        k2.children.forEach((sp, i) => { sp.visible = (i < n); });
+        lines.geometry.setDrawRange(0, n * 2);
       },
       onActivate() { ctx.attach(this); },
       onDeactivate() {}
@@ -407,7 +422,8 @@
       cards.push(card);
     }
 
-    const state = { kpts1: true, kpts2: true, lines: true, opacity: 1.0 };
+    const totalCorrs = (cards[0] && cards[0].totalCorrs) || 0;
+    const state = { kpts1: true, kpts2: true, lines: true, count: totalCorrs };
     const apply = () => cards.forEach(c => c.apply(state));
     apply();
 
@@ -446,13 +462,30 @@
       if (kind !== '2d3d') controlsEl.appendChild(mkCb('lines', 'Correspondence lines'));
       const sl = document.createElement('input');
       sl.type = 'range';
-      sl.min = 0; sl.max = 100; sl.value = 100;
-      sl.dataset.ctrl = 'opacity';
-      sl.addEventListener('input', () => { state.opacity = sl.value / 100; apply(); });
-      const opL = document.createElement('label');
-      opL.appendChild(document.createTextNode('Opacity '));
-      opL.appendChild(sl);
-      controlsEl.appendChild(opL);
+      sl.min = 0; sl.max = totalCorrs; sl.value = totalCorrs; sl.step = 1;
+      sl.dataset.ctrl = 'count';
+      const num = document.createElement('input');
+      num.type = 'number';
+      num.min = 0; num.max = totalCorrs; num.value = totalCorrs; num.step = 1;
+      num.dataset.ctrl = 'count-num';
+      num.className = 'cv-count-num';
+      const setCount = (v) => {
+        let n = parseInt(v, 10);
+        if (isNaN(n)) n = 0;
+        n = Math.max(0, Math.min(totalCorrs, n));
+        state.count = n;
+        if (sl.value !== String(n)) sl.value = String(n);
+        if (num.value !== String(n)) num.value = String(n);
+        apply();
+      };
+      sl.addEventListener('input', () => setCount(sl.value));
+      num.addEventListener('input', () => setCount(num.value));
+      num.addEventListener('change', () => setCount(num.value));
+      const cntL = document.createElement('label');
+      cntL.appendChild(document.createTextNode('Number of correspondences '));
+      cntL.appendChild(sl);
+      cntL.appendChild(num);
+      controlsEl.appendChild(cntL);
     }
 
     return { state, cards, ctx };
