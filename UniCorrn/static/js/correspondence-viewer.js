@@ -16,14 +16,14 @@
   function getKptTexture() {
     if (_kptTex) return _kptTex;
     const c = document.createElement('canvas');
-    c.width = c.height = 64;
+    c.width = c.height = 128;
     const x = c.getContext('2d');
     x.strokeStyle = '#fff';
-    x.lineWidth = 8;
+    x.lineWidth = 28;
     x.lineCap = 'round';
     x.beginPath();
-    x.moveTo(14, 14); x.lineTo(50, 50);
-    x.moveTo(50, 14); x.lineTo(14, 50);
+    x.moveTo(28, 28); x.lineTo(100, 100);
+    x.moveTo(100, 28); x.lineTo(28, 100);
     x.stroke();
     _kptTex = new THREE.CanvasTexture(c);
     return _kptTex;
@@ -57,7 +57,8 @@
         map: tex,
         color: new THREE.Color(colors[i][0] / 255, colors[i][1] / 255, colors[i][2] / 255),
         transparent: true,
-        depthTest: false
+        depthTest: false,
+        depthWrite: false
       });
       const s = new THREE.Sprite(m);
       s.position.set(points[i][0], points[i][1], points[i][2]);
@@ -82,7 +83,7 @@
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     geom.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthTest: false });
+    const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthTest: true, depthWrite: false });
     const lines = new THREE.LineSegments(geom, mat);
     lines.renderOrder = 5;
     return lines;
@@ -239,7 +240,7 @@
     root.rotation.x = Math.PI;
     scene.add(root);
 
-    const points = buildPointCloud(pcd.pcd, pcd.cmap_redblue, 0.015);
+    const points = buildPointCloud(pcd.pcd, pcd.cmap_redblue, 0.02);
     root.add(points);
 
     const localBbox = new THREE.Box3().setFromBufferAttribute(points.geometry.attributes.position);
@@ -279,8 +280,8 @@
     root.rotation.x = Math.PI;
     scene.add(root);
 
-    const pA = buildPointCloud(pcdData.pcd1, pcdData.cmap1_redblue, 0.015);
-    const pB = buildPointCloud(pcdData.pcd2, pcdData.cmap2_redblue, 0.015);
+    const pA = buildPointCloud(pcdData.pcd1, pcdData.cmap1_redblue, 0.02);
+    const pB = buildPointCloud(pcdData.pcd2, pcdData.cmap2_redblue, 0.02);
     const bA = new THREE.Box3().setFromBufferAttribute(pA.geometry.attributes.position);
     const bB = new THREE.Box3().setFromBufferAttribute(pB.geometry.attributes.position);
     const sA = bA.getSize(new THREE.Vector3());
