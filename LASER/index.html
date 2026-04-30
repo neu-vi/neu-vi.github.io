@@ -640,8 +640,12 @@
             
             if (progress < 1) {
                 // --- ANIMATION PHASE (Fixed Mode) ---
-                heroText.style.opacity = 1 - (progress * 2.5);
+                const heroOpacity = 1 - (progress * 2.5);
+                heroText.style.opacity = heroOpacity;
                 overlay.style.opacity = 1 - progress;
+                const heroPE = heroOpacity > 0 ? 'auto' : 'none';
+                heroText.querySelectorAll('a').forEach(a => { a.style.pointerEvents = heroPE; });
+                overlay.style.pointerEvents = (1 - progress) > 0 ? 'auto' : 'none';
 
                 // We need to interpolate "Visual Top".
                 // Start Visual Top = startTop (Centered in screen)
@@ -681,6 +685,8 @@
                 
                 heroText.style.opacity = 0;
                 overlay.style.opacity = 0;
+                heroText.querySelectorAll('a').forEach(a => { a.style.pointerEvents = 'none'; });
+                overlay.style.pointerEvents = 'none';
             }
         }
 
