@@ -585,13 +585,12 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const exampleIds = [1, 2, 3, 4, 5];
+            const mkPairs = (kind) => exampleIds.map(i => ({ url: `assets/examples/${kind}/corr_${i}.json` }));
             const rows = [
-                { trackId: 'track-2d2d', kind: '2d2d', controlsId: 'controls-2d2d',
-                  pairs: [{ url: 'assets/examples/2d2d/corr_0.json' }] },
-                { trackId: 'track-2d3d', kind: '2d3d', controlsId: 'controls-2d3d',
-                  pairs: [{ url: 'assets/examples/2d3d/corr_0.json' }] },
-                { trackId: 'track-3d3d', kind: '3d3d', controlsId: 'controls-3d3d',
-                  pairs: [{ url: 'assets/examples/3d3d/corr_0.json' }] }
+                { trackId: 'track-2d2d', kind: '2d2d', controlsId: 'controls-2d2d', pairs: mkPairs('2d2d') },
+                { trackId: 'track-2d3d', kind: '2d3d', controlsId: 'controls-2d3d', pairs: mkPairs('2d3d') },
+                { trackId: 'track-3d3d', kind: '3d3d', controlsId: 'controls-3d3d', pairs: mkPairs('3d3d') }
             ];
             for (const row of rows) {
                 window.createCorrespondenceRow({

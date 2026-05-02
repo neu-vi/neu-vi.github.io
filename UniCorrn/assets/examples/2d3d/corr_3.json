@@ -1,0 +1,6 @@
+{
+  "schema": "corr2d3d.v1",
+  "image": {"src":"assets/examples/2d3d/img/img_3.png"},
+  "pcd": {"src":"assets/examples/2d3d/pcd/pcd_3.json"},
+  "kpts": {"src":"assets/examples/2d3d/kpts/kpts_3.json"}
+}
