@@ -83,7 +83,7 @@
     const geom = new THREE.BufferGeometry();
     geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     geom.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthTest: true, depthWrite: false });
+    const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.7, depthTest: true, depthWrite: false });
     const lines = new THREE.LineSegments(geom, mat);
     lines.renderOrder = 5;
     return lines;
@@ -169,7 +169,7 @@
           x2: offBX + k2[0] * sBX, y2: offBY + k2[1] * sBY,
           stroke: rgb(pair.line_cmap[i]),
           'stroke-width': 0.6,
-          'stroke-opacity': 0.6
+          'stroke-opacity': 0.7
         }));
       }
     };
@@ -422,8 +422,8 @@
       cards.push(card);
     }
 
-    const totalCorrs = (cards[0] && cards[0].totalCorrs) || 0;
-    const state = { kpts1: true, kpts2: true, lines: true, count: totalCorrs };
+    let currentCard = cards[0] || null;
+    const state = { kpts1: true, kpts2: true, lines: true, count: (currentCard ? currentCard.totalCorrs : 0) };
     const apply = () => cards.forEach(c => c.apply(state));
     apply();
 
@@ -434,14 +434,7 @@
       ctx.start();
     }
 
-    track.addEventListener('carousel:settled', () => {
-      if (!ctx) return;
-      const active = track.firstElementChild;
-      const card = cards.find(c => c.element === active);
-      if (!card || card === ctx.activeCard) return;
-      card.onActivate();
-      apply();
-    });
+    let sl = null, num = null;
 
     if (controlsEl) {
       controlsEl.classList.add('cv-controls');
@@ -460,19 +453,27 @@
       controlsEl.appendChild(mkCb('kpts1', 'Keypoints 1'));
       controlsEl.appendChild(mkCb('kpts2', 'Keypoints 2'));
       if (kind !== '2d3d') controlsEl.appendChild(mkCb('lines', 'Correspondence lines'));
-      const sl = document.createElement('input');
+      const initialMax = currentCard ? currentCard.totalCorrs : 0;
+      sl = document.createElement('input');
       sl.type = 'range';
-      sl.min = 0; sl.max = totalCorrs; sl.value = totalCorrs; sl.step = 1;
+      sl.setAttribute('min', '0');
+      sl.setAttribute('max', String(initialMax));
+      sl.setAttribute('step', '1');
+      sl.value = String(initialMax);
       sl.dataset.ctrl = 'count';
-      const num = document.createElement('input');
+      num = document.createElement('input');
       num.type = 'number';
-      num.min = 0; num.max = totalCorrs; num.value = totalCorrs; num.step = 1;
+      num.setAttribute('min', '0');
+      num.setAttribute('max', String(initialMax));
+      num.setAttribute('step', '1');
+      num.value = String(initialMax);
       num.dataset.ctrl = 'count-num';
       num.className = 'cv-count-num';
       const setCount = (v) => {
+        const max = currentCard ? currentCard.totalCorrs : 0;
         let n = parseInt(v, 10);
         if (isNaN(n)) n = 0;
-        n = Math.max(0, Math.min(totalCorrs, n));
+        n = Math.max(0, Math.min(max, n));
         state.count = n;
         if (sl.value !== String(n)) sl.value = String(n);
         if (num.value !== String(n)) num.value = String(n);
@@ -487,6 +488,30 @@
       cntL.appendChild(num);
       controlsEl.appendChild(cntL);
     }
+
+    track.addEventListener('carousel:settled', () => {
+      const active = track.firstElementChild;
+      const card = cards.find(c => c.element === active);
+      if (!card) return;
+      if (card !== currentCard) {
+        currentCard = card;
+        const newMax = card.totalCorrs;
+        state.count = newMax;
+        if (sl) {
+          sl.setAttribute('max', String(newMax));
+          sl.value = String(newMax);
+        }
+        if (num) {
+          num.setAttribute('max', String(newMax));
+          num.value = String(newMax);
+        }
+        apply();
+      }
+      if (ctx && card !== ctx.activeCard) {
+        card.onActivate();
+        apply();
+      }
+    });
 
     return { state, cards, ctx };
   }
