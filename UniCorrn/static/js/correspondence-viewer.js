@@ -430,8 +430,10 @@
     if (ctx && cards.length > 0) {
       const ro = new ResizeObserver(() => ctx.resize());
       cards.forEach(c => { if (c.slot3D) ro.observe(c.slot3D); });
-      cards[0].onActivate();
-      ctx.start();
+      requestAnimationFrame(() => {
+        cards[0].onActivate();
+        ctx.start();
+      });
     }
 
     let sl = null, num = null;
