@@ -423,16 +423,16 @@
         </div>
 
         <div class="abstract-section" id="abstract">
-            <h2>Abstract</h2>
             <p>
                 <strong>TLDR:</strong> UniCorrn is the first correspondence model with shared weights that unifies 2D-2D, 2D-3D, and 3D-3D geometric matching with an end-to-end transformer architecture. It matches state-of-the-art on 2D-2D matching while beating prior methods by 8% on 7Scenes (2D-3D) and 10% on 3DLoMatch (3D-3D) registration recall.
             </p>
-            <!-- <p>
+            <h2>Abstract</h2>
+            <p>
                 Visual correspondence across image-to-image (2D-2D), image-to-point cloud (2D-3D), and point cloud-to-point cloud (3D-3D) geometric matching forms the foundation for numerous 3D vision tasks. Despite sharing a similar problem structure, current methods use task-specific designs with separate models for each modality combination.
             </p>
             <p>
                 We present UniCorrn, the first correspondence model with shared weights that unifies geometric matching across all three tasks. Our key insight is that Transformer attention naturally captures cross-modal feature similarity. We propose a dual-stream decoder that maintains separate appearance and positional feature streams. This design enables end-to-end learning through stackable layers while supporting flexible query-based correspondence estimation across heterogeneous modalities. Our architecture employs modality-specific backbones followed by shared encoder and decoder components, trained jointly on diverse data combining pseudo point clouds from depth maps with real 3D correspondence annotations. UniCorrn achieves competitive performance on 2D-2D matching and surpasses prior state-of-the-art by 8% on 7Scenes (2D-3D) and 10% on 3DLoMatch (3D-3D) in registration recall.
-            </p> -->
+            </p>
         </div>
 
         <div class="main-section">
@@ -449,6 +449,9 @@
                     <li>These features share information via cross-attention and are then upsampled.</li>
                     <li>Keypoint queries are used to sample feature descriptors, and their correspondences in the target modality are computed with a novel dual-stream attention mechanism.</li>
                 </ul>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
                 <p>The video below provides an overview of the <strong>dual-stream attention mechanism</strong> used to compute correspondences.</p>
             </div>
 
