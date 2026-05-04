@@ -154,6 +154,11 @@
         }
 
         /* --- THE TITLE (HERO TEXT) --- */
+        .title-icon {
+            height: 1em;
+            vertical-align: -0.15em;
+            margin-right: 0.3em;
+        }
         .hero-text {
             position: fixed;
             max-width: 1200px;
@@ -320,6 +325,22 @@
             display: block;
         }
 
+        .method-video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .method-video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
         /* --- GREY SECTION (full-width background) --- */
         .grey-section {
             width: 100%;
@@ -337,7 +358,7 @@
     <div id="top-bar" class="sticky-nav">
         <div class="nav-container">
             <div class="nav-row top-row">
-                <span class="nav-title">🦄 UniCorrn: Unified Correspondence Transformer Across 2D and 3D</span>
+                <span class="nav-title"><img src="assets/icons8-unicorn-100.png" alt="" class="title-icon"> UniCorrn: Unified Correspondence Transformer Across 2D and 3D</span>
             </div>
             <div class="nav-row bottom-row">
                 <a href="#video-wrapper">Teaser</a>
@@ -356,7 +377,7 @@
     </div>
 
     <div class="hero-text" id="hero-text">
-        <h1 class="project-title">🦄 UniCorrn: Unified Correspondence Transformer Across 2D and 3D</h1>
+        <h1 class="project-title"><img src="assets/icons8-unicorn-100.png" alt="" class="title-icon"> UniCorrn: Unified Correspondence Transformer Across 2D and 3D</h1>
 
         <div class="author-row">
             <span class="author"><a href="https://prajnancv.github.io/" target="_blank" rel="noopener noreferrer">Prajnan Goswami<sup>1*</sup></a></span>
@@ -421,16 +442,24 @@
                 <img src="assets/method.png" alt="Method Overview" style="width:100%; border-radius: 8px;">
             </figure>
 
-            <ul>
-                <li>Image and point cloud features are extracted using a ViT and PointTransformerV3, respectively.</li>
-                <li>These features share information via cross-attention and are then upsampled.</li>
-                <li>User-provided keypoints are matched using our matching decoder built from standard transformer components.</li>
-                <li>Check out the video below that explains the <strong>dual-stream attention mechanism</strong> used in our matching decoder.</li>
-            </ul>
+            <div>
+                <ul>
+                    <li>Image and point cloud features are extracted using a ViT and PointTransformerV3, respectively.</li>
+                    <li>These features share information via cross-attention and are then upsampled.</li>
+                    <li>User-provided keypoints are matched using our matching decoder built from standard transformer components.</li>
+                    <li>Check out the video below that explains the <strong>dual-stream attention mechanism</strong> used in our matching decoder.</li>
+                </ul>
+            </div>
 
-            <video class="method-video" autoplay muted loop playsinline>
-                <source src="assets/videos/method.mp4" type="video/mp4">
-            </video>
+            <div class="method-video-wrapper">
+                <iframe
+                    src="https://www.youtube.com/embed/rRrNMAe4kus"
+                    title="UniCorrn: Dual-Stream Attention Block"
+                    frameborder="0"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+            </div>
 
             <h2 id="results">Qualitative Results</h2>
 
