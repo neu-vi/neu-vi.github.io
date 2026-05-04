@@ -442,13 +442,14 @@
                 <img src="assets/method.png" alt="Method Overview" style="width:100%; border-radius: 8px;">
             </figure>
 
-            <div>
+            <div style="margin-bottom: 2rem;">
+                <p><strong>In a nutshell:</strong> Our pipeline computes correspondences across modalities through the following key steps.</p>
                 <ul>
                     <li>Image and point cloud features are extracted using a ViT and PointTransformerV3, respectively.</li>
                     <li>These features share information via cross-attention and are then upsampled.</li>
-                    <li>User-provided keypoints are matched using our matching decoder built from standard transformer components.</li>
-                    <li>Check out the video below that explains the <strong>dual-stream attention mechanism</strong> used in our matching decoder.</li>
+                    <li>User-provided keypoint queries are matched using a matching transformer decoder with a novel dual-stream attention mechanism.</li>
                 </ul>
+                <p>The video below provides an overview of the <strong>dual-stream attention mechanism</strong> used to compute correspondences.</p>
             </div>
 
             <div class="method-video-wrapper">
