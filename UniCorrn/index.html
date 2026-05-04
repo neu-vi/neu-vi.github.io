@@ -447,7 +447,7 @@
                 <ul>
                     <li>Image and point cloud features are extracted using a ViT and PointTransformerV3, respectively.</li>
                     <li>These features share information via cross-attention and are then upsampled.</li>
-                    <li>User-provided keypoint queries are matched using a matching transformer decoder with a novel dual-stream attention mechanism.</li>
+                    <li>Keypoint queries are used to sample feature descriptors, and their correspondences in the target modality are computed with a novel dual-stream attention mechanism.</li>
                 </ul>
                 <p>The video below provides an overview of the <strong>dual-stream attention mechanism</strong> used to compute correspondences.</p>
             </div>
