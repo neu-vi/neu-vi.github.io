@@ -343,13 +343,36 @@
 
         /* --- GREY SECTION (full-width background) --- */
         .grey-section {
-            width: 100%;
-            max-width: 100%;
             position: relative;
             background: #f5f5f5;
-            box-shadow: 0 0 0 4000px #f5f5f5;
-            clip-path: inset(0 -4000px 0 -4000px);
-            padding: 0.1rem 0;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            padding: 0.1rem calc(50vw - 50%);
+        }
+
+        /* --- PAGE FOOTER (template license banner) --- */
+        .page-footer {
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+        }
+        .page-footer .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #4a4a4a;
+            line-height: 1.6;
+        }
+        .page-footer p {
+            margin-bottom: 0.75rem;
+        }
+        .page-footer p:last-child {
+            margin-bottom: 0;
+        }
+        .page-footer a {
+            color: #66ccff;
         }
     </style>
 </head>
@@ -512,6 +535,15 @@
             </div>
         </section>
     </main>
+
+    <footer class="page-footer">
+        <div class="footer-content">
+            <p>
+                Page based on the <a href="https://github.com/neu-vi/neu-vi.github.io/tree/master/LASER">LASER project page template</a>,
+                licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+        </div>
+    </footer>
 
     <script>
         /* --- STICKY NAV & HERO FADE --- */
