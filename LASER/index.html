@@ -131,8 +131,13 @@
             display: block;
             width: 100%;
             aspect-ratio: 16 / 9;
+            /* Push the dock position below the sticky nav (~88px tall).
+               The animation targets this element's rect, so shifting it
+               down also shifts where the docked video lands. The max()
+               keeps clearance on shorter viewports where 40vh is small. */
+            margin-top: max(60px, calc(500px - 40vh));
             margin-bottom: 6rem;
-            
+
             background: transparent;
             border-radius: 12px;
         }
@@ -394,6 +399,145 @@
         .page-footer a {
             color: #66ccff;
         }
+
+        /* --- MOBILE LAYOUT (< 768px) --- */
+        @media (max-width: 768px) {
+            /* Teaser flows in document instead of covering the screen */
+            #video-wrapper {
+                position: static;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+                border-radius: 0;
+            }
+
+            /* Dark overlay only made sense behind the fixed hero text */
+            .video-overlay {
+                display: none;
+            }
+
+            /* Hero text drops into normal flow below the video */
+            .hero-text {
+                position: static;
+                transform: none;
+                max-width: 100%;
+                color: #333;
+                padding: 1.5rem 1rem 0;
+                pointer-events: auto;
+                flex-direction: column;
+                align-items: center;
+                /* Override any inline opacity/filter the desktop scroll handler may have set */
+                opacity: 1 !important;
+                filter: none !important;
+            }
+
+            h1.project-title {
+                font-size: 1.6rem;
+                color: #333;
+                text-shadow: none;
+                margin-bottom: 0.75rem;
+                text-align: center;
+            }
+
+            .author-row {
+                font-size: 0.95rem;
+                color: #444;
+                margin-bottom: 0.5rem;
+            }
+
+            .author-row .author {
+                margin: 0 6px;
+            }
+
+            .affiliation-row {
+                font-size: 0.9rem;
+                color: #666;
+                gap: 8px;
+            }
+
+            .note-row {
+                font-size: 0.8rem;
+                color: #777;
+                margin-top: 0.4rem;
+            }
+
+            /* Landing pad only exists as a docking target for the desktop animation */
+            #landing-pad {
+                display: none;
+            }
+
+            /* No need to clear space for a fixed video any more */
+            .main-content {
+                margin-top: 0;
+                padding: 1rem;
+            }
+
+            /* The negative top margin assumed the desktop button-overlap-on-video layout */
+            .button-row {
+                margin-top: 1.5rem;
+                margin-bottom: 2rem;
+                gap: 10px;
+            }
+
+            .btn {
+                padding: 8px 18px;
+                font-size: 1rem;
+            }
+
+            /* LSA comparison: stack the two columns vertically */
+            .video-row {
+                flex-direction: column;
+                max-width: 100%;
+                left: 0;
+                transform: none;
+                gap: 16px;
+            }
+
+            .video-column {
+                max-width: 100%;
+            }
+
+            /* Sticky nav: let the link row wrap and shrink the title */
+            .nav-title {
+                font-size: 0.85rem;
+                text-align: center;
+                line-height: 1.3;
+            }
+
+            .bottom-row {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px 14px;
+                font-size: 0.85rem;
+            }
+
+            /* Carousel arrows: pull them inside the viewport and shrink */
+            .carousel-outer {
+                width: 100%;
+            }
+
+            .carousel-nav {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .carousel-nav.left {
+                left: 6px;
+            }
+
+            .carousel-nav.right {
+                right: 6px;
+            }
+
+            .main-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .abstract-section h2 {
+                font-size: 1.6rem;
+            }
+        }
     </style>
 </head>
 
@@ -567,10 +711,11 @@
         <h2>BibTeX</h2>
         <div class="bibtex-container">
             <pre id="bibtex-text"><code>
-        @article{ding2025laser,
+        @inproceddings{ding2026laser,
             title={LASER: Layer-wise Scale Alignment for Training-Free Streaming 4D Reconstruction},
             author={Ding, Tianye and Xie, Yiming and Liang, Yiqing and Chatterjee, Moitreya and Miraldo, Pedro and Jiang, Huaizu},
-            year={2025}
+            booktitle={CVPR},
+            year={2026}
         }
             </code></pre>
             <button class="copy-btn" onclick="copyBibtex()">Copy</button>
@@ -599,21 +744,21 @@
 
         // 2. Define the threshold
         // The "fade out" happens over the first 300 pixels of scrolling
-        const fadeHeight = 300; 
+        const fadeHeight = 300;
+
+        // Mobile breakpoint must match the @media query in <style>
+        const isMobile = () => window.innerWidth <= 768;
 
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
 
-            // --- PART A: FADE OUT THE MAIN TITLE ---
-            // Calculate opacity: 1 when at top, 0 when at fadeHeight
-            // Math.max(0, ...) ensures it never goes negative
-            const newOpacity = Math.max(0, 1 - (scrollY / fadeHeight));
-            
-            // Apply it
-            mainTitle.style.opacity = newOpacity;
-            // Optional: add a slight blur for a cool effect
-            mainTitle.style.filter = `blur(${scrollY / 20}px)`;
-
+            // --- PART A: FADE OUT THE MAIN TITLE (desktop only) ---
+            if (!isMobile()) {
+                // Calculate opacity: 1 when at top, 0 when at fadeHeight
+                const newOpacity = Math.max(0, 1 - (scrollY / fadeHeight));
+                mainTitle.style.opacity = newOpacity;
+                mainTitle.style.filter = `blur(${scrollY / 20}px)`;
+            }
 
             // --- PART B: FADE IN THE TOP BAR ---
             // If we have scrolled past the threshold (e.g., 200px), show the bar
@@ -636,6 +781,21 @@
         const scrollDist = 400; // Pixels to scroll to complete animation
 
         function update() {
+            // On mobile, the teaser animation is disabled — clear any inline
+            // styles a prior desktop-mode call may have set so the CSS
+            // @media rules fully take over.
+            if (isMobile()) {
+                ['position', 'width', 'height', 'top', 'left', 'borderRadius'].forEach(p => {
+                    videoWrapper.style[p] = '';
+                });
+                heroText.style.opacity = '';
+                heroText.style.filter = '';
+                overlay.style.opacity = '';
+                overlay.style.pointerEvents = '';
+                heroText.querySelectorAll('a').forEach(a => { a.style.pointerEvents = ''; });
+                return;
+            }
+
             const scrollY = window.scrollY;
             const winW = window.innerWidth;
             const winH = window.innerHeight;
