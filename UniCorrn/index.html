@@ -376,7 +376,8 @@
         .page-footer p:last-child {
             margin-bottom: 0;
         }
-        .page-footer a {
+        .page-footer a,
+        .blog-link {
             color: #66ccff;
         }
 
@@ -607,6 +608,10 @@
             </p>
             <p>
                 We present UniCorrn, the first correspondence model with shared weights that unifies geometric matching across all three tasks. Our key insight is that Transformer attention naturally captures cross-modal feature similarity. We propose a dual-stream decoder that maintains separate appearance and positional feature streams. This design enables end-to-end learning through stackable layers while supporting flexible query-based correspondence estimation across heterogeneous modalities. Our architecture employs modality-specific backbones followed by shared encoder and decoder components, trained jointly on diverse data combining pseudo point clouds from depth maps with real 3D correspondence annotations. UniCorrn achieves competitive performance on 2D-2D matching and surpasses prior state-of-the-art by 8% on 7Scenes (2D-3D) and 10% on 3DLoMatch (3D-3D) in registration recall.
+            </p>
+            <p>
+                There's also a blog post I wrote reflecting the major technical difficulties and how we overcame them within the project - <a class="blog-link" href="https://jerrygcding.github.io/blog/2026/underrated-match-dec/">The Underrated Decoder Behind a Unified Correspondence Model</a><br>
+                If you like what we've delivered from this project, I hope you also find it interesting.
             </p>
         </div>
 
