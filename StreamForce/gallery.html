@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StreamForce Gallery</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --fg: #1a1a1a;
+  --muted: #666;
+  --border: #e0e0e0;
+  --accent: #2e6dd5;
+  --accent-bg: #e8f0fe;
+  --card-bg: #ffffff;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.9rem 1.25rem 0.75rem;
+}
+header h1 {
+  margin: 0 0 0.2rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+header .sub {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-bottom: 0.6rem;
+}
+nav {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+nav button {
+  background: var(--accent-bg);
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--accent);
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+}
+nav button:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+}
+nav button.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 2px 6px rgba(46, 109, 213, 0.3);
+}
+main {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+section { display: none; }
+section.active { display: block; }
+section > h2 {
+  font-size: 1.25rem;
+  margin: 2rem 0 0.35rem;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.3rem;
+  font-weight: 600;
+}
+section > h2:first-child { margin-top: 0.5rem; }
+section > h3 {
+  font-size: 0.98rem;
+  margin: 1.1rem 0 0.5rem;
+  color: #333;
+  font-weight: 600;
+}
+section > p, .caption {
+  color: var(--muted);
+  margin: 0.4rem 0 0.85rem;
+  font-size: 0.9rem;
+  max-width: 1100px;
+}
+.comparison {
+  display: grid;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+.comparison.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.comparison.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.comparison.cols-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1000px) {
+  .comparison.cols-3, .comparison.cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .comparison.cols-2, .comparison.cols-3, .comparison.cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+.video-cell {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.video-cell.ours { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.video-cell .label {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.78rem;
+  background: #f5f5f7;
+  border-top: 1px solid var(--border);
+  color: #444;
+  text-align: center;
+  font-weight: 500;
+}
+.video-cell.ours .label {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+  border-top-color: var(--accent);
+}
+.video-cell video {
+  width: 100%;
+  display: block;
+  background: #000;
+  object-fit: cover;
+  cursor: zoom-in;
+  aspect-ratio: 16 / 9;
+}
+.section-group {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.2rem;
+}
+.section-group h3 { margin-top: 0; }
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.7rem;
+}
+.video-grid .video-cell .label { text-align: center; font-size: 0.76rem; }
+.controls {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.65rem 0.85rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 0.85rem 0;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+.controls input[type="search"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  width: 170px;
+  font-family: inherit;
+}
+.controls .summary { color: var(--muted); font-size: 0.82rem; }
+.controls .pagination {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.controls .pagination button {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  padding: 0.3rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  min-width: 30px;
+  font-family: inherit;
+}
+.controls .pagination button:hover:not(:disabled) { border-color: var(--accent); }
+.controls .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.controls .pagination button.current {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.controls .pagination .dots { padding: 0 0.2rem; color: var(--muted); }
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.modal.show { display: flex; }
+.modal-inner {
+  position: relative;
+  cursor: default;
+  max-width: 95vw;
+  max-height: 95vh;
+}
+.modal video {
+  max-width: 95vw;
+  max-height: 95vh;
+  display: block;
+  background: #000;
+  object-fit: contain;
+}
+.modal .close {
+  position: fixed;
+  top: 0.9rem;
+  right: 1.2rem;
+  font-size: 2rem;
+  line-height: 1;
+  color: white;
+  background: rgba(0,0,0,0.4);
+  border: none;
+  cursor: pointer;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+}
+.modal .src-label {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: ui-monospace, monospace;
+}
+.intro-banner {
+  background: linear-gradient(135deg, #f0f6ff 0%, #fafafa 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.intro-banner b { color: var(--accent); }
+.intro-banner ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+.intro-banner li { margin: 0.15rem 0; }
+.hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+.back-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.36rem 0.85rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: white;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+.back-main:hover { text-decoration: none; background: #000; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav id="nav">
+    <a class="back-main" href="index.html">Back to Main Page</a>
+    <button data-tab="paper" class="active">Paper Figures</button>
+    <button data-tab="local-preserve">Local - Preserve <span style="opacity:0.7">(242)</span></button>
+    <button data-tab="local-change">Local - Change <span style="opacity:0.7">(246)</span></button>
+    <button data-tab="global-preserve">Global - Preserve <span style="opacity:0.7">(135)</span></button>
+    <button data-tab="global-change">Global - Change <span style="opacity:0.7">(151)</span></button>
+    <button data-tab="failure-cases">Failure Cases <span style="opacity:0.7">(12)</span></button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============================== PAPER FIGURES ============================== -->
+<section id="paper" class="active">
+
+  <div class="intro-banner">
+    <b style="font-size: 1rem;">Use the tabs at the top to switch sections.</b>
+    This page is the <b>Paper Figures</b> tab. The other tabs include:
+    <ul>
+      <li><b>Local - Preserve / Local - Change / Global - Preserve / Global - Change</b> - four scenario galleries with hundreds of additional examples (pagination + jump-to-number search).</li>
+      <li><b>Failure Cases</b> - representative cases where StreamForce does not respond correctly to the applied force.</li>
+    </ul>
+    <div style="margin-top: 0.55rem; font-size: 0.85rem; color: var(--muted);">
+      Tip: <b>click any video</b> to enlarge it in a modal viewer. Videos auto-play (muted, looped) when scrolled into view and pause when off-screen.
+    </div>
+  </div>
+
+  <!-- Fig 1: Teaser -->
+  <h2>Fig. 1 - Teaser: StreamForce</h2>
+  <p>A user-applied wind force directed <b>toward the right (->)</b> gradually increases in magnitude to trigger a smoke alarm. StreamForce responds online as forces change, unlike bidirectional baselines that require the full input sequence upfront.</p>
+
+  <div class="section-group">
+    <h3>Smoke alarm scenario - head-to-head</h3>
+    <div class="comparison cols-3">
+      <div class="video-cell ours">
+        <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_StreamForce.mp4" loop muted playsinline preload="none"></video>
+        <div class="label">StreamForce (Ours) - causal, 16.6 FPS, 0.6 s latency</div>
+      </div>
+      <div class="video-cell">
+        <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_force_prompting.mp4" loop muted playsinline preload="none"></video>
+        <div class="label">Force-Prompting (bidirectional)</div>
+      </div>
+      <div class="video-cell">
+        <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_kling.mp4" loop muted playsinline preload="none"></video>
+        <div class="label">Kling Motion Brush</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Additional teaser examples (StreamForce)</h3>
+    <p class="caption">Diverse scenes showcasing global (e.g. wind, smoke) and local (e.g. drawer, glass, boxes) force control on a single image input.</p>
+    <div class="comparison cols-3">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_girl.mp4" loop muted playsinline preload="none"></video><div class="label">Girl with pearl earring</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_peral.mp4" loop muted playsinline preload="none"></video><div class="label">Pearl</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_smoke.mp4" loop muted playsinline preload="none"></video><div class="label">Smoke</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_drawer.mp4" loop muted playsinline preload="none"></video><div class="label">Drawer (local force)</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_glass.mp4" loop muted playsinline preload="none"></video><div class="label">Glass (local force)</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_boxes.mp4" loop muted playsinline preload="none"></video><div class="label">Boxes (local force)</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 3: Visual Comparison -->
+  <h2>Fig. 3 - Visual Comparison vs. Baselines</h2>
+  <p>Four-way comparison against Wan2.2 5B TI2V (text-only), Force-Prompting (bidirectional), and Kling Motion Brush, across both <em>force preservation</em> and <em>force change</em> settings, for both global and local forces.</p>
+
+  <div class="section-group">
+    <h3>Local Force - Preservation</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_text_inference.mp4" loop muted playsinline preload="none"></video><div class="label">Wan2.2 5B TI2V</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_kling.mp4" loop muted playsinline preload="none"></video><div class="label">Kling Motion Brush</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_ours.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce (Ours)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Global Force - Preservation</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_text_inference.mp4" loop muted playsinline preload="none"></video><div class="label">Wan2.2 5B TI2V</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_kling.mp4" loop muted playsinline preload="none"></video><div class="label">Kling Motion Brush</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_ours.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce (Ours)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Local Force - Change (time-varying force)</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_text_inference.mp4" loop muted playsinline preload="none"></video><div class="label">Wan2.2 5B TI2V</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_kling.mp4" loop muted playsinline preload="none"></video><div class="label">Kling Motion Brush</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_ours.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce (Ours)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Global Force - Change (time-varying force)</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_text_inference.mp4" loop muted playsinline preload="none"></video><div class="label">Wan2.2 5B TI2V</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_kling.mp4" loop muted playsinline preload="none"></video><div class="label">Kling Motion Brush</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_ours.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce (Ours)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Physics-IQ Benchmark - Local Force (with ground truth)</h3>
+    <p class="caption">Force preservation cases recorded under controlled conditions; ground-truth videos serve as reference.</p>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_local_text_inference.mp4" loop muted playsinline preload="none"></video><div class="label">Wan2.2 5B TI2V</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_local_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_local_ours.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce (Ours)</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_local_gt.mp4" loop muted playsinline preload="none"></video><div class="label">Ground Truth</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Physics-IQ Benchmark - Global Force (with ground truth)</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_global_text_inference.mp4" loop muted playsinline preload="none"></video><div class="label">Wan2.2 5B TI2V</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_global_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_global_ours.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce (Ours)</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_physics_iq_global_gt.mp4" loop muted playsinline preload="none"></video><div class="label">Ground Truth</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 4: T-Pushing -->
+  <h2>Fig. 4 - T-Pushing Manipulation</h2>
+  <p>Applying two local forces simultaneously to different parts of a T-shaped object produces coordinated translation and rotation that drive the object toward a target position - demonstrating multi-force, part-level interaction.</p>
+  <div class="section-group">
+    <div class="comparison cols-2" style="grid-template-columns: 1fr;">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_4/Fig_4_t_pushing.mp4" loop muted playsinline preload="none"></video><div class="label">T-Pushing with two local forces</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 5: Object Falling and Bouncing -->
+  <h2>Fig. 5 - Object Falling and Bouncing</h2>
+  <p>A force pushes the object across a table; once it passes the edge, it falls under gravity and rebounds on the ground with a plausible loss of energy - emerging from the spatiotemporal priors of the pretrained video model. (The bouncing is more clearly visible in the videos below than in the static paper figure.)</p>
+  <div class="section-group">
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_glass.mp4" loop muted playsinline preload="none"></video><div class="label">Glass pushed off a table - falls</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_object.mp4" loop muted playsinline preload="none"></video><div class="label">Object pushed off an edge - falls and bounces</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 6: Ablation - Unified vs Separate force representation -->
+  <h2>Fig. 6 - Ablation: Unified Force Representation vs. Separate / Force-Prompting</h2>
+  <p>Comparing four configurations: <em>F-Prompt Rep.</em> (Force-Prompting representation), <em>Separate</em> (independent models for global vs. local force), <em>Ours (teacher)</em> (unified bidirectional teacher), and <em>Ours</em> (causal autoregressive student).</p>
+
+  <div class="section-group">
+    <h3>Local Force</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_local_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">F-Prompt Rep.</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_local_separate.mp4" loop muted playsinline preload="none"></video><div class="label">Separate Model</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_local_unified.mp4" loop muted playsinline preload="none"></video><div class="label">Ours (teacher, unified)</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_local_ours.mp4" loop muted playsinline preload="none"></video><div class="label">Ours</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>Global Force</h3>
+    <div class="comparison cols-4">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_global_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="label">F-Prompt Rep.</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_global_separate.mp4" loop muted playsinline preload="none"></video><div class="label">Separate Model</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_global_unified.mp4" loop muted playsinline preload="none"></video><div class="label">Ours (teacher, unified)</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_6/Fig_6_global_ours.mp4" loop muted playsinline preload="none"></video><div class="label">Ours</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 7: Ablation - Diverse data & change data -->
+  <h2>Fig. 7 - Ablation: Diverse Image-Force Data & Force-Changing Data</h2>
+  <p>Removing diverse image-force data during distillation (<em>w/o Diverse</em>) reduces motion variety and adaptability. Removing force-changing training data (<em>w/o Change</em>) causes the model to largely ignore mid-sequence force updates.</p>
+
+  <div class="section-group">
+    <h3>w/o Diverse Data - Local</h3>
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_local_wo_diverse.mp4" loop muted playsinline preload="none"></video><div class="label">w/o Diverse</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_local_ours.mp4" loop muted playsinline preload="none"></video><div class="label">Ours (with diverse data)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>w/o Diverse Data - Global</h3>
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_global_wo_diverse.mp4" loop muted playsinline preload="none"></video><div class="label">w/o Diverse</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_global_ours.mp4" loop muted playsinline preload="none"></video><div class="label">Ours (with diverse data)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>w/o Force-Changing Data - Local</h3>
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_local_change_wo_change.mp4" loop muted playsinline preload="none"></video><div class="label">w/o Change</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_local_change_ours.mp4" loop muted playsinline preload="none"></video><div class="label">Ours (with change data)</div></div>
+    </div>
+  </div>
+
+  <div class="section-group">
+    <h3>w/o Force-Changing Data - Global</h3>
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_global_change_wo_change.mp4" loop muted playsinline preload="none"></video><div class="label">w/o Change</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/Fig_7/Fig_7_global_change_ous.mp4" loop muted playsinline preload="none"></video><div class="label">Ours (with change data)</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 8: Mass-aware behavior -->
+  <h2>Fig. 8 - Mass-aware Motion Behavior</h2>
+  <p>Under the same horizontal force, the glass containing milk moves more slowly than the empty glass, reflecting the expected relationship between object mass and acceleration. This behavior emerges from the model's physical priors - not from any explicit mass conditioning.</p>
+  <div class="section-group">
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_empty.mp4" loop muted playsinline preload="none"></video><div class="label">Empty glass - moves faster under same force</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_w_milk.mp4" loop muted playsinline preload="none"></video><div class="label">Glass with milk - moves slower (heavier mass)</div></div>
+    </div>
+  </div>
+
+  <!-- Fig 9: Friction-aware behavior -->
+  <h2>Fig. 9 - Friction-aware Motion Behavior</h2>
+  <p>The same horizontal force applied to the same T-shaped object on two surfaces with different friction: the object travels a noticeably shorter distance on the higher-friction surface, reflecting friction opposing motion and dissipating kinetic energy.</p>
+  <div class="section-group">
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_beach.mp4" loop muted playsinline preload="none"></video><div class="label">Beach (lower friction) - travels farther</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_rocks.mp4" loop muted playsinline preload="none"></video><div class="label">Rocks (higher friction) - travels shorter</div></div>
+    </div>
+  </div>
+
+  <!-- Fig A2 (supplementary): Magnitude Response -->
+  <h2>Fig. A2 - Magnitude Response Comparisons (Supplementary)</h2>
+  <p>Comparing motion under weaker versus stronger force magnitudes between Force-Prompting and StreamForce. Ours responds more clearly to force-magnitude differences than the baseline.</p>
+  <div class="section-group">
+    <h3>Larger force</h3>
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/FigA2/FigA2_force_prompting_larger.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/FigA2/FigA2_ours_larger.mp4" loop muted playsinline preload="none"></video><div class="label">Ours</div></div>
+    </div>
+    <h3>Smaller force</h3>
+    <div class="comparison cols-2">
+      <div class="video-cell"><video data-src="static/video_examples/paper_figure_videos/FigA2/FigA2_force_prompting_smaller.mp4" loop muted playsinline preload="none"></video><div class="label">Force-Prompting</div></div>
+      <div class="video-cell ours"><video data-src="static/video_examples/paper_figure_videos/FigA2/FigA2_ours_smaller.mp4" loop muted playsinline preload="none"></video><div class="label">Ours</div></div>
+    </div>
+  </div>
+
+  <h2>Project Demo</h2>
+  <p>End-to-end framework overview and live demonstrations.</p>
+  <div class="section-group">
+    <div class="comparison cols-2" style="grid-template-columns: 1fr;">
+      <div class="video-cell"><video data-src="static/streamforce_demo.mp4" loop muted playsinline preload="none"></video><div class="label">StreamForce demo reel</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================== GALLERY SECTIONS ============================== -->
+<section id="local-preserve">
+  <h2>Local Force Preservation - Additional Examples</h2>
+  <p>Localized force applied to specific image regions, with the force held constant throughout the sequence. 242 examples (eight cases moved to the Failure Cases tab).</p>
+  <div class="controls">
+    <input type="search" placeholder="Jump to # (e.g. 42)" data-search="local-preserve">
+    <span class="summary" data-summary="local-preserve"></span>
+    <div class="pagination" data-pagination="local-preserve"></div>
+  </div>
+  <div class="video-grid" data-grid="local-preserve"></div>
+  <div class="controls" style="margin-top: 1rem;">
+    <span class="summary" data-summary="local-preserve"></span>
+    <div class="pagination" data-pagination="local-preserve"></div>
+  </div>
+</section>
+
+<section id="local-change">
+  <h2>Local Force Change - Additional Examples</h2>
+  <p>Localized force whose magnitude and/or direction varies over time within a single generated sequence. 246 examples (three cases moved to the Failure Cases tab).</p>
+  <div class="controls">
+    <input type="search" placeholder="Jump to # (e.g. 42)" data-search="local-change">
+    <span class="summary" data-summary="local-change"></span>
+    <div class="pagination" data-pagination="local-change"></div>
+  </div>
+  <div class="video-grid" data-grid="local-change"></div>
+  <div class="controls" style="margin-top: 1rem;">
+    <span class="summary" data-summary="local-change"></span>
+    <div class="pagination" data-pagination="local-change"></div>
+  </div>
+</section>
+
+<section id="global-preserve">
+  <h2>Global Force Preservation - Additional Examples</h2>
+  <p>Global forces (e.g. wind) applied uniformly across the scene, held constant throughout the sequence. 135 examples (one case moved to the Failure Cases tab).</p>
+  <div class="controls">
+    <input type="search" placeholder="Jump to # (e.g. 42)" data-search="global-preserve">
+    <span class="summary" data-summary="global-preserve"></span>
+    <div class="pagination" data-pagination="global-preserve"></div>
+  </div>
+  <div class="video-grid" data-grid="global-preserve"></div>
+  <div class="controls" style="margin-top: 1rem;">
+    <span class="summary" data-summary="global-preserve"></span>
+    <div class="pagination" data-pagination="global-preserve"></div>
+  </div>
+</section>
+
+<section id="global-change">
+  <h2>Global Force Change - Additional Examples</h2>
+  <p>Global forces whose magnitude and/or direction varies over time during generation. 151 examples.</p>
+  <div class="controls">
+    <input type="search" placeholder="Jump to # (e.g. 42)" data-search="global-change">
+    <span class="summary" data-summary="global-change"></span>
+    <div class="pagination" data-pagination="global-change"></div>
+  </div>
+  <div class="video-grid" data-grid="global-change"></div>
+  <div class="controls" style="margin-top: 1rem;">
+    <span class="summary" data-summary="global-change"></span>
+    <div class="pagination" data-pagination="global-change"></div>
+  </div>
+</section>
+
+<section id="failure-cases">
+  <h2>Failure Cases</h2>
+  <p>Representative cases where StreamForce does not respond correctly to the applied force. Common failure modes include:
+    (1) <b>partial-object detachment</b> - StreamForce moves part of an object that should remain attached to the main object;
+    (2) <b>force leakage to nearby small objects</b> - small objects close to the force-application point are inadvertently affected by the nearby force;
+    (3) <b>implausible motion responses</b> on certain object/scene configurations.</p>
+  <div class="section-group">
+    <div class="comparison cols-3">
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_26.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #26</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_71.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #71</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_84.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #84</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_112.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #112</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_145.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #145</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_146.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #146</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_147.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #147</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_preserve_210.mp4" loop muted playsinline preload="none"></video><div class="label">Local Preserve - #210</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_change_104.mp4" loop muted playsinline preload="none"></video><div class="label">Local Change - #104</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_change_181.mp4" loop muted playsinline preload="none"></video><div class="label">Local Change - #181</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/local_change_211.mp4" loop muted playsinline preload="none"></video><div class="label">Local Change - #211</div></div>
+      <div class="video-cell"><video data-src="static/video_examples/failure_cases/global_preserve_90.mp4" loop muted playsinline preload="none"></video><div class="label">Global Preserve - #90</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Modal video viewer -->
+<div class="modal" id="modal">
+  <button class="close" type="button" aria-label="Close">&times;</button>
+  <div class="modal-inner">
+    <video controls autoplay loop playsinline></video>
+  </div>
+  <div class="src-label"></div>
+</div>
+
+<script>
+(() => {
+  // ---------- Tab switching ----------
+  const navBtns = document.querySelectorAll('#nav button');
+  const sections = document.querySelectorAll('main > section');
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navBtns.forEach(b => b.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      // Pause every video on tab change
+      document.querySelectorAll('video').forEach(v => { try { v.pause(); } catch(_){} });
+      window.scrollTo({ top: 0, behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
+    });
+  });
+
+  // ---------- Lazy load + auto-play on visibility ----------
+  const lazyObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const v = e.target;
+      if (e.isIntersecting) {
+        if (v.dataset.src && !v.src) {
+          v.src = v.dataset.src;
+        }
+        v.play().catch(() => {});
+      } else {
+        v.pause();
+      }
+    });
+  }, { rootMargin: '120px', threshold: 0.1 });
+
+  function attachVideo(v) {
+    lazyObserver.observe(v);
+    v.addEventListener('click', () => openModal(v.dataset.src || v.src));
+  }
+
+  // Attach to all videos rendered statically (paper section)
+  document.querySelectorAll('section video[data-src]').forEach(attachVideo);
+
+  // ---------- Gallery builder ----------
+  const GALLERIES = [
+    { id: 'local-preserve',  folder: 'static/video_examples/local_preserve_examples',  count: 250, skip: [26, 71, 84, 112, 145, 146, 147, 210] }, // moved to failure cases
+    { id: 'local-change',    folder: 'static/video_examples/local_change_examples',    count: 250, skip: [4, 104, 181, 211] }, // #4 missing; others moved to failure cases
+    { id: 'global-preserve', folder: 'static/video_examples/global_preserve_examples', count: 136, skip: [90] }, // moved to failure cases
+    { id: 'global-change',   folder: 'static/video_examples/global_change_examples',   count: 151, skip: [] },
+  ];
+
+  const PAGE_SIZE = 24;
+
+  GALLERIES.forEach(g => {
+    const grid = document.querySelector(`[data-grid="${g.id}"]`);
+    const pagEls = document.querySelectorAll(`[data-pagination="${g.id}"]`);
+    const summaryEls = document.querySelectorAll(`[data-summary="${g.id}"]`);
+    const search = document.querySelector(`[data-search="${g.id}"]`);
+
+    const skip = new Set(g.skip);
+    const allItems = [];
+    for (let i = 1; i <= g.count; i++) if (!skip.has(i)) allItems.push(i);
+
+    let state = { page: 1, items: allItems.slice() };
+
+    function render() {
+      const totalPages = Math.max(1, Math.ceil(state.items.length / PAGE_SIZE));
+      if (state.page > totalPages) state.page = totalPages;
+      const start = (state.page - 1) * PAGE_SIZE;
+      const pageItems = state.items.slice(start, start + PAGE_SIZE);
+
+      grid.innerHTML = '';
+      pageItems.forEach(n => {
+        const cell = document.createElement('div');
+        cell.className = 'video-cell';
+        const v = document.createElement('video');
+        v.dataset.src = `${g.folder}/${n}.mp4`;
+        v.loop = true;
+        v.muted = true;
+        v.playsInline = true;
+        v.preload = 'none';
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = `#${n}`;
+        cell.appendChild(v);
+        cell.appendChild(label);
+        grid.appendChild(cell);
+        attachVideo(v);
+      });
+
+      summaryEls.forEach(el => {
+        const shown = pageItems.length;
+        const total = state.items.length;
+        el.textContent = total === 0
+          ? 'No matches'
+          : `Showing ${start + 1}-${start + shown} of ${total}${total < allItems.length ? ` (filtered from ${allItems.length})` : ''}`;
+      });
+
+      pagEls.forEach(pag => renderPagination(pag, totalPages));
+    }
+
+    function renderPagination(pag, totalPages) {
+      pag.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      const prev = document.createElement('button');
+      prev.textContent = '<-';
+      prev.disabled = state.page === 1;
+      prev.title = 'Previous page';
+      prev.onclick = () => { state.page--; render(); scrollToGrid(); };
+      pag.appendChild(prev);
+
+      const window_size = 2;
+      const pages = new Set([1, totalPages, state.page]);
+      for (let i = Math.max(1, state.page - window_size); i <= Math.min(totalPages, state.page + window_size); i++) pages.add(i);
+      const sorted = [...pages].sort((a, b) => a - b);
+      let last = 0;
+      sorted.forEach(p => {
+        if (p > last + 1) {
+          const dots = document.createElement('span');
+          dots.className = 'dots';
+          dots.textContent = '...';
+          pag.appendChild(dots);
+        }
+        const btn = document.createElement('button');
+        btn.textContent = p;
+        if (p === state.page) btn.className = 'current';
+        btn.onclick = () => { state.page = p; render(); scrollToGrid(); };
+        pag.appendChild(btn);
+        last = p;
+      });
+
+      const next = document.createElement('button');
+      next.textContent = '->';
+      next.disabled = state.page === totalPages;
+      next.title = 'Next page';
+      next.onclick = () => { state.page++; render(); scrollToGrid(); };
+      pag.appendChild(next);
+    }
+
+    function scrollToGrid() {
+      const headerH = document.querySelector('header').offsetHeight + 12;
+      const y = grid.getBoundingClientRect().top + window.scrollY - headerH;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+
+    if (search) {
+      let debounce;
+      search.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          const q = search.value.trim();
+          if (q === '') {
+            state.items = allItems.slice();
+          } else if (/^\d+$/.test(q)) {
+            state.items = allItems.filter(n => String(n).includes(q));
+          } else {
+            state.items = [];
+          }
+          state.page = 1;
+          render();
+        }, 120);
+      });
+    }
+
+    render();
+  });
+
+  // ---------- Modal viewer ----------
+  const modal = document.getElementById('modal');
+  const modalVideo = modal.querySelector('video');
+  const srcLabel = modal.querySelector('.src-label');
+
+  function openModal(src) {
+    modalVideo.src = src;
+    srcLabel.textContent = src;
+    modal.classList.add('show');
+    modalVideo.play().catch(() => {});
+  }
+  function closeModal() {
+    modal.classList.remove('show');
+    modalVideo.pause();
+    modalVideo.removeAttribute('src');
+    modalVideo.load();
+  }
+  modal.addEventListener('click', e => {
+    if (e.target === modal || e.target.classList.contains('close')) closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+  });
+})();
+</script>
+
+</body>
+</html>

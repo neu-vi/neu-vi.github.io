@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="StreamForce: Streaming Video Generation with Streaming Force Control">
+  <title>StreamForce: Streaming Video Generation with Streaming Force Control</title>
+  <style>
+    :root {
+      --text: #252525;
+      --muted: #666666;
+      --link: #3273dc;
+      --line: #dddddd;
+      --soft: #f5f5f5;
+      --accent: #0f766e;
+      --dark: #363636;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: white;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .section {
+      padding: 2.7rem 1rem;
+    }
+
+    .section.hero {
+      padding-top: 3.3rem;
+      padding-bottom: 1.7rem;
+      text-align: center;
+    }
+
+    .hero-body {
+      padding: 0;
+    }
+
+    .container {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+    }
+
+    .columns {
+      display: flex;
+      justify-content: center;
+    }
+
+    .column {
+      width: 100%;
+    }
+
+    .is-four-fifths {
+      max-width: 1040px;
+    }
+
+    .title {
+      color: var(--text);
+    }
+
+    .publication-title {
+      max-width: 1030px;
+      margin: 0 auto 0.95rem;
+      font-size: clamp(2rem, 4.2vw, 3.05rem);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .publication-authors {
+      max-width: 910px;
+      margin: 0 auto;
+      font-size: clamp(1rem, 1.9vw, 1.18rem);
+      line-height: 1.75;
+    }
+
+    .publication-authors a {
+      white-space: nowrap;
+    }
+
+    .publication-affiliations {
+      margin-top: 0.45rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .publication-links {
+      display: flex;
+      justify-content: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 1.15rem;
+    }
+
+    .button,
+    .link-block {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0.48rem 0.9rem;
+      border: 1px solid var(--dark);
+      border-radius: 999px;
+      background: var(--dark);
+      color: white;
+      font-size: 0.94rem;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .button.is-rounded,
+    .link-block.is-rounded {
+      border-radius: 999px;
+    }
+
+    .button.is-dark,
+    .link-block.is-dark {
+      background: var(--dark);
+      border-color: var(--dark);
+      color: white;
+    }
+
+    .link-block:hover {
+      background: #151515;
+      text-decoration: none;
+    }
+
+    .link-block[aria-disabled="true"] {
+      cursor: default;
+      opacity: 0.82;
+    }
+
+    .link-block[aria-disabled="true"]:hover {
+      background: var(--dark);
+    }
+
+    .link-block.light {
+      background: white;
+      border-color: #cfcfcf;
+      color: var(--dark);
+    }
+
+    .link-block.light:hover { background: var(--soft); }
+
+    .tldr {
+      max-width: 920px;
+      margin: 1.35rem auto 0;
+      padding: 0.85rem 1rem;
+      border: 1px solid #d4e7e5;
+      border-radius: var(--radius);
+      background: #f0fbfa;
+      color: #134e49;
+      text-align: left;
+      font-size: 1rem;
+    }
+
+    .video-wrap,
+    .result-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: white;
+    }
+
+    .video-wrap video,
+    .result-card video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: black;
+      cursor: zoom-in;
+    }
+
+    .main-video .video-wrap video {
+      aspect-ratio: auto;
+      object-fit: contain;
+    }
+
+    .t-pushing-video video {
+      aspect-ratio: 2 / 1;
+      object-fit: cover;
+    }
+
+    .main-video {
+      padding-top: 0;
+      padding-bottom: 2.2rem;
+    }
+
+    .caption {
+      max-width: 900px;
+      margin: 0.5rem auto 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.94rem;
+    }
+
+    .explanation {
+      max-width: 920px;
+      margin: 0.75rem auto 0;
+      color: var(--muted);
+      text-align: left;
+      font-size: 0.98rem;
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      text-align: center;
+      font-size: clamp(1.75rem, 3.5vw, 2.45rem);
+      font-weight: 400;
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 1.55rem 0 0.75rem;
+      text-align: center;
+      font-size: clamp(1.14rem, 2.2vw, 1.48rem);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    p {
+      max-width: 920px;
+      margin: 0.75rem auto;
+      font-size: 1rem;
+    }
+
+    .abstract {
+      max-width: 760px;
+      text-align: justify;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .video-grid.two {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+    }
+
+    .result-card.ours {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15);
+    }
+
+    .result-label {
+      min-height: 52px;
+      padding: 0.55rem 0.65rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .result-card.ours .result-label {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .subtle {
+      color: var(--muted);
+      text-align: center;
+    }
+
+    pre {
+      max-width: 920px;
+      margin: 1rem auto 0;
+      padding: 1rem;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--soft);
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      padding: 1.8rem 1rem 2.4rem;
+      border-top: 1px solid #eeeeee;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 30;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.92);
+    }
+
+    .modal.open { display: flex; }
+
+    .modal video {
+      width: min(1120px, 96vw);
+      max-height: 86vh;
+      background: black;
+      object-fit: contain;
+    }
+
+    .modal button {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: white;
+      color: #111111;
+      font-size: 1.55rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .comparison-grid,
+      .video-grid,
+      .video-grid.two {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .section {
+        padding-left: 0.65rem;
+        padding-right: 0.65rem;
+      }
+
+      .section.hero {
+        padding-top: 2rem;
+      }
+
+      .publication-links {
+        gap: 0.45rem;
+      }
+
+      .link-block {
+        min-height: 36px;
+        padding: 0.43rem 0.75rem;
+        font-size: 0.88rem;
+      }
+
+      .comparison-grid,
+      .video-grid,
+      .video-grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .abstract {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="section hero">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-four-fifths">
+            <h1 class="title is-1 publication-title">StreamForce: Streaming Video Generation with Streaming Force Control</h1>
+
+            <!-- Author block hidden for now.
+            <div class="is-size-5 publication-authors">
+              <a href="https://sarihust.github.io/" target="_blank" rel="noopener noreferrer">Hanhui Wang</a><sup>1*</sup>,
+              <a href="https://ymingxie.github.io/" target="_blank" rel="noopener noreferrer">Yiming Xie</a><sup>1,3*</sup>,
+              <a href="https://havenfeng.github.io/" target="_blank" rel="noopener noreferrer">Haiwen Feng</a><sup>2,3</sup>,
+              <a href="https://lvzhaoyang.github.io/" target="_blank" rel="noopener noreferrer">Zhaoyang Lv</a><sup>3</sup>,
+              <a href="https://shenlong.web.illinois.edu/" target="_blank" rel="noopener noreferrer">Shenlong Wang</a><sup>4&dagger;</sup>,
+              <a href="https://jianghz.me/" target="_blank" rel="noopener noreferrer">Huaizu Jiang</a><sup>1&dagger;</sup>
+            </div>
+
+            <div class="is-size-5 publication-affiliations">
+              <sup>1</sup>Northeastern University &nbsp;&nbsp;
+              <sup>2</sup>University of California, Berkeley &nbsp;&nbsp;
+              <sup>3</sup>Impossible, Inc. &nbsp;&nbsp;
+              <sup>4</sup>University of Illinois Urbana-Champaign<br>
+              <sup>*</sup>Equal contributions &nbsp;&nbsp;
+              <sup>&dagger;</sup>Equal advising
+            </div>
+            -->
+
+            <div class="publication-links">
+              <span class="button is-rounded is-dark link-block" aria-disabled="true">Paper (coming soon)</span>
+              <span class="button is-rounded is-dark link-block" aria-disabled="true">Code (coming soon)</span>
+              <a class="button is-rounded is-dark link-block" href="gallery.html">Gallery</a>
+              <!-- <a class="button is-rounded link-block light" href="#bibtex">BibTeX</a> -->
+            </div>
+
+            <div class="tldr">
+              <strong>TL;DR:</strong> StreamForce generates videos from a single image while users continuously apply and modify physical forces, enabling causal streaming control over local pushes and global effects such as wind.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="section main-video">
+      <div class="container">
+        <div class="video-wrap">
+          <video src="static/streamforce_demo.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
+        <!-- <p class="caption">End-to-end framework overview and live demonstrations.</p> -->
+      </div>
+    </section>
+
+    <section class="section" id="abstract">
+      <div class="container">
+        <h2>Abstract</h2>
+        <p class="abstract">
+          We introduce StreamForce, a streaming video generation framework that enables physically grounded control through continuous force inputs. Unlike prior video models that train separate models for different force types, assume fixed forces, or rely on non-causal processing, StreamForce is a causal and unified model that responds instantly and coherently to both local and global, time-varying forces. To achieve this, we design a unified force representation as a control signal and develop a distillation pipeline for force-controllable video generation. Our model combines autoregressive efficiency with force responsiveness, sustaining stable photometric and dynamic realism. StreamForce runs at up to 16.6 FPS on a single GPU, achieving state-of-the-art performance in both force adherence and motion realism.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="teaser">
+      <div class="container">
+        <h2>Streaming Force Control</h2>
+        <p class="subtle">
+          A user-applied wind force directed toward the right gradually increases in magnitude to trigger a smoke alarm. StreamForce responds online as forces change, unlike bidirectional baselines that require the full input sequence upfront.
+        </p>
+        <div class="video-grid">
+          <div class="result-card ours">
+            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_StreamForce.mp4" loop muted playsinline preload="none"></video>
+            <div class="result-label">StreamForce (Ours)</div>
+          </div>
+          <div class="result-card">
+            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_force_prompting.mp4" loop muted playsinline preload="none"></video>
+            <div class="result-label">Force-Prompting</div>
+          </div>
+          <div class="result-card">
+            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_kling.mp4" loop muted playsinline preload="none"></video>
+            <div class="result-label">Kling Motion Brush</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="comparisons">
+      <div class="container">
+        <h2>Baseline Comparisons</h2>
+        <p class="subtle">
+          Four-way comparison against Wan2.2 5B TI2V (text-only), Force-Prompting (bidirectional), and Kling Motion Brush, across both force preservation and force change settings, for both global and local forces.
+        </p>
+
+        <h3>Local Force Preservation</h3>
+        <div class="comparison-grid">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_text_inference.mp4" loop muted playsinline preload="none"></video><div class="result-label">Wan2.2 TI2V</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="result-label">Force-Prompting</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_kling.mp4" loop muted playsinline preload="none"></video><div class="result-label">Kling Motion Brush</div></div>
+          <div class="result-card ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_ours.mp4" loop muted playsinline preload="none"></video><div class="result-label">StreamForce (Ours)</div></div>
+        </div>
+
+        <h3>Global Force Preservation</h3>
+        <div class="comparison-grid">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_text_inference.mp4" loop muted playsinline preload="none"></video><div class="result-label">Wan2.2 TI2V</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="result-label">Force-Prompting</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_kling.mp4" loop muted playsinline preload="none"></video><div class="result-label">Kling Motion Brush</div></div>
+          <div class="result-card ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_ours.mp4" loop muted playsinline preload="none"></video><div class="result-label">StreamForce (Ours)</div></div>
+        </div>
+
+        <h3>Local Force Change</h3>
+        <div class="comparison-grid">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_text_inference.mp4" loop muted playsinline preload="none"></video><div class="result-label">Wan2.2 TI2V</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="result-label">Force-Prompting</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_kling.mp4" loop muted playsinline preload="none"></video><div class="result-label">Kling Motion Brush</div></div>
+          <div class="result-card ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_local_change_ours.mp4" loop muted playsinline preload="none"></video><div class="result-label">StreamForce (Ours)</div></div>
+        </div>
+
+        <h3>Global Force Change</h3>
+        <div class="comparison-grid">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_text_inference.mp4" loop muted playsinline preload="none"></video><div class="result-label">Wan2.2 TI2V</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_force_prompting.mp4" loop muted playsinline preload="none"></video><div class="result-label">Force-Prompting</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_kling.mp4" loop muted playsinline preload="none"></video><div class="result-label">Kling Motion Brush</div></div>
+          <div class="result-card ours"><video data-src="static/video_examples/paper_figure_videos/Fig_3/Fig_3_global_change_ours.mp4" loop muted playsinline preload="none"></video><div class="result-label">StreamForce (Ours)</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="multi-force">
+      <div class="container">
+        <h2>Multi-Force and Part-Level Interaction</h2>
+        <div class="video-wrap t-pushing-video">
+          <video data-src="static/video_examples/paper_figure_videos/Fig_4/Fig_4_t_pushing.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="explanation">Applying two local forces simultaneously to different parts of a T-shaped object produces coordinated translation and rotation that drive the object toward a target position, demonstrating multi-force, part-level interaction.</p>
+      </div>
+    </section>
+
+    <section class="section" id="physics">
+      <div class="container">
+        <h2>Physical Behaviors</h2>
+        <p class="subtle">
+          StreamForce inherits physical priors that support falling and bouncing, and different responses under varied mass or friction.
+        </p>
+
+        <h3>Falling and Bouncing</h3>
+        <div class="video-grid two">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_glass.mp4" loop muted playsinline preload="none"></video><div class="result-label">Falling glass</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_object.mp4" loop muted playsinline preload="none"></video><div class="result-label">Falling and bouncing object</div></div>
+        </div>
+        <p class="explanation">A force pushes the object across a table; once it passes the edge, it falls under gravity and rebounds on the ground with a plausible loss of energy, emerging from the spatiotemporal priors of the pretrained video model.</p>
+
+        <h3>Mass-Aware Motion</h3>
+        <div class="video-grid two">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_empty.mp4" loop muted playsinline preload="none"></video><div class="result-label">Empty glass: faster motion</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_w_milk.mp4" loop muted playsinline preload="none"></video><div class="result-label">Glass with milk: slower motion</div></div>
+        </div>
+        <p class="explanation">Under the same horizontal force, the glass containing milk moves more slowly than the empty glass, reflecting the expected relationship between object mass and acceleration. This behavior emerges from the model's physical priors, not from explicit mass conditioning.</p>
+
+        <h3>Friction-Aware Motion</h3>
+        <div class="video-grid two">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_beach.mp4" loop muted playsinline preload="none"></video><div class="result-label">Lower-friction surface: travels farther</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_rocks.mp4" loop muted playsinline preload="none"></video><div class="result-label">Higher-friction surface: travels shorter</div></div>
+        </div>
+        <p class="explanation">The same horizontal force is applied to the same T-shaped object on two surfaces with different friction: the object travels a noticeably shorter distance on the higher-friction surface, reflecting friction opposing motion and dissipating kinetic energy.</p>
+      </div>
+    </section>
+
+    <!-- BibTeX will be enabled after the arXiv page is available.
+    <section class="section" id="bibtex">
+      <div class="container">
+        <h2>BibTeX</h2>
+        <pre><code>@misc{wang2026streamforce,
+  title  = {Streaming Video Generation with Streaming Force Control},
+  author = {Wang, Hanhui and Xie, Yiming and Feng, Haiwen and Lv, Zhaoyang and Wang, Shenlong and Jiang, Huaizu},
+  year   = {2026}
+        }</code></pre>
+      </div>
+    </section>
+    -->
+  </main>
+
+  <footer>
+    <div class="container">
+      Website structure adapted from the Nerfies project page template.
+    </div>
+  </footer>
+
+  <div class="modal" id="video-modal" aria-hidden="true">
+    <button type="button" aria-label="Close video">&times;</button>
+    <video controls autoplay loop playsinline></video>
+  </div>
+
+  <script>
+    (() => {
+      const videos = document.querySelectorAll('video[data-src]');
+      const modal = document.getElementById('video-modal');
+      const modalVideo = modal.querySelector('video');
+      const closeButton = modal.querySelector('button');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            if (!video.src) video.src = video.dataset.src;
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { rootMargin: '160px 0px', threshold: 0.12 });
+
+      videos.forEach((video) => {
+        observer.observe(video);
+        video.addEventListener('click', () => {
+          const src = video.currentSrc || video.src || video.dataset.src;
+          modalVideo.src = src;
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden', 'false');
+          modalVideo.play().catch(() => {});
+        });
+      });
+
+      function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        modalVideo.pause();
+        modalVideo.removeAttribute('src');
+        modalVideo.load();
+      }
+
+      closeButton.addEventListener('click', closeModal);
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+    })();
+  </script>
+</body>
+</html>
