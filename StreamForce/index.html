@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="StreamForce: Streaming Video Generation with Streaming Force Control">
   <title>StreamForce: Streaming Video Generation with Streaming Force Control</title>
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/9910/9910417.png">
   <style>
     :root {
       --text: #252525;
@@ -168,6 +169,14 @@
       font-size: 1rem;
     }
 
+    .arrow-note {
+      max-width: 920px;
+      margin: 0.85rem auto 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
     .video-wrap,
     .result-card {
       border: 1px solid var(--line);
@@ -189,6 +198,11 @@
     .main-video .video-wrap video {
       aspect-ratio: auto;
       object-fit: contain;
+    }
+
+    .t-pushing-video {
+      max-width: 760px;
+      margin: 0 auto;
     }
 
     .t-pushing-video video {
@@ -504,6 +518,9 @@
             </div>
           </div>
         </div>
+        <p class="arrow-note">
+          Arrows visualize the force input: their direction indicates the applied force direction, and changes in length indicate changes in force magnitude over time.
+        </p>
         <div class="publication-links">
           <a class="button is-rounded is-dark link-block" href="gallery.html">Open Full Gallery</a>
         </div>
@@ -528,16 +545,6 @@
         <p class="abstract">
           We introduce StreamForce, a streaming video generation framework that enables physically grounded control through continuous force inputs. Unlike prior video models that train separate models for different force types, assume fixed forces, or rely on non-causal processing, StreamForce is a causal and unified model that responds instantly and coherently to both local and global, time-varying forces. To achieve this, we design a unified force representation as a control signal and develop a distillation pipeline for force-controllable video generation. Our model combines autoregressive efficiency with force responsiveness, sustaining stable photometric and dynamic realism. StreamForce runs at up to 16.6 FPS on a single GPU, achieving state-of-the-art performance in both force adherence and motion realism.
         </p>
-      </div>
-    </section>
-
-    <section class="section" id="multi-force">
-      <div class="container">
-        <h2>Multi-Force and Part-Level Interaction</h2>
-        <div class="video-wrap t-pushing-video">
-          <video data-src="static/video_examples/paper_figure_videos/Fig_4/Fig_4_t_pushing.mp4" loop muted playsinline preload="none"></video>
-        </div>
-        <p class="explanation">Applying two local forces simultaneously to different parts of a T-shaped object produces coordinated translation and rotation that drive the object toward a target position, demonstrating multi-force, part-level interaction.</p>
       </div>
     </section>
 
@@ -635,6 +642,16 @@
         <p class="below-video-text">
           In the smoke-alarm example, a user-applied wind force directed toward the right gradually increases in magnitude. StreamForce updates the generated dynamics as the force changes.
         </p>
+      </div>
+    </section>
+
+    <section class="section" id="multi-force">
+      <div class="container">
+        <h2>Multi-Force and Part-Level Interaction</h2>
+        <div class="video-wrap t-pushing-video">
+          <video data-src="static/video_examples/paper_figure_videos/Fig_4/Fig_4_t_pushing.mp4" loop muted playsinline preload="none"></video>
+        </div>
+        <p class="explanation">Applying two local forces simultaneously to different parts of a T-shaped object produces coordinated translation and rotation that drive the object toward a target position, demonstrating multi-force, part-level interaction.</p>
       </div>
     </section>
 
