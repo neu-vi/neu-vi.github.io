@@ -255,18 +255,6 @@ section > p, .caption {
   font-size: 0.8rem;
   font-family: ui-monospace, monospace;
 }
-.intro-banner {
-  background: linear-gradient(135deg, #f0f6ff 0%, #fafafa 100%);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 8px;
-  padding: 0.9rem 1.1rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-}
-.intro-banner b { color: var(--accent); }
-.intro-banner ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
-.intro-banner li { margin: 0.15rem 0; }
 .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
 .back-main {
   display: inline-flex;
@@ -290,11 +278,11 @@ section > p, .caption {
 <header>
   <nav id="nav">
     <a class="back-main" href="index.html">Back to Main Page</a>
-    <button data-tab="paper" class="active">Paper Figures</button>
+    <button data-tab="global-preserve" class="active">Global - Preserve <span style="opacity:0.7">(135)</span></button>
+    <button data-tab="global-change">Global - Change <span style="opacity:0.7">(151)</span></button>
     <button data-tab="local-preserve">Local - Preserve <span style="opacity:0.7">(242)</span></button>
     <button data-tab="local-change">Local - Change <span style="opacity:0.7">(246)</span></button>
-    <button data-tab="global-preserve">Global - Preserve <span style="opacity:0.7">(135)</span></button>
-    <button data-tab="global-change">Global - Change <span style="opacity:0.7">(151)</span></button>
+    <button data-tab="paper">Paper Figures</button>
     <button data-tab="failure-cases">Failure Cases <span style="opacity:0.7">(12)</span></button>
   </nav>
 </header>
@@ -302,19 +290,7 @@ section > p, .caption {
 <main>
 
 <!-- ============================== PAPER FIGURES ============================== -->
-<section id="paper" class="active">
-
-  <div class="intro-banner">
-    <b style="font-size: 1rem;">Use the tabs at the top to switch sections.</b>
-    This page is the <b>Paper Figures</b> tab. The other tabs include:
-    <ul>
-      <li><b>Local - Preserve / Local - Change / Global - Preserve / Global - Change</b> - four scenario galleries with hundreds of additional examples (pagination + jump-to-number search).</li>
-      <li><b>Failure Cases</b> - representative cases where StreamForce does not respond correctly to the applied force.</li>
-    </ul>
-    <div style="margin-top: 0.55rem; font-size: 0.85rem; color: var(--muted);">
-      Tip: <b>click any video</b> to enlarge it in a modal viewer. Videos auto-play (muted, looped) when scrolled into view and pause when off-screen.
-    </div>
-  </div>
+<section id="paper">
 
   <!-- Fig 1: Teaser -->
   <h2>Fig. 1 - Teaser: StreamForce</h2>
@@ -572,7 +548,7 @@ section > p, .caption {
   </div>
 </section>
 
-<section id="global-preserve">
+<section id="global-preserve" class="active">
   <h2>Global Force Preservation - Additional Examples</h2>
   <p>Global forces (e.g. wind) applied uniformly across the scene, held constant throughout the sequence. 135 examples (one case moved to the Failure Cases tab).</p>
   <div class="controls">
@@ -679,10 +655,10 @@ section > p, .caption {
 
   // ---------- Gallery builder ----------
   const GALLERIES = [
-    { id: 'local-preserve',  folder: 'static/video_examples/local_preserve_examples',  count: 250, skip: [26, 71, 84, 112, 145, 146, 147, 210] }, // moved to failure cases
-    { id: 'local-change',    folder: 'static/video_examples/local_change_examples',    count: 250, skip: [4, 104, 181, 211] }, // #4 missing; others moved to failure cases
     { id: 'global-preserve', folder: 'static/video_examples/global_preserve_examples', count: 136, skip: [90] }, // moved to failure cases
     { id: 'global-change',   folder: 'static/video_examples/global_change_examples',   count: 151, skip: [] },
+    { id: 'local-preserve',  folder: 'static/video_examples/local_preserve_examples',  count: 250, skip: [26, 71, 84, 112, 145, 146, 147, 210] }, // moved to failure cases
+    { id: 'local-change',    folder: 'static/video_examples/local_change_examples',    count: 250, skip: [4, 104, 181, 211] }, // #4 missing; others moved to failure cases
   ];
 
   const PAGE_SIZE = 24;

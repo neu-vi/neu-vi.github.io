@@ -217,6 +217,14 @@
       font-size: 0.98rem;
     }
 
+    .below-video-text {
+      max-width: 920px;
+      margin: 0.9rem auto 0;
+      color: var(--muted);
+      text-align: left;
+      font-size: 1rem;
+    }
+
     h2 {
       margin: 0 0 1rem;
       text-align: center;
@@ -254,6 +262,38 @@
 
     .video-grid.two {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .showcase-block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.8rem;
+      background: var(--soft);
+    }
+
+    .showcase-title {
+      margin: 0 0 0.65rem;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 650;
+      color: var(--text);
+    }
+
+    .showcase-videos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+    }
+
+    .showcase-videos .result-card {
+      border-color: #e4e4e4;
     }
 
     .comparison-grid {
@@ -348,6 +388,10 @@
       .video-grid.two {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .showcase-videos {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 620px) {
@@ -372,7 +416,12 @@
 
       .comparison-grid,
       .video-grid,
-      .video-grid.two {
+      .video-grid.two,
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase-videos {
         grid-template-columns: 1fr;
       }
 
@@ -413,7 +462,6 @@
             <div class="publication-links">
               <span class="button is-rounded is-dark link-block" aria-disabled="true">Paper (coming soon)</span>
               <span class="button is-rounded is-dark link-block" aria-disabled="true">Code (coming soon)</span>
-              <a class="button is-rounded is-dark link-block" href="gallery.html">Gallery</a>
               <!-- <a class="button is-rounded link-block light" href="#bibtex">BibTeX</a> -->
             </div>
 
@@ -427,12 +475,50 @@
   </section>
 
   <main>
-    <section class="section main-video">
+    <section class="section" id="selected-gallery">
       <div class="container">
+        <div class="showcase-grid">
+          <div class="showcase-block">
+            <h3 class="showcase-title">Global Force</h3>
+            <div class="showcase-videos">
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/11.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/27.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/38.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/45.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/75.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/95.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_preserve_examples/128.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_change_examples/13.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/global_change_examples/104.mp4" loop muted playsinline preload="none"></video></div>
+            </div>
+          </div>
+          <div class="showcase-block">
+            <h3 class="showcase-title">Local Force</h3>
+            <div class="showcase-videos">
+              <div class="result-card"><video data-src="static/video_examples/local_preserve_examples/21.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/local_preserve_examples/28.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/local_preserve_examples/110.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/local_preserve_examples/166.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/local_change_examples/111.mp4" loop muted playsinline preload="none"></video></div>
+              <div class="result-card"><video data-src="static/video_examples/local_change_examples/234.mp4" loop muted playsinline preload="none"></video></div>
+            </div>
+          </div>
+        </div>
+        <div class="publication-links">
+          <a class="button is-rounded is-dark link-block" href="gallery.html">Open Full Gallery</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section main-video" id="real-time-demo">
+      <div class="container">
+        <h2>Real-Time Interaction Demo</h2>
         <div class="video-wrap">
           <video src="static/streamforce_demo.mp4" autoplay muted loop playsinline preload="metadata"></video>
         </div>
-        <!-- <p class="caption">End-to-end framework overview and live demonstrations.</p> -->
+        <p class="below-video-text">
+          The demo shows how StreamForce consumes force inputs during generation, enabling users to steer evolving videos instead of specifying the entire motion sequence in advance.
+        </p>
       </div>
     </section>
 
@@ -445,26 +531,43 @@
       </div>
     </section>
 
-    <section class="section" id="teaser">
+    <section class="section" id="multi-force">
       <div class="container">
-        <h2>Streaming Force Control</h2>
-        <p class="subtle">
-          A user-applied wind force directed toward the right gradually increases in magnitude to trigger a smoke alarm. StreamForce responds online as forces change, unlike bidirectional baselines that require the full input sequence upfront.
-        </p>
-        <div class="video-grid">
-          <div class="result-card ours">
-            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_StreamForce.mp4" loop muted playsinline preload="none"></video>
-            <div class="result-label">StreamForce (Ours)</div>
-          </div>
-          <div class="result-card">
-            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_force_prompting.mp4" loop muted playsinline preload="none"></video>
-            <div class="result-label">Force-Prompting</div>
-          </div>
-          <div class="result-card">
-            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_kling.mp4" loop muted playsinline preload="none"></video>
-            <div class="result-label">Kling Motion Brush</div>
-          </div>
+        <h2>Multi-Force and Part-Level Interaction</h2>
+        <div class="video-wrap t-pushing-video">
+          <video data-src="static/video_examples/paper_figure_videos/Fig_4/Fig_4_t_pushing.mp4" loop muted playsinline preload="none"></video>
         </div>
+        <p class="explanation">Applying two local forces simultaneously to different parts of a T-shaped object produces coordinated translation and rotation that drive the object toward a target position, demonstrating multi-force, part-level interaction.</p>
+      </div>
+    </section>
+
+    <section class="section" id="physics">
+      <div class="container">
+        <h2>Physical Behaviors</h2>
+        <p class="subtle">
+          StreamForce inherits physical priors that support falling and bouncing, and different responses under varied mass or friction.
+        </p>
+
+        <h3>Falling and Bouncing</h3>
+        <div class="video-grid two">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_glass.mp4" loop muted playsinline preload="none"></video><div class="result-label">Falling glass</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_object.mp4" loop muted playsinline preload="none"></video><div class="result-label">Falling and bouncing object</div></div>
+        </div>
+        <p class="explanation">A force pushes the object across a table; once it passes the edge, it falls under gravity and rebounds on the ground with a plausible loss of energy, emerging from the spatiotemporal priors of the pretrained video model.</p>
+
+        <h3>Mass-Aware Motion</h3>
+        <div class="video-grid two">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_empty.mp4" loop muted playsinline preload="none"></video><div class="result-label">Empty glass: faster motion</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_w_milk.mp4" loop muted playsinline preload="none"></video><div class="result-label">Glass with milk: slower motion</div></div>
+        </div>
+        <p class="explanation">Under the same horizontal force, the glass containing milk moves more slowly than the empty glass, reflecting the expected relationship between object mass and acceleration. This behavior emerges from the model's physical priors, not from explicit mass conditioning.</p>
+
+        <h3>Friction-Aware Motion</h3>
+        <div class="video-grid two">
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_beach.mp4" loop muted playsinline preload="none"></video><div class="result-label">Lower-friction surface: travels farther</div></div>
+          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_rocks.mp4" loop muted playsinline preload="none"></video><div class="result-label">Higher-friction surface: travels shorter</div></div>
+        </div>
+        <p class="explanation">The same horizontal force is applied to the same T-shaped object on two surfaces with different friction: the object travels a noticeably shorter distance on the higher-friction surface, reflecting friction opposing motion and dissipating kinetic energy.</p>
       </div>
     </section>
 
@@ -509,43 +612,29 @@
       </div>
     </section>
 
-    <section class="section" id="multi-force">
+    <section class="section" id="teaser">
       <div class="container">
-        <h2>Multi-Force and Part-Level Interaction</h2>
-        <div class="video-wrap t-pushing-video">
-          <video data-src="static/video_examples/paper_figure_videos/Fig_4/Fig_4_t_pushing.mp4" loop muted playsinline preload="none"></video>
+        <h2>Streaming Force Updates During Generation</h2>
+        <div class="video-grid">
+          <div class="result-card">
+            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_force_prompting.mp4" loop muted playsinline preload="none"></video>
+            <div class="result-label">Force-Prompting: bidirectional</div>
+          </div>
+          <div class="result-card">
+            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_kling.mp4" loop muted playsinline preload="none"></video>
+            <div class="result-label">Kling Motion Brush</div>
+          </div>
+          <div class="result-card ours">
+            <video data-src="static/video_examples/paper_figure_videos/Fig_1/Fig_1_StreamForce.mp4" loop muted playsinline preload="none"></video>
+            <div class="result-label">StreamForce (Ours): causal streaming force control</div>
+          </div>
         </div>
-        <p class="explanation">Applying two local forces simultaneously to different parts of a T-shaped object produces coordinated translation and rotation that drive the object toward a target position, demonstrating multi-force, part-level interaction.</p>
-      </div>
-    </section>
-
-    <section class="section" id="physics">
-      <div class="container">
-        <h2>Physical Behaviors</h2>
-        <p class="subtle">
-          StreamForce inherits physical priors that support falling and bouncing, and different responses under varied mass or friction.
+        <p class="below-video-text">
+          This section highlights the core streaming setting: forces arrive while the video is being generated, and users can modify them at any time to steer the future rollout. StreamForce is causal, so it reacts online to changing force inputs; bidirectional baselines require the full force sequence upfront and cannot naturally support the same real-time interaction.
         </p>
-
-        <h3>Falling and Bouncing</h3>
-        <div class="video-grid two">
-          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_glass.mp4" loop muted playsinline preload="none"></video><div class="result-label">Falling glass</div></div>
-          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_5/Fig_5_object.mp4" loop muted playsinline preload="none"></video><div class="result-label">Falling and bouncing object</div></div>
-        </div>
-        <p class="explanation">A force pushes the object across a table; once it passes the edge, it falls under gravity and rebounds on the ground with a plausible loss of energy, emerging from the spatiotemporal priors of the pretrained video model.</p>
-
-        <h3>Mass-Aware Motion</h3>
-        <div class="video-grid two">
-          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_empty.mp4" loop muted playsinline preload="none"></video><div class="result-label">Empty glass: faster motion</div></div>
-          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_8/Fig_8_w_milk.mp4" loop muted playsinline preload="none"></video><div class="result-label">Glass with milk: slower motion</div></div>
-        </div>
-        <p class="explanation">Under the same horizontal force, the glass containing milk moves more slowly than the empty glass, reflecting the expected relationship between object mass and acceleration. This behavior emerges from the model's physical priors, not from explicit mass conditioning.</p>
-
-        <h3>Friction-Aware Motion</h3>
-        <div class="video-grid two">
-          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_beach.mp4" loop muted playsinline preload="none"></video><div class="result-label">Lower-friction surface: travels farther</div></div>
-          <div class="result-card"><video data-src="static/video_examples/paper_figure_videos/Fig_9/Fig_9_rocks.mp4" loop muted playsinline preload="none"></video><div class="result-label">Higher-friction surface: travels shorter</div></div>
-        </div>
-        <p class="explanation">The same horizontal force is applied to the same T-shaped object on two surfaces with different friction: the object travels a noticeably shorter distance on the higher-friction surface, reflecting friction opposing motion and dissipating kinetic energy.</p>
+        <p class="below-video-text">
+          In the smoke-alarm example, a user-applied wind force directed toward the right gradually increases in magnitude. StreamForce updates the generated dynamics as the force changes.
+        </p>
       </div>
     </section>
 
