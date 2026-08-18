@@ -1,0 +1,132 @@
+{
+  "selection_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/demo_materials/website_videos/gallery_progressive",
+  "generated_at": "2026-07-28T04:46:48.634524+00:00",
+  "fps": 24,
+  "summary": {
+    "processed": 10,
+    "skipped_existing": 0,
+    "failed": 0
+  },
+  "samples": [
+    {
+      "prediction": "scene_1_step_1.mp4",
+      "lighting_video": "lighting_conditions/scene_1_step_1_lighting.mp4",
+      "scene": "08c1f68fc5aa475dbfd800053dd512ca_combined_0",
+      "iter": "iter_00000150",
+      "source_dataset": "paper_fig1a",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1a",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 296018
+    },
+    {
+      "prediction": "scene_1_step_2.mp4",
+      "lighting_video": "lighting_conditions/scene_1_step_2_lighting.mp4",
+      "scene": "08c1f68fc5aa475dbfd800053dd512ca_combined_1",
+      "iter": "iter_00000163",
+      "source_dataset": "paper_fig1a",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1a",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 32029
+    },
+    {
+      "prediction": "scene_1_step_3.mp4",
+      "lighting_video": "lighting_conditions/scene_1_step_3_lighting.mp4",
+      "scene": "08c1f68fc5aa475dbfd800053dd512ca_combined_2",
+      "iter": "iter_00000139",
+      "source_dataset": "paper_fig1a",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1a",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 45516
+    },
+    {
+      "prediction": "scene_2_step_1.mp4",
+      "lighting_video": "lighting_conditions/scene_2_step_1_lighting.mp4",
+      "scene": "0d22be03613b43659d52a0ed0a6ae0be_combined_0",
+      "iter": "iter_00000538",
+      "source_dataset": "paper_suppa",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppa",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 165654
+    },
+    {
+      "prediction": "scene_2_step_2.mp4",
+      "lighting_video": "lighting_conditions/scene_2_step_2_lighting.mp4",
+      "scene": "0d22be03613b43659d52a0ed0a6ae0be_combined_1",
+      "iter": "iter_00000279",
+      "source_dataset": "paper_suppa",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppa",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 33305
+    },
+    {
+      "prediction": "scene_2_step_3.mp4",
+      "lighting_video": "lighting_conditions/scene_2_step_3_lighting.mp4",
+      "scene": "0d22be03613b43659d52a0ed0a6ae0be_combined_2",
+      "iter": "iter_00000432",
+      "source_dataset": "paper_suppa",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppa",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 45511
+    },
+    {
+      "prediction": "scene_3_step_1.mp4",
+      "lighting_video": "lighting_conditions/scene_3_step_1_lighting.mp4",
+      "scene": "be3e8759772a48d0bc3d5433edbfb7c7_combined_0",
+      "iter": "iter_00000034",
+      "source_dataset": "paper_suppc",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppc",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 179874
+    },
+    {
+      "prediction": "scene_3_step_2.mp4",
+      "lighting_video": "lighting_conditions/scene_3_step_2_lighting.mp4",
+      "scene": "be3e8759772a48d0bc3d5433edbfb7c7_combined_1",
+      "iter": "iter_00000045",
+      "source_dataset": "paper_suppc",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppc",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 30298
+    },
+    {
+      "prediction": "scene_3_step_3.mp4",
+      "lighting_video": "lighting_conditions/scene_3_step_3_lighting.mp4",
+      "scene": "be3e8759772a48d0bc3d5433edbfb7c7_combined_2",
+      "iter": "iter_00000114",
+      "source_dataset": "paper_suppc",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppc",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 46237
+    },
+    {
+      "prediction": "scene_3_step_4.mp4",
+      "lighting_video": "lighting_conditions/scene_3_step_4_lighting.mp4",
+      "scene": "be3e8759772a48d0bc3d5433edbfb7c7_combined_3",
+      "iter": "iter_00000306",
+      "source_dataset": "paper_suppc",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppc",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 55738
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "selection_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/demo_materials/website_videos/gallery_obj",
+  "generated_at": "2026-07-28T04:42:45.694761+00:00",
+  "fps": 24,
+  "summary": {
+    "processed": 12,
+    "skipped_existing": 0,
+    "failed": 0
+  },
+  "samples": [
+    {
+      "prediction": "camera_area.mp4",
+      "lighting_video": "lighting_conditions/camera_area_lighting.mp4",
+      "scene": "Camera_01_area_0",
+      "iter": "iter_00000491",
+      "source_dataset": "video_making_polyhaven_camera_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_camera_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 54318
+    },
+    {
+      "prediction": "camera_env_1.mp4",
+      "lighting_video": "lighting_conditions/camera_env_1_lighting.mp4",
+      "scene": "Camera_01_env_0",
+      "iter": "iter_00000493",
+      "source_dataset": "video_making_polyhaven_camera_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_camera_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 188971
+    },
+    {
+      "prediction": "camera_env_2.mp4",
+      "lighting_video": "lighting_conditions/camera_env_2_lighting.mp4",
+      "scene": "Camera_01_env_1",
+      "iter": "iter_00000492",
+      "source_dataset": "video_making_polyhaven_camera_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_camera_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 183675
+    },
+    {
+      "prediction": "megaphone_area.mp4",
+      "lighting_video": "lighting_conditions/megaphone_area_lighting.mp4",
+      "scene": "Megaphone_01_area_1",
+      "iter": "iter_00000498",
+      "source_dataset": "video_making_polyhaven_megaphone_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_megaphone_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 53747
+    },
+    {
+      "prediction": "megaphone_env.mp4",
+      "lighting_video": "lighting_conditions/megaphone_env_lighting.mp4",
+      "scene": "Megaphone_01_env_1",
+      "iter": "iter_00000492",
+      "source_dataset": "video_making_polyhaven_megaphone_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_megaphone_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 245892
+    },
+    {
+      "prediction": "megaphone_colored_point.mp4",
+      "lighting_video": "lighting_conditions/megaphone_colored_point_lighting.mp4",
+      "scene": "Megaphone_01_rgb_pl_0",
+      "iter": "iter_00000494",
+      "source_dataset": "video_making_polyhaven_megaphone_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_megaphone_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 51287
+    },
+    {
+      "prediction": "brass_vase_area_1.mp4",
+      "lighting_video": "lighting_conditions/brass_vase_area_1_lighting.mp4",
+      "scene": "brass_vase_04_area_0",
+      "iter": "iter_00000173",
+      "source_dataset": "video_making_polyhaven_brassvase_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_brassvase_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 47502
+    },
+    {
+      "prediction": "brass_vase_area_2.mp4",
+      "lighting_video": "lighting_conditions/brass_vase_area_2_lighting.mp4",
+      "scene": "brass_vase_04_area_1",
+      "iter": "iter_00000447",
+      "source_dataset": "video_making_polyhaven_brassvase_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_brassvase_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 46682
+    },
+    {
+      "prediction": "brass_vase_env.mp4",
+      "lighting_video": "lighting_conditions/brass_vase_env_lighting.mp4",
+      "scene": "brass_vase_04_env_2",
+      "iter": "iter_00000188",
+      "source_dataset": "video_making_polyhaven_brassvase_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_brassvase_all",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 257939
+    },
+    {
+      "prediction": "marble_bust_area.mp4",
+      "lighting_video": "lighting_conditions/marble_bust_area_lighting.mp4",
+      "scene": "marble_bust_01_area_0",
+      "iter": "iter_00000491",
+      "source_dataset": "video_making_polyhaven_marble_all_rerun",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_marble_all_rerun",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 51132
+    },
+    {
+      "prediction": "marble_bust_env.mp4",
+      "lighting_video": "lighting_conditions/marble_bust_env_lighting.mp4",
+      "scene": "marble_bust_01_env_1",
+      "iter": "iter_00000492",
+      "source_dataset": "video_making_polyhaven_marble_all_rerun",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_marble_all_rerun",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 200520
+    },
+    {
+      "prediction": "marble_bust_point.mp4",
+      "lighting_video": "lighting_conditions/marble_bust_point_lighting.mp4",
+      "scene": "marble_bust_01_white_pl_1",
+      "iter": "iter_00000497",
+      "source_dataset": "video_making_polyhaven_marble_all_rerun",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_marble_all_rerun",
+      "expected_frames": 100,
+      "status": "processed",
+      "lighting_frames": 100,
+      "bytes": 48364
+    }
+  ]
+}

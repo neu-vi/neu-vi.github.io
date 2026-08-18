@@ -1,0 +1,132 @@
+{
+  "selection_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/demo_materials/website_videos",
+  "generated_at": "2026-07-26T03:44:07.304721+00:00",
+  "fps": 24,
+  "summary": {
+    "processed": 0,
+    "skipped_existing": 10,
+    "failed": 0
+  },
+  "samples": [
+    {
+      "prediction": "teaser_horse/horse_area.mp4",
+      "lighting_video": "teaser_horse/lighting_conditions/horse_area_lighting.mp4",
+      "scene": "horse_statue_01_area_0",
+      "iter": "iter_00000491",
+      "source_dataset": "video_making_polyhaven_horse_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_horse_all",
+      "expected_frames": 100,
+      "status": "skipped_existing",
+      "lighting_frames": 100,
+      "bytes": 59206
+    },
+    {
+      "prediction": "teaser_horse/horse_env.mp4",
+      "lighting_video": "teaser_horse/lighting_conditions/horse_env_lighting.mp4",
+      "scene": "horse_statue_01_env_1",
+      "iter": "iter_00000507",
+      "source_dataset": "video_making_polyhaven_horse_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_horse_all",
+      "expected_frames": 100,
+      "status": "skipped_existing",
+      "lighting_frames": 100,
+      "bytes": 113291
+    },
+    {
+      "prediction": "teaser_horse/horse_point.mp4",
+      "lighting_video": "teaser_horse/lighting_conditions/horse_point_lighting.mp4",
+      "scene": "horse_statue_01_white_pl_1",
+      "iter": "iter_00000550",
+      "source_dataset": "video_making_polyhaven_horse_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_polyhaven_horse_all",
+      "expected_frames": 100,
+      "status": "skipped_existing",
+      "lighting_frames": 100,
+      "bytes": 50481
+    },
+    {
+      "prediction": "teaser_progressive/scene_step_1.mp4",
+      "lighting_video": "teaser_progressive/lighting_conditions/scene_step_1_lighting.mp4",
+      "scene": "57d406eb5b904f36ab13b79932cc9984_combined_0",
+      "iter": "iter_00000013",
+      "source_dataset": "paper_fig1b",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1b",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 76314
+    },
+    {
+      "prediction": "teaser_progressive/scene_step_2.mp4",
+      "lighting_video": "teaser_progressive/lighting_conditions/scene_step_2_lighting.mp4",
+      "scene": "57d406eb5b904f36ab13b79932cc9984_combined_1",
+      "iter": "iter_00000050",
+      "source_dataset": "paper_fig1b",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1b",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 32408
+    },
+    {
+      "prediction": "teaser_progressive/scene_step_3.mp4",
+      "lighting_video": "teaser_progressive/lighting_conditions/scene_step_3_lighting.mp4",
+      "scene": "57d406eb5b904f36ab13b79932cc9984_combined_2",
+      "iter": "iter_00000129",
+      "source_dataset": "paper_fig1b",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1b",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 49462
+    },
+    {
+      "prediction": "teaser_progressive/scene_step_4.mp4",
+      "lighting_video": "teaser_progressive/lighting_conditions/scene_step_4_lighting.mp4",
+      "scene": "57d406eb5b904f36ab13b79932cc9984_combined_3",
+      "iter": "iter_00000054",
+      "source_dataset": "paper_fig1b",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1b",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 61033
+    },
+    {
+      "prediction": "teaser_scene/scene_env.mp4",
+      "lighting_video": "teaser_scene/lighting_conditions/scene_env_lighting.mp4",
+      "scene": "6daa24e4320d403780b6790ea46c8ee3_env_1",
+      "iter": "iter_00000724",
+      "source_dataset": "paper_fig1c",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1c",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 215834
+    },
+    {
+      "prediction": "teaser_scene/scene_multi_point.mp4",
+      "lighting_video": "teaser_scene/lighting_conditions/scene_multi_point_lighting.mp4",
+      "scene": "6daa24e4320d403780b6790ea46c8ee3_multi_pl_0",
+      "iter": "iter_00000788",
+      "source_dataset": "paper_fig1c",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1c",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 30081
+    },
+    {
+      "prediction": "teaser_scene/scene_point.mp4",
+      "lighting_video": "teaser_scene/lighting_conditions/scene_point_lighting.mp4",
+      "scene": "6daa24e4320d403780b6790ea46c8ee3_white_pl_0",
+      "iter": "iter_00000765",
+      "source_dataset": "paper_fig1c",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_fig1c",
+      "expected_frames": 50,
+      "status": "skipped_existing",
+      "lighting_frames": 50,
+      "bytes": 32330
+    }
+  ]
+}

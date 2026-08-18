@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="LumiTokens performs 3D relighting as a direct transformation in a learned latent token space.">
+  <meta name="keywords" content="LumiTokens, 3D relighting, latent scene tokens, progressive relighting, novel view synthesis">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fffaf0">
+  <title>LumiTokens: 3D Relighting via Token-Space Lighting Transformation</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700|Noto+Sans:400,500,700|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script defer src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="container is-max-desktop">
+    <div class="navbar-brand">
+      <a class="navbar-item brand" href="#top" aria-label="LumiTokens home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        LumiTokens
+      </a>
+      <button class="navbar-burger" aria-label="Open navigation menu" aria-expanded="false" data-target="site-navigation">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+    <div id="site-navigation" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#abstract">Abstract</a>
+        <a class="navbar-item" href="#method">Method</a>
+        <a class="navbar-item" href="#results">Results</a>
+        <a class="navbar-item" href="#bibtex">BibTeX</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <section class="hero publication-header">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <p class="eyebrow">ECCV 2026</p>
+            <h1 class="title publication-title">
+              <span class="gradient-word">LumiTokens</span>: 3D Relighting via<br class="is-hidden-mobile"> Token-Space Lighting Transformation
+            </h1>
+
+            <div class="publication-authors">
+              <span class="author-block"><a href="https://yiwenchen1999.github.io/" target="_blank" rel="noopener noreferrer">Yiwen Chen</a><sup>1</sup></span>
+              <span class="author-block"><a href="https://mgadelha.me/" target="_blank" rel="noopener noreferrer">Matheus Gadelha</a><sup>2</sup></span>
+              <span class="author-block"><a href="https://jianghz.me/" target="_blank" rel="noopener noreferrer">Huaizu Jiang</a><sup>1</sup></span>
+            </div>
+            <div class="publication-affiliations">
+              <span class="author-block"><sup>1</sup>Northeastern University</span>
+              <span class="author-block"><sup>2</sup>Adobe Research</span>
+            </div>
+
+            <div class="publication-links" aria-label="Project resources">
+              <span class="link-block">
+                <span class="button is-normal is-rounded resource-button is-unavailable" aria-disabled="true" title="Paper link will be added when available">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper <small>coming soon</small></span>
+                </span>
+              </span>
+              <span class="link-block">
+                <span class="button is-normal is-rounded resource-button is-unavailable" aria-disabled="true" title="Code link will be added when available">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code <small>coming soon</small></span>
+                </span>
+              </span>
+              <span class="link-block">
+                <a href="#bibtex" class="button is-normal is-rounded resource-button">
+                  <span class="icon"><i class="fas fa-quote-right"></i></span>
+                  <span>BibTeX</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-widescreen">
+      <div class="hero-body">
+        <div class="chapter-tabs" role="tablist" aria-label="LumiTokens video chapters">
+          <button class="chapter-tab is-active" id="tab-object" type="button" role="tab" aria-selected="true" aria-controls="chapter-object" data-chapter="chapter-object">
+            <span class="chapter-number">01</span>
+            <span>Object relighting</span>
+          </button>
+          <button class="chapter-tab" id="tab-scene" type="button" role="tab" aria-selected="false" aria-controls="chapter-scene" data-chapter="chapter-scene" tabindex="-1">
+            <span class="chapter-number">02</span>
+            <span>Scene relighting</span>
+          </button>
+          <button class="chapter-tab" id="tab-progressive" type="button" role="tab" aria-selected="false" aria-controls="chapter-progressive" data-chapter="chapter-progressive" tabindex="-1">
+            <span class="chapter-number">03</span>
+            <span>Progressive editing</span>
+          </button>
+        </div>
+
+        <div class="chapter-viewer" data-video-chapters>
+          <section class="chapter-panel is-active" id="chapter-object" role="tabpanel" aria-labelledby="tab-object" data-playback-rate="0.75">
+            <div class="sample-grid sample-grid-three">
+              <article class="video-sample">
+                <h3>Environment map</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Horse relit under an environment map">
+                  <source src="./demo_videos/teaser_horse/horse_env.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video is-envmap" muted playsinline preload="metadata" aria-label="Changing environment map">
+                    <source src="./demo_videos/teaser_horse/lighting_conditions/horse_env_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Point light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Horse relit under a point light">
+                  <source src="./demo_videos/teaser_horse/horse_point.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="Moving point light condition">
+                    <source src="./demo_videos/teaser_horse/lighting_conditions/horse_point_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Area light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Horse relit under an area light">
+                  <source src="./demo_videos/teaser_horse/horse_area.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="Moving area light condition">
+                    <source src="./demo_videos/teaser_horse/lighting_conditions/horse_area_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+            </div>
+            <p class="chapter-caption">Relight an object under diverse light types while preserving a consistent 3D appearance.</p>
+          </section>
+
+          <section class="chapter-panel" id="chapter-scene" role="tabpanel" aria-labelledby="tab-scene" data-playback-rate="0.375" hidden>
+            <div class="sample-grid sample-grid-three">
+              <article class="video-sample">
+                <h3>Environment map</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene relit under an environment map">
+                  <source src="./demo_videos/teaser_scene/scene_env.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video is-envmap" muted playsinline preload="metadata" aria-label="Changing environment map for the scene">
+                    <source src="./demo_videos/teaser_scene/lighting_conditions/scene_env_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Point light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene relit under a point light">
+                  <source src="./demo_videos/teaser_scene/scene_point.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="Moving point light for the scene">
+                    <source src="./demo_videos/teaser_scene/lighting_conditions/scene_point_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Multiple point lights</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene relit under multiple point lights">
+                  <source src="./demo_videos/teaser_scene/scene_multi_point.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="Multiple moving point lights">
+                    <source src="./demo_videos/teaser_scene/lighting_conditions/scene_multi_point_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+            </div>
+            <p class="chapter-caption">Scene-level relighting captures moving cast shadows, highlights, and interactions between objects.</p>
+          </section>
+
+          <section class="chapter-panel" id="chapter-progressive" role="tabpanel" aria-labelledby="tab-progressive" data-playback-rate="0.375" hidden>
+            <div class="sample-grid sample-grid-four">
+              <article class="video-sample">
+                <h3>Environment light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene after adding an environment light">
+                  <source src="./demo_videos/teaser_progressive/scene_step_1.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video is-envmap" muted playsinline preload="metadata" aria-label="Environment light condition">
+                    <source src="./demo_videos/teaser_progressive/lighting_conditions/scene_step_1_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Add a point light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene after adding a point light">
+                  <source src="./demo_videos/teaser_progressive/scene_step_2.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="First point light condition">
+                    <source src="./demo_videos/teaser_progressive/lighting_conditions/scene_step_2_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Add another point light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene after adding another point light">
+                  <source src="./demo_videos/teaser_progressive/scene_step_3.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="Second point light condition">
+                    <source src="./demo_videos/teaser_progressive/lighting_conditions/scene_step_3_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+              <article class="video-sample">
+                <h3>Add an area light</h3>
+                <video class="result-video" muted playsinline preload="metadata" aria-label="Scene after adding an area light">
+                  <source src="./demo_videos/teaser_progressive/scene_step_4.mp4" type="video/mp4">
+                </video>
+                <div class="lighting-strip">
+                  <span class="lighting-label">Lighting</span>
+                  <video class="lighting-video" muted playsinline preload="metadata" aria-label="Area light condition">
+                    <source src="./demo_videos/teaser_progressive/lighting_conditions/scene_step_4_lighting.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </article>
+            </div>
+            <p class="chapter-caption">Lighting edits accumulate in token space: environment light, point lights, then an area light.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="abstract">
+    <div class="container is-max-desktop">
+      <div class="has-text-centered abstract-heading">
+        <p class="section-kicker">Overview</p>
+        <h2 class="title is-2">Abstract</h2>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified abstract-copy">
+            <p>
+              Existing 3D relighting methods rely on explicit material decomposition, diffusion-based view-space generation, or a combination of both—requiring full recomputation for every new lighting condition. Recent latent scene representations instead compress multi-view images into compact tokens without fixed physical semantics, opening a new design space for relighting.
+            </p>
+            <p>
+              We present <strong>LumiTokens</strong>, a framework that formulates 3D relighting as a direct transformation on latent scene tokens, without explicit 3D representations, rendering equations, or physics-based decomposition. A Scene Token Editor jointly processes scene tokens and Plücker-parameterized light-ray tokens through self-attention, producing updated tokens that decode into multi-view-consistent relit images. A unified ray-token interface supports environment maps, point lights, and area lights.
+            </p>
+            <p>
+              Because the editor output remains in the same latent space as its input, LumiTokens supports <strong>progressive relighting</strong>: users can add illumination one light source at a time, with every edit composing directly in token space. Experiments show comparable or superior relighting quality to prior methods while enabling persistent, composable lighting edits.
+            </p>
+          </div>
+          <aside class="tldr-card" aria-labelledby="tldr-title">
+            <p class="tldr-label" id="tldr-title">TL;DR</p>
+            <p>
+              We encode sparse views once, then use tokenized light-rays to edit the latent scene representation directly. The same Scene Token Editor supports environment, point, and area lights, and its output can be edited again for progressive, composable relighting—without explicit geometry or material decomposition.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section method-section" id="method">
+    <div class="container is-max-desktop">
+      <div class="has-text-centered section-heading">
+        <p class="section-kicker">How it works</p>
+        <h2 class="title is-2">Relighting happens inside the scene representation</h2>
+        <p class="section-lede">Encode sparse views once, edit the latent scene with light-ray tokens, and decode any requested view.</p>
+      </div>
+
+      <figure class="paper-figure architecture-figure">
+        <img src="./static/images/lumitokens/architecture.png" alt="LumiTokens architecture with a scene encoder, a light-conditioned Scene Token Editor, and a novel-view decoder.">
+      </figure>
+
+      <div class="columns is-variable is-5 method-cards">
+        <div class="column">
+          <article class="method-card">
+            <span class="step-number">01</span>
+            <h3 class="title is-4">Encode the scene</h3>
+            <p>Posed sparse-view images are compressed into a compact set of unstructured latent scene tokens.</p>
+          </article>
+        </div>
+        <div class="column">
+          <article class="method-card featured-card">
+            <span class="step-number">02</span>
+            <h3 class="title is-4">Edit with light rays</h3>
+            <p>The Scene Token Editor uses self-attention to transform scene tokens jointly with unified Plücker light-ray tokens.</p>
+          </article>
+        </div>
+        <div class="column">
+          <article class="method-card">
+            <span class="step-number">03</span>
+            <h3 class="title is-4">Render or keep editing</h3>
+            <p>Decode a relit novel view, or feed the updated tokens back to the editor to compose another lighting change.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="results">
+    <div class="container is-widescreen">
+      <div class="has-text-centered section-heading">
+        <p class="section-kicker">Results</p>
+        <h2 class="title is-2">Relighting across objects and scenes</h2>
+        <p class="section-lede">Explore diverse lighting conditions and progressive edits. Select a lighting setup within each card to compare results.</p>
+      </div>
+
+      <div class="gallery-chapter-tabs" role="tablist" aria-label="Results chapters">
+        <button class="gallery-chapter-tab is-active" id="gallery-tab-object" type="button" role="tab" aria-selected="true" aria-controls="gallery-object" data-gallery-panel="gallery-object">
+          <span>01</span> Object relighting
+        </button>
+        <button class="gallery-chapter-tab" id="gallery-tab-scene" type="button" role="tab" aria-selected="false" aria-controls="gallery-scene" data-gallery-panel="gallery-scene" tabindex="-1">
+          <span>02</span> Scene relighting
+        </button>
+        <button class="gallery-chapter-tab" id="gallery-tab-progressive" type="button" role="tab" aria-selected="false" aria-controls="gallery-progressive" data-gallery-panel="gallery-progressive" tabindex="-1">
+          <span>03</span> Progressive editing
+        </button>
+      </div>
+
+      <div class="results-gallery" data-results-gallery>
+        <section class="results-gallery-panel is-active" id="gallery-object" role="tabpanel" aria-labelledby="gallery-tab-object" data-playback-rate="0.75">
+          <div class="gallery-panel-heading">
+            <div>
+              <h3 class="title is-3">Object relighting</h3>
+            </div>
+            <span>4 objects · 12 results</span>
+          </div>
+
+          <div class="object-results-grid">
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Camera</h4><span data-active-condition>Environment 1</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Camera relighting result"><source src="./demo_videos/gallery_obj/camera_env_1.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Camera lighting condition"><source src="./demo_videos/gallery_obj/lighting_conditions/camera_env_1_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Camera lighting conditions">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Environment 1" data-main-src="./demo_videos/gallery_obj/camera_env_1.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/camera_env_1_lighting.mp4" data-envmap="true">Env 1</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Environment 2" data-main-src="./demo_videos/gallery_obj/camera_env_2.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/camera_env_2_lighting.mp4" data-envmap="true">Env 2</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light" data-main-src="./demo_videos/gallery_obj/camera_area.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/camera_area_lighting.mp4">Area</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Megaphone</h4><span data-active-condition>Colored point light</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Megaphone relighting result"><source src="./demo_videos/gallery_obj/megaphone_colored_point.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video data-light-video muted loop playsinline preload="metadata" aria-label="Megaphone lighting condition"><source src="./demo_videos/gallery_obj/lighting_conditions/megaphone_colored_point_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Megaphone lighting conditions">
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Environment map" data-main-src="./demo_videos/gallery_obj/megaphone_env.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/megaphone_env_lighting.mp4" data-envmap="true">Env</button>
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Colored point light" data-main-src="./demo_videos/gallery_obj/megaphone_colored_point.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/megaphone_colored_point_lighting.mp4">Point</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light" data-main-src="./demo_videos/gallery_obj/megaphone_area.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/megaphone_area_lighting.mp4">Area</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Brass vase</h4><span data-active-condition>Area light 1</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Brass vase relighting result"><source src="./demo_videos/gallery_obj/brass_vase_area_1.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video data-light-video muted loop playsinline preload="metadata" aria-label="Brass vase lighting condition"><source src="./demo_videos/gallery_obj/lighting_conditions/brass_vase_area_1_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Brass vase lighting conditions">
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Environment map" data-main-src="./demo_videos/gallery_obj/brass_vase_env.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/brass_vase_env_lighting.mp4" data-envmap="true">Env</button>
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Area light 1" data-main-src="./demo_videos/gallery_obj/brass_vase_area_1.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/brass_vase_area_1_lighting.mp4">Area 1</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light 2" data-main-src="./demo_videos/gallery_obj/brass_vase_area_2.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/brass_vase_area_2_lighting.mp4">Area 2</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Marble bust</h4><span data-active-condition>Environment map</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Marble bust relighting result"><source src="./demo_videos/gallery_obj/marble_bust_env.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Marble bust lighting condition"><source src="./demo_videos/gallery_obj/lighting_conditions/marble_bust_env_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Marble bust lighting conditions">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Environment map" data-main-src="./demo_videos/gallery_obj/marble_bust_env.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/marble_bust_env_lighting.mp4" data-envmap="true">Env</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Point light" data-main-src="./demo_videos/gallery_obj/marble_bust_point.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/marble_bust_point_lighting.mp4">Point</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light" data-main-src="./demo_videos/gallery_obj/marble_bust_area.mp4" data-light-src="./demo_videos/gallery_obj/lighting_conditions/marble_bust_area_lighting.mp4">Area</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="results-gallery-panel" id="gallery-scene" role="tabpanel" aria-labelledby="gallery-tab-scene" data-playback-rate="0.375" hidden>
+          <div class="gallery-panel-heading">
+            <div>
+              <h3 class="title is-3">Scene relighting</h3>
+            </div>
+            <span>3 scenes · 9 results</span>
+          </div>
+
+          <div class="scene-results-grid">
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Framed artwork scene</h4><span data-active-condition>Environment map</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Framed artwork scene relighting result"><source src="./demo_videos/gallery_scenes/scene_1_env.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Framed artwork scene lighting condition"><source src="./demo_videos/gallery_scenes/lighting_conditions/scene_1_env_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Framed artwork scene lighting conditions">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Environment map" data-main-src="./demo_videos/gallery_scenes/scene_1_env.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_1_env_lighting.mp4" data-envmap="true">Env</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Point light" data-main-src="./demo_videos/gallery_scenes/scene_1_point.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_1_point_lighting.mp4">Point</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light" data-main-src="./demo_videos/gallery_scenes/scene_1_area.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_1_area_lighting.mp4">Area</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Apple still-life scene</h4><span data-active-condition>Environment map 1</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Apple still-life scene relighting result"><source src="./demo_videos/gallery_scenes/scene_2_env_1.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Apple still-life scene lighting condition"><source src="./demo_videos/gallery_scenes/lighting_conditions/scene_2_env_1_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Apple still-life scene lighting conditions">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Environment map 1" data-main-src="./demo_videos/gallery_scenes/scene_2_env_1.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_2_env_1_lighting.mp4" data-envmap="true">Env 1</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Environment map 2" data-main-src="./demo_videos/gallery_scenes/scene_2_env_2.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_2_env_2_lighting.mp4" data-envmap="true">Env 2</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light" data-main-src="./demo_videos/gallery_scenes/scene_2_area.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_2_area_lighting.mp4">Area</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Headphones &amp; vessels</h4><span data-active-condition>Multiple point lights</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Headphones and vessels scene relighting result"><source src="./demo_videos/gallery_scenes/scene_3_multi_point.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video data-light-video muted loop playsinline preload="metadata" aria-label="Headphones and vessels scene lighting condition"><source src="./demo_videos/gallery_scenes/lighting_conditions/scene_3_multi_point_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher" role="group" aria-label="Headphones and vessels scene lighting conditions">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Multiple point lights" data-main-src="./demo_videos/gallery_scenes/scene_3_multi_point.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_3_multi_point_lighting.mp4">Multi-point</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Point light" data-main-src="./demo_videos/gallery_scenes/scene_3_pointlight.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_3_pointlight_lighting.mp4">Point</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Area light" data-main-src="./demo_videos/gallery_scenes/scene_3_area.mp4" data-light-src="./demo_videos/gallery_scenes/lighting_conditions/scene_3_area_lighting.mp4">Area</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="results-gallery-panel" id="gallery-progressive" role="tabpanel" aria-labelledby="gallery-tab-progressive" data-playback-rate="0.375" hidden>
+          <div class="gallery-panel-heading">
+            <div>
+              <h3 class="title is-3">Progressive lighting edits</h3>
+            </div>
+            <span>3 scenes · 10 edit states</span>
+          </div>
+
+          <div class="progressive-results-grid">
+            <article class="result-gallery-card progressive-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Motorcycle scene</h4><span data-active-condition>Step 1</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Progressive motorcycle scene result"><source src="./demo_videos/gallery_progressive/scene_1_step_1.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Motorcycle scene lighting condition"><source src="./demo_videos/gallery_progressive/lighting_conditions/scene_1_step_1_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher progressive-switcher" role="group" aria-label="Motorcycle scene edit steps">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Step 1" data-main-src="./demo_videos/gallery_progressive/scene_1_step_1.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_1_step_1_lighting.mp4" data-envmap="true">1</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 2" data-main-src="./demo_videos/gallery_progressive/scene_1_step_2.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_1_step_2_lighting.mp4">2</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 3" data-main-src="./demo_videos/gallery_progressive/scene_1_step_3.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_1_step_3_lighting.mp4">3</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card progressive-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Still-life scene</h4><span data-active-condition>Step 1</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Progressive still-life scene result"><source src="./demo_videos/gallery_progressive/scene_2_step_1.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Still-life scene lighting condition"><source src="./demo_videos/gallery_progressive/lighting_conditions/scene_2_step_1_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher progressive-switcher" role="group" aria-label="Still-life scene edit steps">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Step 1" data-main-src="./demo_videos/gallery_progressive/scene_2_step_1.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_2_step_1_lighting.mp4" data-envmap="true">1</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 2" data-main-src="./demo_videos/gallery_progressive/scene_2_step_2.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_2_step_2_lighting.mp4">2</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 3" data-main-src="./demo_videos/gallery_progressive/scene_2_step_3.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_2_step_3_lighting.mp4">3</button>
+              </div>
+            </article>
+
+            <article class="result-gallery-card progressive-gallery-card" data-result-card>
+              <div class="result-card-heading"><h4>Tabletop scene</h4><span data-active-condition>Step 1</span></div>
+              <video class="result-card-video" data-result-video muted loop playsinline preload="metadata" aria-label="Progressive tabletop scene result"><source src="./demo_videos/gallery_progressive/scene_3_step_1.mp4" type="video/mp4"></video>
+              <div class="result-lighting-preview">
+                <span>Lighting</span>
+                <video class="is-envmap" data-light-video muted loop playsinline preload="metadata" aria-label="Tabletop scene lighting condition"><source src="./demo_videos/gallery_progressive/lighting_conditions/scene_3_step_1_lighting.mp4" type="video/mp4"></video>
+              </div>
+              <div class="result-condition-switcher progressive-switcher" role="group" aria-label="Tabletop scene edit steps">
+                <button class="result-condition is-active" type="button" aria-pressed="true" data-label="Step 1" data-main-src="./demo_videos/gallery_progressive/scene_3_step_1.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_3_step_1_lighting.mp4" data-envmap="true">1</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 2" data-main-src="./demo_videos/gallery_progressive/scene_3_step_2.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_3_step_2_lighting.mp4">2</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 3" data-main-src="./demo_videos/gallery_progressive/scene_3_step_3.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_3_step_3_lighting.mp4">3</button>
+                <button class="result-condition" type="button" aria-pressed="false" data-label="Step 4" data-main-src="./demo_videos/gallery_progressive/scene_3_step_4.mp4" data-light-src="./demo_videos/gallery_progressive/lighting_conditions/scene_3_step_4_lighting.mp4">4</button>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bibtex-section" id="bibtex">
+    <div class="container is-max-desktop content">
+      <div class="has-text-centered section-heading">
+        <p class="section-kicker">Reference</p>
+        <h2 class="title is-2">BibTeX</h2>
+      </div>
+      <div class="bibtex-block">
+        <button class="copy-button" type="button" data-copy-target="bibtex-code" aria-label="Copy BibTeX citation">
+          <i class="far fa-copy" aria-hidden="true"></i>
+          <span>Copy</span>
+        </button>
+        <pre><code id="bibtex-code">@inproceedings{chen2026lumitokens,
+  title     = {LumiTokens: 3D Relighting via Token-Space Lighting Transformation},
+  author    = {Chen, Yiwen and Gadelha, Matheus and Jiang, Huaizu},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2026}
+}</code></pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container is-max-desktop">
+    <div class="content has-text-centered">
+      <p><strong>LumiTokens</strong> · Northeastern University &amp; Adobe Research</p>
+      <p class="template-credit">
+        Website template adapted from <a href="https://nerfies.github.io">Nerfies</a>, licensed under
+        <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

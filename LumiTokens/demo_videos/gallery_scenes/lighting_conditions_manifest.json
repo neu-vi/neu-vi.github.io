@@ -1,0 +1,120 @@
+{
+  "selection_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/demo_materials/website_videos/gallery_scenes",
+  "generated_at": "2026-07-29T05:17:05.480622+00:00",
+  "fps": 24,
+  "summary": {
+    "processed": 9,
+    "skipped_existing": 0,
+    "failed": 0
+  },
+  "samples": [
+    {
+      "prediction": "scene_1_area.mp4",
+      "lighting_video": "lighting_conditions/scene_1_area_lighting.mp4",
+      "scene": "3e6446859fb84867a74d73468c9fcbe6_area_0",
+      "iter": "iter_00000497",
+      "source_dataset": "video_making_scene_webb_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_scene_webb_all",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 29311
+    },
+    {
+      "prediction": "scene_1_env.mp4",
+      "lighting_video": "lighting_conditions/scene_1_env_lighting.mp4",
+      "scene": "3e6446859fb84867a74d73468c9fcbe6_combined_0",
+      "iter": "iter_00000489",
+      "source_dataset": "video_making_scene_webb_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_scene_webb_all",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 256481
+    },
+    {
+      "prediction": "scene_1_point.mp4",
+      "lighting_video": "lighting_conditions/scene_1_point_lighting.mp4",
+      "scene": "3e6446859fb84867a74d73468c9fcbe6_white_pl_0",
+      "iter": "iter_00000472",
+      "source_dataset": "video_making_scene_webb_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_scene_webb_all",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 25061
+    },
+    {
+      "prediction": "scene_2_area.mp4",
+      "lighting_video": "lighting_conditions/scene_2_area_lighting.mp4",
+      "scene": "42d14d33af274a6c9caad5156dae60dd_area_0",
+      "iter": "iter_00000596",
+      "source_dataset": "paper_suppb",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppb",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 33798
+    },
+    {
+      "prediction": "scene_2_env_2.mp4",
+      "lighting_video": "lighting_conditions/scene_2_env_2_lighting.mp4",
+      "scene": "42d14d33af274a6c9caad5156dae60dd_combined_0",
+      "iter": "iter_00000053",
+      "source_dataset": "paper_suppb",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppb",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 164616
+    },
+    {
+      "prediction": "scene_2_env_1.mp4",
+      "lighting_video": "lighting_conditions/scene_2_env_1_lighting.mp4",
+      "scene": "42d14d33af274a6c9caad5156dae60dd_env_1",
+      "iter": "iter_00000628",
+      "source_dataset": "paper_suppb",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/paper_suppb",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 241779
+    },
+    {
+      "prediction": "scene_3_area.mp4",
+      "lighting_video": "lighting_conditions/scene_3_area_lighting.mp4",
+      "scene": "5a83321dfc4d4f60be6cb300826a248b_area_0",
+      "iter": "iter_00000491",
+      "source_dataset": "video_making_scene_weba_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_scene_weba_all",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 33527
+    },
+    {
+      "prediction": "scene_3_pointlight.mp4",
+      "lighting_video": "lighting_conditions/scene_3_pointlight_lighting.mp4",
+      "scene": "5a83321dfc4d4f60be6cb300826a248b_combined_1",
+      "iter": "iter_00000462",
+      "source_dataset": "video_making_scene_weba_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_scene_weba_all",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 31253
+    },
+    {
+      "prediction": "scene_3_multi_point.mp4",
+      "lighting_video": "lighting_conditions/scene_3_multi_point_lighting.mp4",
+      "scene": "5a83321dfc4d4f60be6cb300826a248b_multi_pl_0",
+      "iter": "iter_00000494",
+      "source_dataset": "video_making_scene_weba_all",
+      "source_input_root": "/music-shared-disk/group/ct/yiwen/codes/LVSMExp/ckpt_dpt/video_making_scene_weba_all",
+      "expected_frames": 50,
+      "status": "processed",
+      "lighting_frames": 50,
+      "bytes": 46628
+    }
+  ]
+}
