@@ -6,6 +6,8 @@
   <meta name="description" content="StreamForce: Streaming Video Generation with Streaming Force Control">
   <title>StreamForce: Streaming Video Generation with Streaming Force Control</title>
   <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/9910/9910417.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <style>
     :root {
       --text: #252525;
@@ -99,6 +101,14 @@
       line-height: 1.65;
     }
 
+    .venue {
+      margin: 0.6rem auto 0;
+      color: var(--accent);
+      font-size: clamp(1rem, 1.9vw, 1.18rem);
+      font-weight: 700;
+      line-height: 1.65;
+    }
+
     .publication-links {
       display: flex;
       justify-content: center;
@@ -121,6 +131,15 @@
       font-size: 0.94rem;
       font-weight: 650;
       text-decoration: none;
+      gap: 0.45rem;
+    }
+
+    .link-block .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.05em;
+      font-size: 1.05em;
     }
 
     .button.is-rounded,
@@ -156,6 +175,39 @@
     }
 
     .link-block.light:hover { background: var(--soft); }
+
+    .bibtex-block {
+      position: relative;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .bibtex-block pre {
+      padding-top: 2.9rem;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: white;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .copy-button:hover {
+      background: var(--soft);
+      color: var(--text);
+    }
 
     .tldr {
       max-width: 920px;
@@ -470,12 +522,26 @@
               <sup>*</sup>Equal contributions &nbsp;&nbsp;
               <sup>&dagger;</sup>Equal advising
             </div>
-           
+
+            <p class="venue">SIGGRAPH Asia 2026</p>
 
             <div class="publication-links">
-              <!-- <a class="button is-rounded is-dark link-block" target="_blank" rel="noopener noreferrer">Paper</a> -->
-              <span class="button is-rounded is-dark link-block" aria-disabled="true">Code (coming soon)</span>
-              <!-- <a class="button is-rounded link-block light" href="#bibtex">BibTeX</a> -->
+              <a class="button is-rounded is-dark link-block" href="https://arxiv.org/abs/2606.07508" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><i class="ai ai-arxiv" aria-hidden="true"></i></span>
+                <span>arXiv</span>
+              </a>
+              <a class="button is-rounded is-dark link-block" href="https://arxiv.org/pdf/2606.07508" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><i class="fas fa-file-pdf" aria-hidden="true"></i></span>
+                <span>Paper</span>
+              </a>
+              <a class="button is-rounded is-dark link-block" href="https://github.com/neu-vi/StreamForce" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><i class="fab fa-github" aria-hidden="true"></i></span>
+                <span>Code</span>
+              </a>
+              <a class="button is-rounded is-dark link-block" href="#bibtex">
+                <span class="icon"><i class="fas fa-quote-right" aria-hidden="true"></i></span>
+                <span>BibTeX</span>
+              </a>
             </div>
 
             <div class="tldr">
@@ -657,17 +723,21 @@
     <section class="section" id="bibtex">
       <div class="container">
         <h2>BibTeX</h2>
-        <pre><code>
-          @misc{wang2026streamingvideogenerationstreaming,
-            title={Streaming Video Generation with Streaming Force Control}, 
-            author={Hanhui Wang and Yiming Xie and Haiwen Feng and Zhaoyang Lv and Shenlong Wang and Huaizu Jiang},
-            year={2026},
-            eprint={2606.07508},
-            archivePrefix={arXiv},
-            primaryClass={cs.CV},
-            url={https://arxiv.org/abs/2606.07508}, 
-          }
-        </code></pre>
+        <div class="bibtex-block">
+          <button class="copy-button" type="button" data-copy-target="bibtex-code" aria-label="Copy BibTeX citation">
+            <i class="far fa-copy" aria-hidden="true"></i>
+            <span>Copy</span>
+          </button>
+          <pre><code id="bibtex-code">@misc{wang2026streamingvideogenerationstreaming,
+  title={Streaming Video Generation with Streaming Force Control},
+  author={Hanhui Wang and Yiming Xie and Haiwen Feng and Zhaoyang Lv and Shenlong Wang and Huaizu Jiang},
+  year={2026},
+  eprint={2606.07508},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2606.07508},
+}</code></pre>
+        </div>
       </div>
     </section>
    
@@ -728,6 +798,24 @@
       });
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+    })();
+
+    (() => {
+      document.querySelectorAll('.copy-button[data-copy-target]').forEach((button) => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        if (!target) return;
+        const label = button.querySelector('span');
+        button.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(target.textContent.trim());
+            const original = label.textContent;
+            label.textContent = 'Copied';
+            setTimeout(() => { label.textContent = original; }, 1600);
+          } catch (error) {
+            /* clipboard unavailable */
+          }
+        });
       });
     })();
   </script>
