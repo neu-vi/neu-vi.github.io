@@ -2,12 +2,17 @@
 
 This folder contains a standalone static frontend for ablation-focused force evaluation.
 
+For the general "how do I stand one of these up" recipe (Google Sheet + Apps Script
+deployment, endpoint wiring, troubleshooting), see [`../README.md`](../README.md).
+This file only covers what is specific to this study.
+
 ## Files
 
 - `index.html`, `style.css`, `app.js`: frontend app
 - `manifest.json`: required question manifest (create separately)
 - `videos/`: condition/method videos
 - `imgs/`: reference images
+- `apps_script/Code.gs`: Google Apps Script backend that writes submissions to a Google Sheet
 
 ## Conditions and tasks
 
@@ -74,7 +79,7 @@ Place `manifest.json` in this folder. Expected structure:
 
 ## Submission
 
-In `app.js`:
+In `app.js`, line 1:
 
 ```js
 const SUBMIT_ENDPOINT = "";
@@ -82,6 +87,39 @@ const SUBMIT_ENDPOINT = "";
 
 - Empty: download JSON locally on submit
 - Non-empty URL: POST JSON to endpoint, fallback to local JSON on failure
+
+The endpoint is a Google Apps Script Web app running `apps_script/Code.gs`, bound to
+a Google Sheet. Deployment steps are in [`../README.md`](../README.md#deploying-a-study).
+Each study posts its own payload shape, so this one needs its own sheet and its own
+deployment — do not reuse another study's endpoint.
+
+### Payload shape
+
+```json
+{
+  "participant_id": "<uuid>",
+  "completed_at_iso": "...",
+  "user_agent": "...",
+  "responses": [
+    {
+      "participant_id": "<uuid>",
+      "condition": "wind_magnitude",
+      "task_type": "magnitude_adaptation",
+      "case_id": "216",
+      "shown_order": ["ours", "text_inference", "force_prompting"],
+      "answer_label": "A",
+      "answer_method": "ours",
+      "answer_labels": ["A"],
+      "answer_methods": ["ours"],
+      "timestamp_iso": "...",
+      "user_agent": "..."
+    }
+  ]
+}
+```
+
+`shown_order` is the per-question shuffled method order; `Code.gs` uses it to map the
+displayed labels A/B/C/D back to method names. `NONE` means "Neither can".
 
 ## Local run
 
