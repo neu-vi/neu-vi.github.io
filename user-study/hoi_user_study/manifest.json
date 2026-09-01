@@ -1,0 +1,343 @@
+{
+  "version": 2,
+  "title": "Human-Object Interaction Video Study",
+  "block_order": [
+    "tracking",
+    "generation"
+  ],
+  "blocks": {
+    "tracking": {
+      "methods": [
+        "m1",
+        "m2"
+      ],
+      "title": "Which video reproduces the reference motion better?"
+    },
+    "generation": {
+      "methods": [
+        "m1",
+        "m2",
+        "m3",
+        "m4"
+      ],
+      "title": "Which character motion best follows the written instruction?",
+      "attention_check": {
+        "case_id": "g02",
+        "duplicate_method": "m1",
+        "position": 9
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "t01",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t01.mp4?v=e630c677",
+      "videos": {
+        "m1": "videos/tracking/m1/t01.mp4?v=c82fe74d",
+        "m2": "videos/tracking/m2/t01.mp4?v=82f20678"
+      }
+    },
+    {
+      "id": "t02",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t02.mp4?v=8291c464",
+      "videos": {
+        "m1": "videos/tracking/m1/t02.mp4?v=3657cbd2",
+        "m2": "videos/tracking/m2/t02.mp4?v=6eaac42f"
+      }
+    },
+    {
+      "id": "t03",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t03.mp4?v=27567fee",
+      "videos": {
+        "m1": "videos/tracking/m1/t03.mp4?v=8f95ead3",
+        "m2": "videos/tracking/m2/t03.mp4?v=3d0733da"
+      }
+    },
+    {
+      "id": "t04",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t04.mp4?v=26fbc790",
+      "videos": {
+        "m1": "videos/tracking/m1/t04.mp4?v=616e1913",
+        "m2": "videos/tracking/m2/t04.mp4?v=e818e645"
+      }
+    },
+    {
+      "id": "t05",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t05.mp4?v=e1d4bc0b",
+      "videos": {
+        "m1": "videos/tracking/m1/t05.mp4?v=b8b57c66",
+        "m2": "videos/tracking/m2/t05.mp4?v=ab64a464"
+      }
+    },
+    {
+      "id": "t06",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t06.mp4?v=f09d727a",
+      "videos": {
+        "m1": "videos/tracking/m1/t06.mp4?v=9c0a028c",
+        "m2": "videos/tracking/m2/t06.mp4?v=db15b5d8"
+      }
+    },
+    {
+      "id": "t07",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t07.mp4?v=a88d4506",
+      "videos": {
+        "m1": "videos/tracking/m1/t07.mp4?v=523cc9ca",
+        "m2": "videos/tracking/m2/t07.mp4?v=9e774bbb"
+      }
+    },
+    {
+      "id": "t08",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t08.mp4?v=1303789c",
+      "videos": {
+        "m1": "videos/tracking/m1/t08.mp4?v=be936d6f",
+        "m2": "videos/tracking/m2/t08.mp4?v=484e206a"
+      }
+    },
+    {
+      "id": "t09",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t09.mp4?v=c0306bfd",
+      "videos": {
+        "m1": "videos/tracking/m1/t09.mp4?v=b464d930",
+        "m2": "videos/tracking/m2/t09.mp4?v=5dd41d19"
+      }
+    },
+    {
+      "id": "t10",
+      "block": "tracking",
+      "reference": "videos/tracking/ref/t10.mp4?v=734eec44",
+      "videos": {
+        "m1": "videos/tracking/m1/t10.mp4?v=1814cbab",
+        "m2": "videos/tracking/m2/t10.mp4?v=04c22e44"
+      }
+    },
+    {
+      "id": "g01",
+      "block": "generation",
+      "prompt": "Pull the clothesstand, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g01.mp4?v=9b547546",
+        "m2": "videos/generation/m2/g01.mp4?v=3adf9bc6",
+        "m3": "videos/generation/m3/g01.mp4?v=2303e3f3",
+        "m4": "videos/generation/m4/g01.mp4?v=06c0396a"
+      }
+    },
+    {
+      "id": "g02",
+      "block": "generation",
+      "prompt": "Pull the clothesstand, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g02.mp4?v=3e394e73",
+        "m2": "videos/generation/m2/g02.mp4?v=652c3f71",
+        "m3": "videos/generation/m3/g02.mp4?v=ed427786",
+        "m4": "videos/generation/m4/g02.mp4?v=35c5982c"
+      }
+    },
+    {
+      "id": "g03",
+      "block": "generation",
+      "prompt": "Kick the base of the floorlamp, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g03.mp4?v=85505d65",
+        "m2": "videos/generation/m2/g03.mp4?v=e115e0f6",
+        "m3": "videos/generation/m3/g03.mp4?v=3d85b325",
+        "m4": "videos/generation/m4/g03.mp4?v=620a5da2"
+      }
+    },
+    {
+      "id": "g04",
+      "block": "generation",
+      "prompt": "Lift the largebox, rotate the largebox, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g04.mp4?v=e819734e",
+        "m2": "videos/generation/m2/g04.mp4?v=ed11da92",
+        "m3": "videos/generation/m3/g04.mp4?v=b8230332",
+        "m4": "videos/generation/m4/g04.mp4?v=9b4e6789"
+      }
+    },
+    {
+      "id": "g05",
+      "block": "generation",
+      "prompt": "Kick the largebox, lift the largebox, move the largebox, and put down the largebox.",
+      "videos": {
+        "m1": "videos/generation/m1/g05.mp4?v=d334c29b",
+        "m2": "videos/generation/m2/g05.mp4?v=4f2de1c1",
+        "m3": "videos/generation/m3/g05.mp4?v=66c23f30",
+        "m4": "videos/generation/m4/g05.mp4?v=3d86386a"
+      }
+    },
+    {
+      "id": "g06",
+      "block": "generation",
+      "prompt": "Lift the largetable above your head, spin it and put the largetable down.",
+      "videos": {
+        "m1": "videos/generation/m1/g06.mp4?v=3eb58749",
+        "m2": "videos/generation/m2/g06.mp4?v=6ca518c5",
+        "m3": "videos/generation/m3/g06.mp4?v=ff485e32",
+        "m4": "videos/generation/m4/g06.mp4?v=663f308a"
+      }
+    },
+    {
+      "id": "g07",
+      "block": "generation",
+      "prompt": "Lift the largetable above your head, walk, and put the largetable down.",
+      "videos": {
+        "m1": "videos/generation/m1/g07.mp4?v=d0d5b153",
+        "m2": "videos/generation/m2/g07.mp4?v=2835831f",
+        "m3": "videos/generation/m3/g07.mp4?v=d07f05fd",
+        "m4": "videos/generation/m4/g07.mp4?v=5d5427d7"
+      }
+    },
+    {
+      "id": "g08",
+      "block": "generation",
+      "prompt": "Grasp the sides of the monitor, tilt it, pull the monitor, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g08.mp4?v=712a2fa8",
+        "m2": "videos/generation/m2/g08.mp4?v=fb4e6e21",
+        "m3": "videos/generation/m3/g08.mp4?v=ff65199e",
+        "m4": "videos/generation/m4/g08.mp4?v=c81a46ea"
+      }
+    },
+    {
+      "id": "g09",
+      "block": "generation",
+      "prompt": "Lift the monitor, rotate the monitor, and put down the monitor.",
+      "videos": {
+        "m1": "videos/generation/m1/g09.mp4?v=5a6dfd58",
+        "m2": "videos/generation/m2/g09.mp4?v=1a768ce0",
+        "m3": "videos/generation/m3/g09.mp4?v=a4a13ec4",
+        "m4": "videos/generation/m4/g09.mp4?v=ab3309fe"
+      }
+    },
+    {
+      "id": "g10",
+      "block": "generation",
+      "prompt": "Lift the plasticbox, rotate the plasticbox, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g10.mp4?v=4514de66",
+        "m2": "videos/generation/m2/g10.mp4?v=a2a1f14d",
+        "m3": "videos/generation/m3/g10.mp4?v=6c740ee3",
+        "m4": "videos/generation/m4/g10.mp4?v=48cc8523"
+      }
+    },
+    {
+      "id": "g11",
+      "block": "generation",
+      "prompt": "Push the smallbox, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g11.mp4?v=0e78df9e",
+        "m2": "videos/generation/m2/g11.mp4?v=17b7878e",
+        "m3": "videos/generation/m3/g11.mp4?v=0c8babdd",
+        "m4": "videos/generation/m4/g11.mp4?v=d0e86192"
+      }
+    },
+    {
+      "id": "g12",
+      "block": "generation",
+      "prompt": "Lift the smalltable above your head, spin it and put the smalltable down.",
+      "videos": {
+        "m1": "videos/generation/m1/g12.mp4?v=ec27b752",
+        "m2": "videos/generation/m2/g12.mp4?v=25289483",
+        "m3": "videos/generation/m3/g12.mp4?v=39fde792",
+        "m4": "videos/generation/m4/g12.mp4?v=2bf69a77"
+      }
+    },
+    {
+      "id": "g13",
+      "block": "generation",
+      "prompt": "Push the suitcase, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g13.mp4?v=034e5b78",
+        "m2": "videos/generation/m2/g13.mp4?v=b2b6ed97",
+        "m3": "videos/generation/m3/g13.mp4?v=9a24a704",
+        "m4": "videos/generation/m4/g13.mp4?v=0e504059"
+      }
+    },
+    {
+      "id": "g14",
+      "block": "generation",
+      "prompt": "Lift the suitcase, move the suitcase, and put down the suitcase.",
+      "videos": {
+        "m1": "videos/generation/m1/g14.mp4?v=8614bba9",
+        "m2": "videos/generation/m2/g14.mp4?v=65a6e3de",
+        "m3": "videos/generation/m3/g14.mp4?v=a3fed184",
+        "m4": "videos/generation/m4/g14.mp4?v=dac9c09e"
+      }
+    },
+    {
+      "id": "g15",
+      "block": "generation",
+      "prompt": "Kick the trashcan, lift the trashcan, move the trashcan, and put down the trashcan.",
+      "videos": {
+        "m1": "videos/generation/m1/g15.mp4?v=cf53083d",
+        "m2": "videos/generation/m2/g15.mp4?v=11783efa",
+        "m3": "videos/generation/m3/g15.mp4?v=00649cab",
+        "m4": "videos/generation/m4/g15.mp4?v=11d91ae6"
+      }
+    },
+    {
+      "id": "g16",
+      "block": "generation",
+      "prompt": "Lift the tripod, move the tripod, and put down the tripod.",
+      "videos": {
+        "m1": "videos/generation/m1/g16.mp4?v=7db91e4b",
+        "m2": "videos/generation/m2/g16.mp4?v=6ed72d72",
+        "m3": "videos/generation/m3/g16.mp4?v=c98c8a45",
+        "m4": "videos/generation/m4/g16.mp4?v=cf7ff865"
+      }
+    },
+    {
+      "id": "g17",
+      "block": "generation",
+      "prompt": "Hold and turn the tripod around to a different orientation.",
+      "videos": {
+        "m1": "videos/generation/m1/g17.mp4?v=82f3505d",
+        "m2": "videos/generation/m2/g17.mp4?v=ff6520ae",
+        "m3": "videos/generation/m3/g17.mp4?v=f95f1090",
+        "m4": "videos/generation/m4/g17.mp4?v=929e3dd2"
+      }
+    },
+    {
+      "id": "g18",
+      "block": "generation",
+      "prompt": "Lift the whitechair over your head, walk and then place the whitechair on the floor.",
+      "videos": {
+        "m1": "videos/generation/m1/g18.mp4?v=e703c7ea",
+        "m2": "videos/generation/m2/g18.mp4?v=3346c530",
+        "m3": "videos/generation/m3/g18.mp4?v=29839bd4",
+        "m4": "videos/generation/m4/g18.mp4?v=21ee2734"
+      }
+    },
+    {
+      "id": "g19",
+      "block": "generation",
+      "prompt": "Grab the top of the woodchair, swing the woodchair, and put down the woodchair.",
+      "videos": {
+        "m1": "videos/generation/m1/g19.mp4?v=58335cdc",
+        "m2": "videos/generation/m2/g19.mp4?v=529b477c",
+        "m3": "videos/generation/m3/g19.mp4?v=887030b2",
+        "m4": "videos/generation/m4/g19.mp4?v=821eace7"
+      }
+    },
+    {
+      "id": "g20",
+      "block": "generation",
+      "prompt": "Put your hand on the back of the woodchair, pull the woodchair, and set it back down.",
+      "videos": {
+        "m1": "videos/generation/m1/g20.mp4?v=7f3f70c1",
+        "m2": "videos/generation/m2/g20.mp4?v=b09e40b3",
+        "m3": "videos/generation/m3/g20.mp4?v=11a9c822",
+        "m4": "videos/generation/m4/g20.mp4?v=f3b0ce9d"
+      }
+    }
+  ]
+}

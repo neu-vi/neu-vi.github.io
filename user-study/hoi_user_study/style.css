@@ -1,0 +1,503 @@
+/* ==========================================================================
+ * Perceptual user study - stylesheet.
+ *
+ * Design rule: the participant should understand the task from the LAYOUT.
+ * Consequences that are load-bearing, not cosmetic:
+ *
+ *   - the videos are the largest thing on screen; everything else recedes;
+ *   - `.badge-face` paints BOTH the letter badge on a clip and an unselected
+ *     answer chip, so the answer<->video mapping is visible, not explained.
+ *     If you restyle one, restyle the other or the mapping breaks;
+ *   - selecting a chip visibly presses it in, which is what makes multi-select
+ *     discoverable without a "(select one or more)" instruction;
+ *   - the exclusive option is set apart and muted, so its exclusivity reads.
+ * ========================================================================== */
+
+:root {
+  --bg: #f6f8fb;
+  --fg: #1a2433;
+  --muted: #5a687a;
+  --card: #ffffff;
+  --border: #dce3ed;
+  --accent: #0c6ddf;
+  --accent-soft: #e9f2ff;
+  --accent-line: #b9d3f5;
+  --accent-ink: #0b4f9d;
+  --danger: #b42318;
+  /* Deliberately NOT the blue used for the lettered candidates: the reference
+     clip is ground truth, not one of the answers, and must never read as one. */
+  --reference: #7a3fb0;
+  --reference-soft: #f4ecfc;
+  --reference-ink: #4b2371;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at 20% 0%, #edf5ff 0%, var(--bg) 45%, #f3f7fd 100%);
+  color: var(--fg);
+}
+
+.app-shell {
+  width: min(1100px, 94vw);
+  margin: 1.5rem auto 3rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+}
+
+.subtitle {
+  margin: 0.25rem 0 0.7rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.status {
+  min-height: 1.2rem;
+  margin-bottom: 0.6rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  word-break: break-word;
+}
+
+.status.error {
+  color: var(--danger);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem 1.1rem;
+  box-shadow: 0 10px 30px rgba(12, 39, 81, 0.08);
+}
+
+p,
+li {
+  line-height: 1.45;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+}
+
+button {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 9px;
+  padding: 0.6rem 1.15rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #fff;
+  color: var(--fg);
+  border-color: var(--border);
+  font-weight: 500;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   Progress: a slim bar, a part chip and a compact count. No prose.
+   ---------------------------------------------------------------------- */
+.progress-bar {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  overflow: hidden;
+}
+
+.progress-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0 0.9rem;
+}
+
+.part-chip {
+  display: inline-block;
+  margin: 0;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.progress-count {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------------------
+   Reference motion (Part 1 only)
+
+   No sentence explains it: the tint, the border, the badge, the unlettered
+   single-clip placement above the lettered pair say it.
+   ---------------------------------------------------------------------- */
+.reference-panel {
+  position: relative;
+  margin: 0 auto 1rem;
+  max-width: 440px;
+  border: 2px solid #dcc6f0;
+  background: var(--reference-soft);
+  border-radius: 12px;
+  padding: 0.5rem;
+}
+
+.reference-badge {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  z-index: 2;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--reference);
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.reference-panel video {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+}
+
+.reference-panel--missing {
+  border-color: #f0d9a8;
+  background: #fdf7e8;
+  padding: 0.75rem 0.85rem;
+}
+
+.reference-panel--missing .reference-badge {
+  position: static;
+  display: inline-block;
+  background: #c98f16;
+  margin-bottom: 0.4rem;
+}
+
+.reference-missing-text {
+  margin: 0;
+  color: #6b4f16;
+  font-size: 0.92rem;
+}
+
+/* -------------------------------------------------------------------------
+   The instruction (Part 2 only): the text itself, quoted and large, directly
+   above the grid. Its position is the explanation.
+   ---------------------------------------------------------------------- */
+.prompt-callout {
+  margin: 0 0 0.9rem;
+  border-left: 4px solid var(--accent);
+  padding: 0.1rem 0 0.1rem 0.85rem;
+}
+
+.prompt-callout--missing {
+  border-left-color: var(--muted);
+}
+
+.prompt-text {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: #10315c;
+}
+
+/* -------------------------------------------------------------------------
+   The videos. These are the content: no card frame, no header row, minimal
+   gap. The letter badge is overlaid on the clip itself.
+   ---------------------------------------------------------------------- */
+.video-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.video-grid.two-grid,
+.video-grid.four-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.video-card {
+  position: relative;
+}
+
+video {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+  background: #000;
+}
+
+/* -------------------------------------------------------------------------
+   badge-face: the SHARED look of a video's letter badge and an unselected
+   answer chip. This equality is the mechanism that makes the mapping obvious;
+   keep them identical.
+   ---------------------------------------------------------------------- */
+.badge-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6rem;
+  min-height: 2.3rem;
+  padding: 0 0.7rem;
+  border: 2px solid var(--accent-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--accent-ink);
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.video-label {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* -------------------------------------------------------------------------
+   Questions: one short imperative line, then a row of toggle chips.
+   ---------------------------------------------------------------------- */
+.fieldset {
+  border: 0;
+  padding: 0;
+  margin: 1.1rem 0 0;
+}
+
+.fieldset legend {
+  padding: 0;
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin-bottom: 0.5rem;
+}
+
+/* The "which question do the number keys act on" hint. Subtle on purpose. */
+.fieldset.is-focused legend {
+  color: var(--accent-ink);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Visually hidden, NOT display:none - it stays a real, focusable checkbox. */
+.chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.chip .chip-face {
+  cursor: pointer;
+  transition: background 0.1s ease, border-color 0.1s ease, transform 0.06s ease;
+}
+
+.chip:hover .chip-face {
+  border-color: var(--accent);
+}
+
+.chip input:checked + .chip-face {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
+}
+
+.chip input:focus-visible + .chip-face {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The exclusive option: set apart and muted, so it does not read as a fifth
+   video and its "instead of, not as well as" nature is visible. */
+.chip--none {
+  margin-left: 0.6rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--border);
+}
+
+.chip--none .chip-face {
+  border-color: var(--border);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.chip--none:hover .chip-face {
+  border-color: var(--muted);
+}
+
+.chip--none input:checked + .chip-face {
+  background: var(--muted);
+  border-color: var(--muted);
+  color: #fff;
+}
+
+.chip--none input:focus-visible + .chip-face {
+  outline-color: var(--muted);
+}
+
+/* -------------------------------------------------------------------------
+   Small print
+   ---------------------------------------------------------------------- */
+
+/* Part-1 freeze disclosure. Muted: it is a caveat, not an instruction. */
+.trial-note {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.foot-note {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.notice {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.3em;
+  text-align: center;
+  padding: 0.05em 0.3em;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  color: var(--fg);
+}
+
+/* -------------------------------------------------------------------------
+   Intro / interstitial / completion - all deliberately tiny
+   ---------------------------------------------------------------------- */
+.intro-lede {
+  margin: 0.2rem 0 0.9rem;
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.interstitial h2 {
+  margin: 0.15rem 0 0.6rem;
+}
+
+.completion-code {
+  display: inline-block;
+  margin-top: 0.55rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: #fcfdff;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 1.15rem;
+}
+
+.noscript {
+  margin: 1rem;
+  color: var(--danger);
+}
+
+/* -------------------------------------------------------------------------
+   Mobile: videos stack, chips wrap, the keyboard hint goes away.
+   ---------------------------------------------------------------------- */
+@media (max-width: 780px) {
+  .video-grid,
+  .video-grid.two-grid,
+  .video-grid.four-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-panel {
+    max-width: none;
+  }
+
+  .card {
+    padding: 0.85rem;
+  }
+
+  .app-shell {
+    width: min(1100px, 96vw);
+    margin: 0.9rem auto 2rem;
+  }
+
+  .kbd-hint {
+    display: none;
+  }
+
+  /* Bigger touch targets, and the exclusive chip drops to its own line rather
+     than being squeezed onto the end of the letter row. */
+  .badge-face {
+    min-height: 2.7rem;
+    min-width: 3rem;
+  }
+
+  .chip--none {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+    flex-basis: 100%;
+    margin-top: 0.15rem;
+  }
+}
