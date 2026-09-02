@@ -136,14 +136,15 @@ files are named `videos/<block>/<method>/<case>.mp4`. The real mapping lives in
   references or links it. `tools/install_manifests.py` fails loudly if it ever
   turns up inside `site/`.
 - No real method name may appear in any deployed HTML/CSS/JS/JSON. Before
-  deploying, grep this folder for the real method names and confirm it prints
-  nothing. The names themselves are deliberately not written down here - this
-  file ships publicly alongside the study. They are listed in the maintainer
-  copy of this README and in the decode key, both of which stay in the research
-  repo.
+  deploying, run the guard below; it must print nothing:
 
-  This deployed copy of the README has been scrubbed of the method names, so it
-  is safe to ship. The unscrubbed maintainer version lives in the research repo.
+  the method names are deliberately not written here - this file ships
+  publicly. They are in the maintainer copy in the research repo.
+
+  The `--include` filters are load-bearing: **this README itself contains the
+  banned words, twice, inside the guard command.** It is a maintainer doc, not
+  part of the study - exclude it from the deployed bundle (Section 5) and the
+  point is moot.
 - Only Part-2 cases carry a `prompt`, and the OMOMO caption names the object
   ("Lift the suitcase, ..."). That is unavoidable - the text *is* the
   conditioning - and it leaks nothing about method identity, because all four
@@ -203,7 +204,7 @@ rsync -av --delete --exclude 'README.md' \
   user-study/hoi/
 
 # 4. anonymity guard - must print nothing
-grep -rniwE '<method>|<method>|<method>|<method>|<method>|final' user-study/hoi \
+grep -rniwE '<the five method names>' user-study/hoi_user_study \
   --include='*.html' --include='*.css' --include='*.js' --include='*.json'
 test ! -e user-study/hoi/KEY_DO_NOT_DEPLOY.json && echo "key file absent - good"
 
@@ -241,7 +242,7 @@ produced on the LAN Ubuntu box (`experiments/2026-09-01_study1-mesh-renders/`).
 **The two candidate clips in the same trial are NOT mesh renders, by design.**
 They are the original Isaac Lab **sim rollouts** - the capsule humanoid on the
 reflective grid floor, with the pelvis-welded camera - web-encoded straight from
-`experiments/2026-08-16_tracking-vs-<method>/renders-pairs/<NN>_<stem>/`.
+the corresponding run folder in the research repo.
 So within one Part-1 trial the reference and the two candidates deliberately
 **look different**: different body representation, different background,
 different camera solve, and the mesh figure sits smaller in the frame.
@@ -472,8 +473,8 @@ at `../verification/payload_sample_merged_30trials.json`.
       "case_id": "t04",
       "block": "tracking",
       "shown_order": ["m2", "m1"],
-      "answers":         {"tracking_accuracy": ["A"], "plausibility": ["A","B"], "naturalness": ["NONE"]},
-      "answers_methods": {"tracking_accuracy": ["m2"], "plausibility": ["m2","m1"], "naturalness": ["NONE"]},
+      "answers":         {"tracking_accuracy": ["A"], "naturalness": ["NONE"]},
+      "answers_methods": {"tracking_accuracy": ["m2"], "naturalness": ["NONE"]},
       "first_seen_iso": "2026-08-31T05:15:55.524Z",
       "answered_iso":   "2026-08-31T05:18:49.603Z",
       "dwell_ms": 94650,
@@ -593,9 +594,14 @@ plus two of `m2`/`m3`/`m4` in `generation`), and the arm it displaced is simply
 not shown - that trial contributes no comparison data, which is expected, since
 attention-check trials are dropped before analysis (Section 8).
 
-Grading it: a participant passes when, for every metric, the two labels backed
-by the duplicated video are either both selected or both unselected. Find those
-labels from `shown_order` - the two slot indices holding the same method id.
+Grading it (**single-select**, since 2026-09-01): each question takes exactly
+one answer, so "answer both duplicates identically" is no longer expressible.
+Find the two labels backed by the duplicated video from `shown_order` (the two
+slot indices holding the same method id); a participant who picks either of them
+was choosing between two clips that are the same, i.e. that answer carries no
+signal. The check is therefore weaker than it was under multi-select - decide
+before analysis what you want it to mean, and prefer the `dwell_ms` and
+`first_seen_iso`/`answered_iso` fields as the real engagement signal.
 
 Alternatively, mark an existing case with `"is_attention_check": true` and it is
 used as-is and merely flagged.
@@ -623,8 +629,12 @@ study is live.
 - **Reloading on the interstitial** resumes on question 10 (the last answered
   trial), and pressing *Next* shows the interstitial again. That is deliberate:
   the checkpoint only ever points at a real trial.
-- **Keyboard.** `1`/`2`(/`3`/`4`) toggle `A`/`B`(/`C`/`D`) on the highlighted
-  question, `0` toggles *None*, `Enter` advances (and confirms the interstitial).
+- **Keyboard.** `1`/`2`(/`3`/`4`) select `A`/`B`(/`C`/`D`) on the highlighted
+  question, `0` selects *None*, `Enter` advances (and confirms the interstitial).
+  Selecting replaces the previous choice; pressing the same number twice leaves
+  it selected (the chips are radio buttons - an answered question cannot be
+  emptied). Arrow keys move within the highlighted question's chips, as in any
+  native radio group.
   The highlighted question is the last one the participant touched, and it is
   outlined in blue. The hint is hidden on narrow screens.
 - **Autoplay.** Videos are `muted autoplay loop playsinline`, and `play()` is

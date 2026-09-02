@@ -8,9 +8,12 @@
  *   - `.badge-face` paints BOTH the letter badge on a clip and an unselected
  *     answer chip, so the answer<->video mapping is visible, not explained.
  *     If you restyle one, restyle the other or the mapping breaks;
- *   - selecting a chip visibly presses it in, which is what makes multi-select
- *     discoverable without a "(select one or more)" instruction;
- *   - the exclusive option is set apart and muted, so its exclusivity reads.
+ *   - selecting a chip visibly presses it in, and exactly one chip per question
+ *     is ever pressed, which is what makes "choose one" discoverable without a
+ *     "(select one)" instruction. The chips are radio inputs, so the browser
+ *     enforces that, not the stylesheet;
+ *   - the opt-out option is set apart and muted, so it does not read as one more
+ *     video.
  * ========================================================================== */
 
 :root {
@@ -297,7 +300,7 @@ video {
 }
 
 /* -------------------------------------------------------------------------
-   Questions: one short imperative line, then a row of toggle chips.
+   Questions: one short imperative line, then a row of single-choice chips.
    ---------------------------------------------------------------------- */
 .fieldset {
   border: 0;
@@ -330,7 +333,9 @@ video {
   cursor: pointer;
 }
 
-/* Visually hidden, NOT display:none - it stays a real, focusable checkbox. */
+/* Visually hidden, NOT display:none - it stays a real, focusable radio button
+   (display:none or visibility:hidden would drop it out of the focus order and
+   out of the accessibility tree, taking arrow-key navigation with it). */
 .chip input {
   position: absolute;
   width: 1px;
@@ -362,8 +367,8 @@ video {
   outline-offset: 2px;
 }
 
-/* The exclusive option: set apart and muted, so it does not read as a fifth
-   video and its "instead of, not as well as" nature is visible. */
+/* The opt-out option ("Neither" / "None"): set apart and muted, so it does not
+   read as one more video. It is an ordinary member of the radio group. */
 .chip--none {
   margin-left: 0.6rem;
   padding-left: 0.6rem;
@@ -486,7 +491,7 @@ kbd {
     display: none;
   }
 
-  /* Bigger touch targets, and the exclusive chip drops to its own line rather
+  /* Bigger touch targets, and the opt-out chip drops to its own line rather
      than being squeezed onto the end of the letter row. */
   .badge-face {
     min-height: 2.7rem;
@@ -501,3 +506,6 @@ kbd {
     margin-top: 0.15rem;
   }
 }
+
+.intro-parts { margin: 0.9rem 0 1.1rem; padding-left: 1.15rem; }
+.intro-parts li { margin-bottom: 0.45rem; line-height: 1.55; }

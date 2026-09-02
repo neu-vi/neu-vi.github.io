@@ -70,10 +70,15 @@ const BLOCK_ORDER = ["tracking", "generation"];
 /*
  * Copy rule for this whole screen: the participant should understand the task
  * from the LAYOUT, not from prose. So a question is one short imperative line
- * with no metric jargon and no description paragraph, the answers are toggle
- * chips that visibly press in (which is what makes multi-select discoverable
- * without saying "select one or more"), and the letter chip on a video is drawn
- * exactly like the unselected answer chip so the mapping needs no explanation.
+ * with no metric jargon and no description paragraph, the answers are chips
+ * that visibly press in when picked - and, being real radio buttons, picking a
+ * second one releases the first, so "choose one" needs no sentence either - and
+ * the letter chip on a video is drawn exactly like the unselected answer chip so
+ * the mapping needs no explanation.
+ *
+ * Every question takes EXACTLY ONE answer (2026-09-01). The wording below is
+ * singular throughout; if you ever re-introduce multi-select, every legend, the
+ * intro list and both interstitial sentences have to change back with it.
  *
  * The payload keys below are load-bearing for analysis and must NOT be renamed
  * when the visible wording changes.
@@ -91,15 +96,16 @@ const BLOCK_CONFIG = {
        only bias the judgement. A `prompt` in the manifest is ignored. */
     showPrompt: false,
     trialNote:
-      "Some videos may freeze partway through - the character has stopped moving or fallen. Judge what happens up to that point.",
+      "Some clips stop early because the character has fallen over or stopped "
+      + "moving. Please judge what happens before that point.",
     noneLabel: "Neither",
     /* Two questions, not three. "Physical plausibility" was dropped on
        2026-08-31: every clip in this study is a physics-simulated Isaac Sim
        rollout, so plausibility holds by construction and the question
        discriminates nothing while still spending the participant's attention. */
     questions: [
-      { key: "tracking_accuracy", legend: "Which follows the reference more closely?" },
-      { key: "naturalness", legend: "Which moves more naturally?" }
+      { key: "tracking_accuracy", legend: "Which clip follows the reference motion more accurately?" },
+      { key: "naturalness", legend: "Which clip moves more naturally?" }
     ]
   },
 
@@ -117,8 +123,11 @@ const BLOCK_CONFIG = {
     noneLabel: "None",
     /* Two questions here too - see the note in the tracking block. */
     questions: [
-      { key: "text_adherence", legend: "Which follows the instruction?" },
-      { key: "naturalness", legend: "Which moves more naturally?" }
+      { key: "text_adherence", legend: "Which clip follows the written instruction?" },
+      /* Superlative on purpose: one pick out of four is a ranking, not a pass/fail
+         judgement, so "moves naturally" would leave a participant who thinks two
+         clips qualify with no rule for choosing between them. */
+      { key: "naturalness", legend: "Which clip moves most naturally?" }
     ]
   }
 };
@@ -131,15 +140,14 @@ const BLOCK_CONFIG = {
 const INTERSTITIAL = {
   generation: function () {
     return `
-      <h2>The task changes slightly from here</h2>
+      <h2>Part 2 of 2</h2>
       <p>
-        From now on each question shows a <strong>short written
-        instruction</strong> and <strong>four videos</strong> instead of a
-        reference clip and two.
+        A written instruction will now appear at the top, with four clips below
+        it.
       </p>
       <p>
-        Your job is the same: say which videos do what the instruction says, and
-        which move naturally.
+        Select which clip follows the written instruction and which clip moves
+        most naturally.
       </p>
     `;
   }
@@ -160,33 +168,46 @@ const INTERSTITIAL = {
 function renderIntroBody(totalTrials) {
   return `
     <p class="intro-lede">
-      You will watch short videos of an animated character picking up and moving
-      objects, and answer two quick questions about each one.
+      You will view short clips of an animated character picking up and moving
+      objects, then answer two questions about each set of clips.
     </p>
+    <ul class="intro-parts">
+      <li>
+        <strong>Part 1</strong> (questions 1&ndash;10): a reference motion is
+        shown at the top, with two clips below it. Select which clip follows the
+        reference motion more accurately and which clip moves more naturally.
+      </li>
+      <li>
+        <strong>Part 2</strong> (questions 11&ndash;30): a written instruction is
+        shown at the top, with four clips below it. Select which clip follows the
+        written instruction and which clip moves most naturally.
+      </li>
+    </ul>
     <p>
-      ${totalTrials} questions, ${escapeHtml(EST_DURATION_TEXT)}.
+      There are ${totalTrials} questions in total, and the study takes about
+      ${escapeHtml(EST_DURATION_TEXT.replace(/^about\s+/i, ""))}. Your answers
+      are anonymous and will only be used for research.
     </p>
-    <p>
-      The task changes slightly halfway through - we will explain it when you get
-      there.
-    </p>
-    <p>Your responses are anonymous and used only for research.</p>
   `;
 }
 /* ===== BLOCK CONFIG :: END ================================================ */
 
 const LABELS = ["A", "B", "C", "D"];
 const NONE_VALUE = "NONE";
-/* The visible label of the exclusive option is per block (`noneLabel` in
+/* The opt-out option is simply the last choice in the same single-choice group
+   (it used to need exclusivity logic; with one answer per question that is the
+   radio group's job). Its visible label is per block (`noneLabel` in
    BLOCK_CONFIG - "Neither" with two videos, "None" with four); NONE_VALUE is
    what goes in the payload and never changes. */
 const STORAGE_KEY_PARTICIPANT = "thc_" + STUDY_ID + "_participant_id";
 const STORAGE_KEY_PROGRESS = "thc_" + STUDY_ID + "_progress_v1";
 const STORAGE_KEY_SUBMISSION = "thc_" + STUDY_ID + "_submission_id_v1";
-/* Bumped to 3 when the plausibility question was dropped: the fingerprint only
-   covers the manifest, so without this an in-flight session would silently
-   switch question set mid-study. A stale checkpoint is discarded instead. */
-const PROGRESS_SCHEMA = 3;
+/* Bumped to 3 when the plausibility question was dropped, and to 4 when the
+   answers became single-choice: the fingerprint only covers the manifest, so
+   without this an in-flight session would silently switch question set (or be
+   restored with two options ticked, which the new UI cannot represent)
+   mid-study. A stale checkpoint is discarded instead. */
+const PROGRESS_SCHEMA = 4;
 
 const appEl = document.getElementById("app");
 const statusEl = document.getElementById("status");
@@ -462,7 +483,7 @@ function renderIntro() {
   appEl.innerHTML = `
     ${renderIntroBody(totalTrials)}
     <div class="controls">
-      <button id="start-study" type="button">I Consent, Start Study</button>
+      <button id="start-study" type="button">I agree to participate and begin the study</button>
     </div>
   `;
   document.getElementById("start-study").addEventListener("click", () => startStudy());
@@ -477,15 +498,15 @@ function renderResume(saved) {
     return trial && isAnswerComplete(answers[k], questionsOf(trial.block));
   }).length;
   appEl.innerHTML = `
-    <h2>Resume Your Session?</h2>
+    <h2>Resume Previous Session</h2>
     <p>
-      We found a saved session on this device: you were on question
+      A saved session was found on this device. You reached question
       <strong>${saved.index + 1}</strong> of <strong>${saved.trials.length}</strong>
-      (${done} answered).
+      and answered ${done} ${done === 1 ? "question" : "questions"}.
     </p>
     <p class="notice">
-      Resuming keeps your previous answers, the question order and the
-      A/B labelling exactly as they were. Starting over discards them.
+      Resuming will preserve your previous answers, question order, and A/B
+      labelling. Starting over will discard them.
     </p>
     <div class="controls">
       <button id="resume" type="button">Resume</button>
@@ -905,11 +926,22 @@ function renderPromptCallout(trial, cfg) {
 }
 
 /*
- * Answers are toggle chips, but they are still REAL checkboxes: the <input>
- * lives inside its <label>, is only visually hidden, and keeps its native
- * semantics, focus order and screen-reader announcement. .chip-face is what is
- * painted, and it is the same rule that paints the letter badge on the video,
- * which is the whole point - the mapping is visual, not verbal.
+ * Answers are chips, but they are still REAL radio buttons: the <input> lives
+ * inside its <label>, is only visually hidden, and keeps its native semantics,
+ * focus order, arrow-key navigation and screen-reader announcement. A <fieldset>
+ * with a <legend> plus radios sharing one `name` IS a radio group - no ARIA
+ * needed. .chip-face is what is painted, and it is the same rule that paints the
+ * letter badge on the video, which is the whole point - the mapping is visual,
+ * not verbal.
+ *
+ * type="radio" (not checkbox) is what enforces one answer per question: the
+ * browser releases the previous choice for us, and re-clicking the selected
+ * option fires no `change`, so a participant cannot empty an answered question
+ * by accident. Nothing in the app has to police it.
+ *
+ * The `name` is the question key, which is unique within a trial (the two
+ * questions of a block never share a key) and only one trial is in the DOM at a
+ * time - so the group is exactly this question's chips.
  *
  * Do not swap these for <button aria-pressed>: the rest of the app (keyboard
  * shortcuts, syncChoiceInputs, sanitiseSavedAnswers) drives `input.checked`.
@@ -923,7 +955,7 @@ function renderQuestionBlock(question, choices, selected, cfg) {
       const label = isNone ? cfg.noneLabel : value;
       return `
       <label class="chip${isNone ? " chip--none" : ""}">
-        <input type="checkbox" name="${escapeHtml(question.key)}" value="${escapeHtml(
+        <input type="radio" name="${escapeHtml(question.key)}" value="${escapeHtml(
         value
       )}" ${checked}>
         <span class="chip-face badge-face">${escapeHtml(label)}</span>
@@ -943,8 +975,10 @@ function wireAnswerInputs(questions) {
   questions.forEach((question) => {
     const inputs = appEl.querySelectorAll(`input[name="${question.key}"]`);
     Array.prototype.forEach.call(inputs, (input) => {
+      /* A radio only fires `change` when it BECOMES checked, so the event
+         target is always the new answer and there is nothing to un-apply. */
       input.addEventListener("change", (evt) => {
-        applyChoice(question.key, evt.target.value, evt.target.checked);
+        applyChoice(question.key, evt.target.value);
       });
     });
   });
@@ -962,13 +996,13 @@ function wireAnswerInputs(questions) {
   });
 }
 
-function applyChoice(questionKey, value, isChecked) {
+/* One answer per question. The stored value stays a single-element ARRAY, not a
+   scalar: the payload shape `{"naturalness": ["A"]}` is what the Apps Script
+   receiver and every already-collected row expect, and changing it would make
+   the sheet inconsistent with itself. */
+function applyChoice(questionKey, value) {
   const answer = ensureAnswer(state.index);
-  answer[questionKey] = computeNextValues(
-    normalizeAnswerList(answer[questionKey]),
-    value,
-    isChecked
-  );
+  answer[questionKey] = [value];
   syncChoiceInputs(questionKey, answer[questionKey]);
 
   /* Stamp WHEN the trial was answered, not only at submit. */
@@ -1038,11 +1072,14 @@ function syncNextButtonState() {
   }
 }
 
+/* EXACTLY one choice per question - not "at least one". The app can only ever
+   store one, so the strict test costs nothing and refuses a hand-edited
+   localStorage that claims two. */
 function isAnswerComplete(answer, questions) {
   if (!answer) {
     return false;
   }
-  return questions.every((q) => normalizeAnswerList(answer[q.key]).length > 0);
+  return questions.every((q) => normalizeAnswerList(answer[q.key]).length === 1);
 }
 
 function isTrialComplete(index) {
@@ -1114,7 +1151,7 @@ document.addEventListener("keydown", (evt) => {
     return;
   }
   if (evt.repeat) {
-    /* Holding a key must not race through trials or flicker a checkbox. */
+    /* Holding a key must not race through trials or flicker a selection. */
     return;
   }
   if (state.phase === "interstitial" && evt.key === "Enter") {
@@ -1165,9 +1202,10 @@ document.addEventListener("keydown", (evt) => {
   const questions = trialQuestions(state.index);
   const known = questions.map((q) => q.key).indexOf(state.focusedQuestion) >= 0;
   const questionKey = known ? state.focusedQuestion : questions[0].key;
-  const current = normalizeAnswerList(ensureAnswer(state.index)[questionKey]);
   evt.preventDefault();
-  applyChoice(questionKey, value, current.indexOf(value) < 0);
+  /* Selects, never toggles: pressing the same number twice leaves the answer in
+     place, exactly as clicking the selected chip twice does. */
+  applyChoice(questionKey, value);
 });
 
 /* -------------------------------------------------------------------------
@@ -1304,9 +1342,10 @@ function loadCheckpoint() {
 }
 
 /* localStorage is user-writable, so treat a restored answer as untrusted: keep
-   only choices that actually exist on that trial, and only the question keys
-   that trial's block actually asks. Anything else would render as a "complete"
-   trial with no checkbox ticked. */
+   only choices that actually exist on that trial, only the question keys that
+   trial's block actually asks, and at most ONE of them. Anything else would
+   render as a "complete" trial with no chip selected, or as a radio group with
+   two selections, which the DOM cannot show. */
 function sanitiseSavedAnswers(answers, trials) {
   const clean = {};
   if (!answers || typeof answers !== "object") {
@@ -1324,7 +1363,7 @@ function sanitiseSavedAnswers(answers, trials) {
       const values = normalizeAnswerList(entry[q.key]).filter(
         (v) => allowed.indexOf(v) >= 0
       );
-      kept[q.key] = values.indexOf(NONE_VALUE) >= 0 ? [NONE_VALUE] : values;
+      kept[q.key] = values.length ? [values[0]] : [];
     });
     clean[idx] = kept;
   });
@@ -1508,28 +1547,28 @@ function renderComplete(postResult, downloaded) {
      status line, and it is not decoration: in offline mode the participant has
      to know a file was downloaded and that they must send it back, and on a
      failure they have to know their answers are NOT saved yet. */
-  let message = "Thank you - your responses were saved as a downloaded file.";
+  let message = "Thank you for taking part. Your answers have been saved to a file on this device.";
   if (postResult && postResult.ok) {
-    message = "Thank you - your responses were submitted.";
+    message = "Thank you for taking part. Your answers have been recorded.";
   } else if (!downloaded) {
     message =
-      "Your responses could not be saved. Please do not close this page - reload" +
-      " it and it will offer to resume so the submission can be retried.";
+      "Your responses could not be saved. Please keep this page open and reload "
+      + "it to resume the study and retry the submission.";
   }
 
   const fallbackNote =
     postResult && !postResult.ok
       ? `<p class="notice">Online submission failed (${escapeHtml(
           postResult.message
-        )}); a local copy was used instead.</p>`
+        )}); a local copy was saved instead.</p>`
       : "";
 
   /* An anchor click gives no success signal, so a blocked download would leave
      the participant believing their work was saved. Offer an explicit retry. */
   const downloadNote = downloaded
-    ? `<p class="notice">Please send that file to the study organiser. No download?</p>
+    ? `<p class="notice">Please send the file to the study organiser. If the download did not start, save your responses again.</p>
        <div class="controls">
-         <button id="redownload" class="secondary" type="button">Save my responses again</button>
+         <button id="redownload" class="secondary" type="button">Save My Responses Again</button>
        </div>`
     : "";
 
@@ -1620,27 +1659,29 @@ function normalizeAnswerList(value) {
   return [value];
 }
 
-/* "None" is exclusive: picking it clears every label, picking a label clears it. */
-function computeNextValues(currentValues, changedValue, isChecked) {
-  if (changedValue === NONE_VALUE) {
-    return isChecked ? [NONE_VALUE] : [];
-  }
-  const withoutNone = currentValues.filter((v) => v !== NONE_VALUE);
-  if (!isChecked) {
-    return withoutNone.filter((v) => v !== changedValue);
-  }
-  if (withoutNone.indexOf(changedValue) < 0) {
-    withoutNone.push(changedValue);
-  }
-  return withoutNone;
-}
-
 function syncChoiceInputs(name, selectedValues) {
   const selected = normalizeAnswerList(selectedValues);
   const inputs = appEl.querySelectorAll(`input[name="${name}"]`);
+  let checkedInput = null;
   Array.prototype.forEach.call(inputs, (input) => {
     input.checked = selected.indexOf(input.value) >= 0;
+    if (input.checked) {
+      checkedInput = input;
+    }
   });
+  /* A number-key shortcut changes the answer without moving focus, which in a
+     radio group would leave the focused chip unchecked while another is
+     selected - a state the participant cannot then arrow out of predictably, and
+     one a screen reader reads as "not checked". Only re-point focus when it was
+     already inside THIS group, so a keystroke can never steal it from a video
+     or the Next button. */
+  if (
+    checkedInput &&
+    document.activeElement !== checkedInput &&
+    Array.prototype.indexOf.call(inputs, document.activeElement) >= 0
+  ) {
+    checkedInput.focus();
+  }
 }
 
 function shuffleArray(arr) {

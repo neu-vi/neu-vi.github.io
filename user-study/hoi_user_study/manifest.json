@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "title": "Human-Object Interaction Video Study",
+  "title": "Human-Object Interaction Animation Study",
   "block_order": [
     "tracking",
     "generation"
