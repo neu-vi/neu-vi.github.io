@@ -138,8 +138,10 @@ files are named `videos/<block>/<method>/<case>.mp4`. The real mapping lives in
 - No real method name may appear in any deployed HTML/CSS/JS/JSON. Before
   deploying, run the guard below; it must print nothing:
 
-  the method names are deliberately not written here - this file ships
-  publicly. They are in the maintainer copy in the research repo.
+  ```bash
+  grep -rniwE '<the five method names>' . \
+    --include='*.html' --include='*.css' --include='*.js' --include='*.json'
+  ```
 
   The `--include` filters are load-bearing: **this README itself contains the
   banned words, twice, inside the guard command.** It is a maintainer doc, not
@@ -204,7 +206,7 @@ rsync -av --delete --exclude 'README.md' \
   user-study/hoi/
 
 # 4. anonymity guard - must print nothing
-grep -rniwE '<the five method names>' user-study/hoi_user_study \
+grep -rniwE '<the five method names>' . \
   --include='*.html' --include='*.css' --include='*.js' --include='*.json'
 test ! -e user-study/hoi/KEY_DO_NOT_DEPLOY.json && echo "key file absent - good"
 
@@ -242,7 +244,7 @@ produced on the LAN Ubuntu box (`experiments/2026-09-01_study1-mesh-renders/`).
 **The two candidate clips in the same trial are NOT mesh renders, by design.**
 They are the original Isaac Lab **sim rollouts** - the capsule humanoid on the
 reflective grid floor, with the pelvis-welded camera - web-encoded straight from
-the corresponding run folder in the research repo.
+`experiments/2026-08-16_tracking-vs-<method>/renders-pairs/<NN>_<stem>/`.
 So within one Part-1 trial the reference and the two candidates deliberately
 **look different**: different body representation, different background,
 different camera solve, and the mesh figure sits smaller in the frame.

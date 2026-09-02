@@ -51,14 +51,18 @@ const VIDEO_BASE = "";
 const STUDY_ID = "hoi_study";
 /* Derived from the delivered clip durations, not guessed.
      Part 1: 10 clips, 2.57-8.57 s, 43.9 s total (mean 4.39 s)
-     Part 2: 20 clips, 10.0 s each, 200 s total (the four play concurrently)
-   One pass of every clip is a hard floor of 244 s = 4.1 min. Realistically a
+     Part 2: 20 trials, 0.67-10.0 s per clip (median 7.6 s); the four clips of a
+             trial play concurrently and loop, so one pass of a trial is the
+             longest of its four -> 193.0 s total (was 200 s when every Part-2
+             clip was freeze-padded to 10 s; see the 2026-09-01 natural-length
+             rebuild)
+   One pass of every clip is a hard floor of 237 s = 4.0 min. Realistically a
    participant watches ~2 loops in Part 1 and ~1.5 in Part 2 and spends ~8-10 s
    answering the two questions:
      2*43.9 + 10*8  = 168 s   Part 1
-     1.5*200 + 20*10 = 500 s  Part 2
+     1.5*193 + 20*10 = 490 s  Part 2
      + ~60 s for the intro, interstitial and completion screens
-     = 728 s = 12.1 min  ->  "about 12 minutes". */
+     = 718 s = 12.0 min  ->  "about 12 minutes". */
 const EST_DURATION_TEXT = "about 12 minutes";
 
 /* ===== BLOCK CONFIG :: BEGIN ================================================
@@ -117,8 +121,10 @@ const BLOCK_CONFIG = {
     /* The instruction is shown quoted and large directly above the grid; that
        placement is the explanation, so there is no label sentence. */
     showPrompt: true,
-    /* Every generation clip is exactly 10 s, so the freeze disclosure that the
-       tracking block carries does not apply here. */
+    /* No freeze disclosure here. Part-2 clips are delivered at their true
+       episode length (capped at 10 s) and loop, so a clip that ends early
+       restarts instead of holding a still frame - there is nothing to
+       disclose. Part 1 keeps its padding, and keeps its note. */
     trialNote: "",
     noneLabel: "None",
     /* Two questions here too - see the note in the tracking block. */
