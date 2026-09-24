@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-labelledby="title desc">
+  <title id="title">Image and video RDM sensitivity to temporal motion</title>
+  <desc id="desc">Image RDM remains nearly flat as the frozen percentage changes, while video RDM responds nonlinearly across the full range. A dashed line shows a linear decrease.</desc>
+  <rect width="760" height="420" rx="18" fill="#fff"/>
+  <g stroke="#e7e3de" stroke-width="1">
+    <path d="M82 62H702M82 116H702M82 170H702M82 223H702M82 277H702M82 330H702"/>
+  </g>
+  <g fill="#7b8597" font-family="Inter,Arial,sans-serif" font-size="16">
+    <text x="69" y="66" text-anchor="end">0.10</text>
+    <text x="69" y="120" text-anchor="end">0.08</text>
+    <text x="69" y="174" text-anchor="end">0.06</text>
+    <text x="69" y="227" text-anchor="end">0.04</text>
+    <text x="69" y="281" text-anchor="end">0.02</text>
+    <text x="69" y="334" text-anchor="end">0.00</text>
+    <text x="82" y="351" text-anchor="middle">100</text>
+    <text x="237" y="351" text-anchor="middle">75</text>
+    <text x="392" y="351" text-anchor="middle">50</text>
+    <text x="547" y="351" text-anchor="middle">25</text>
+    <text x="702" y="351" text-anchor="middle">0</text>
+    <text x="392" y="401" text-anchor="middle" font-size="18" font-weight="700" letter-spacing="1">PERCENTAGE FROZEN (%)</text>
+    <text x="21" y="196" text-anchor="middle" font-size="18" font-weight="700" letter-spacing="1" transform="rotate(-90 21 196)">RDM LOSS</text>
+    <text x="82" y="373" text-anchor="middle" font-size="12">FULLY FROZEN</text>
+    <text x="702" y="373" text-anchor="middle" font-size="12">ORIGINAL MOTION</text>
+  </g>
+  <path d="M82 61L702 313" fill="none" stroke="#aeb6c2" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <path d="M82 312L237 314L392 314L547 314L702 314" fill="none" stroke="#2f7ee6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 61L237 257L392 290L547 307L702 313" fill="none" stroke="#ff6733" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#2f7ee6" stroke="#fff" stroke-width="2">
+    <circle cx="82" cy="312" r="5"/><circle cx="237" cy="314" r="5"/><circle cx="392" cy="314" r="5"/><circle cx="547" cy="314" r="5"/><circle cx="702" cy="314" r="5"/>
+  </g>
+  <g fill="#ff6733" stroke="#fff" stroke-width="2">
+    <circle cx="82" cy="61" r="6"/><circle cx="237" cy="257" r="6"/><circle cx="392" cy="290" r="6"/><circle cx="547" cy="307" r="6"/><circle cx="702" cy="313" r="6"/>
+  </g>
+  <g font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700">
+    <g transform="translate(100 20)"><path d="M0 0H28" stroke="#2f7ee6" stroke-width="3"/><text x="36" y="4" fill="#667287">Image · DINOv2</text></g>
+    <g transform="translate(335 20)"><path d="M0 0H28" stroke="#ff6733" stroke-width="4"/><text x="36" y="4" fill="#667287">Video · V-JEPA 2.1</text></g>
+    <g transform="translate(610 20)"><path d="M0 0H28" stroke="#aeb6c2" stroke-width="2.5" stroke-dasharray="7 6"/><text x="36" y="4" fill="#667287">Linear</text></g>
+  </g>
+</svg>

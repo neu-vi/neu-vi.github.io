@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 650" role="img" aria-labelledby="title desc">
+  <title id="title">End-to-end backpropagation versus staged vector-Jacobian products</title>
+  <desc id="desc">The conventional path keeps generator, decoder, and representation graphs resident together. ViRDM replays and differentiates one module at a time before replaying the selected generator exit.</desc>
+  <defs>
+    <marker id="gray" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#98a5b4"/></marker>
+    <marker id="blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#3478d4"/></marker>
+    <marker id="orange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#ff6733"/></marker>
+    <filter id="glow" x="-25%" y="-45%" width="150%" height="190%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      :root{--ink:#13233e;--muted:#748195;--line:#d9e0e8;--orange:#ff6733;--orange-soft:#fff0e9;--blue:#3478d4;--blue-soft:#edf5ff;--green:#208978;--green-soft:#ebf8f5;--cycle:14s}
+      text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:var(--ink)}
+      .rowtitle{font-family:Georgia,"Times New Roman",serif;font-size:42px;font-weight:600}.rowsub{font-size:14px;fill:var(--muted)}.phase{font-size:11px;font-weight:850;letter-spacing:1.05px}.label{font-size:14px;font-weight:800;text-anchor:middle}.sub{font-size:11px;font-weight:700;fill:var(--muted);text-anchor:middle}.note{font-size:13px;font-weight:800;text-anchor:middle}.tiny{font-size:11px;font-weight:760;fill:var(--muted);text-anchor:middle}.summary{font-size:16px;font-weight:850;fill:var(--orange);text-anchor:middle}
+      .module{fill:#fff;stroke:#b9c4d0;stroke-width:2}.generator{fill:var(--orange-soft);stroke:var(--orange)}.decoder{fill:var(--blue-soft);stroke:var(--blue)}.encoder{fill:var(--green-soft);stroke:var(--green)}.value{fill:#fff;stroke:#b9c4d0;stroke-width:2}.loss{fill:#f1eefb;stroke:#8268c7;stroke-width:2}.line{fill:none;stroke:#98a5b4;stroke-width:2.5;stroke-linecap:round;marker-end:url(#gray)}.forward{fill:none;stroke:var(--blue);stroke-width:3;stroke-linecap:round;marker-end:url(#blue)}.backward{fill:none;stroke:var(--orange);stroke-width:3.2;stroke-linecap:round;marker-end:url(#orange)}
+      .flow{stroke-dasharray:13 8;animation:flow .8s linear infinite}.naive-fwd,.naive-back{opacity:0}.stage{opacity:.28;filter:grayscale(1)}.naive-fwd{animation:naiveFwd var(--cycle) infinite}.naive-back{animation:naiveBack var(--cycle) infinite}.s1{animation:s1 var(--cycle) infinite}.s2{animation:s2 var(--cycle) infinite}.s3{animation:s3 var(--cycle) infinite}.s4{animation:s4 var(--cycle) infinite}
+      @keyframes flow{to{stroke-dashoffset:-21}}@keyframes naiveFwd{0%,48%{opacity:1}50%,100%{opacity:0}}@keyframes naiveBack{0%,49%,100%{opacity:0}50%,98%{opacity:1}}@keyframes s1{0%,23%{opacity:1;filter:grayscale(0)}25%,100%{opacity:.28;filter:grayscale(1)}}@keyframes s2{0%,24%,50%,100%{opacity:.28;filter:grayscale(1)}25%,48%{opacity:1;filter:grayscale(0)}}@keyframes s3{0%,49%,75%,100%{opacity:.28;filter:grayscale(1)}50%,73%{opacity:1;filter:grayscale(0)}}@keyframes s4{0%,74%,100%{opacity:.28;filter:grayscale(1)}75%,98%{opacity:1;filter:grayscale(0)}}
+    </style>
+  </defs>
+  <rect width="1500" height="650" fill="#fff"/>
+  <text x="34" y="43" class="rowtitle">Normal end-to-end backward</text>
+  <g transform="translate(36 68)">
+    <rect x="0" y="0" width="1428" height="190" rx="22" fill="#fafbfc" stroke="#dce2e8"/>
+    <circle class="value" cx="88" cy="86" r="39"/><text class="label" x="88" y="91">Noise</text><path class="line" d="M127 86H190"/>
+    <rect class="module generator" x="194" y="48" width="154" height="76" rx="17"/><text class="label" x="271" y="82">Generator</text><text class="sub" x="271" y="101">trainable</text><path class="line" d="M348 86H411"/>
+    <circle class="value" cx="452" cy="86" r="39"/><text class="label" x="452" y="91">Latent</text><path class="line" d="M491 86H554"/>
+    <rect class="module decoder" x="558" y="48" width="154" height="76" rx="17"/><text class="label" x="635" y="82">VAE Decoder</text><text class="sub" x="635" y="101">frozen</text><path class="line" d="M712 86H775"/>
+    <circle class="value" cx="816" cy="86" r="39"/><text class="label" x="816" y="91">Video</text><path class="line" d="M855 86H918"/>
+    <rect class="module encoder" x="922" y="48" width="154" height="76" rx="17"/><text class="label" x="999" y="82">Rep. Encoder</text><text class="sub" x="999" y="101">frozen</text><path class="line" d="M1076 86H1139"/>
+    <circle class="value" cx="1180" cy="86" r="39"/><text class="label" x="1180" y="91">Feature</text><path class="line" d="M1219 86H1275"/>
+    <rect class="loss" x="1279" y="50" width="121" height="72" rx="17"/><text class="label" x="1339" y="83">RDM</text><text class="label" x="1339" y="101">Loss</text>
+    <g class="naive-fwd"><text x="714" y="25" class="phase" text-anchor="middle" fill="#3478d4">PHASE 1 · FORWARD · BUILD AND RETAIN GENERATOR + DECODER + ENCODER GRAPHS</text><path class="forward flow" d="M127 86H190"/><path class="forward flow" d="M348 86H411"/><path class="forward flow" d="M491 86H554"/><path class="forward flow" d="M712 86H775"/><path class="forward flow" d="M855 86H918"/><path class="forward flow" d="M1076 86H1139"/><path class="forward flow" d="M1219 86H1275"/></g>
+    <g class="naive-back"><text x="714" y="25" class="phase" text-anchor="middle" fill="#ff6733">PHASE 2 · BACKWARD · ALL THREE MODULE GRAPHS CO-RESIDENT</text><path class="backward flow" d="M1279 132Q1177 176 1076 124"/><path class="backward flow" d="M922 132Q817 176 712 124"/><path class="backward flow" d="M558 132Q453 176 348 124"/><text x="805" y="181" class="note" fill="#ff6733">OOM at target resolution</text></g>
+  </g>
+  <line x1="34" y1="316" x2="1466" y2="316" stroke="#dfe4ea"/>
+  <text x="34" y="359" class="rowtitle" fill="#ff6733">ViRDM staged VJP backward</text>
+  <g transform="translate(36 386)">
+    <g class="stage s1">
+      <text x="8" y="24" class="phase" fill="#8268c7">STAGE 1 · RDM LOSS BACKWARD</text><circle class="value" cx="46" cy="91" r="34"/><text class="label" x="46" y="96">Feature</text><path class="line flow" d="M80 91H112"/><rect class="loss" x="116" y="55" width="118" height="72" rx="16"/><text class="label" x="175" y="87">RDM</text><text class="label" x="175" y="105">Loss</text><path class="backward flow" d="M234 91H270"/><circle class="value" cx="304" cy="91" r="34"/><text class="label" x="304" y="88">Gradient</text><text class="sub" x="304" y="106">gₕ</text><text x="175" y="174" class="note" fill="#8268c7">Gradient gₕ = ∇ₕ L<tspan baseline-shift="sub" font-size="10">RDM</tspan></text>
+    </g>
+    <g class="stage s2" transform="translate(353 0)">
+      <text x="8" y="24" class="phase" fill="#208978">STAGE 2 · REP. ENCODER VJP</text><circle class="value" cx="43" cy="91" r="34"/><text class="label" x="43" y="96">Video</text><path class="line flow" d="M77 91H105"/><rect class="module encoder" x="109" y="53" width="132" height="76" rx="16"/><text class="label" x="175" y="86">Rep. Encoder</text><text class="sub" x="175" y="105">frozen · replayed</text><path class="line flow" d="M241 91H269"/><circle class="value" cx="303" cy="91" r="34"/><text class="label" x="303" y="96">Feature</text><path class="backward flow" d="M303 132Q175 150 43 132"/><text x="175" y="172" class="note" fill="#208978">Gradient gᵥ = J<tspan baseline-shift="sub" font-size="10">Φ</tspan>ᵀ gₕ</text><text x="175" y="194" class="tiny">Release Rep. Encoder graph</text>
+    </g>
+    <g class="stage s3" transform="translate(706 0)">
+      <text x="8" y="24" class="phase" fill="#3478d4">STAGE 3 · TINY VAE DECODER VJP</text><circle class="value" cx="43" cy="91" r="34"/><text class="label" x="43" y="96">Latent</text><path class="line flow" d="M77 91H105"/><rect class="module decoder" x="109" y="53" width="132" height="76" rx="16"/><text class="label" x="175" y="86">Tiny VAE</text><text class="label" x="175" y="103">Decoder</text><text class="sub" x="175" y="119">frozen · replayed</text><path class="line flow" d="M241 91H269"/><circle class="value" cx="303" cy="91" r="34"/><text class="label" x="303" y="96">Video</text><path class="backward flow" d="M303 132Q175 150 43 132"/><text x="175" y="172" class="note" fill="#3478d4">Gradient g_z = J<tspan baseline-shift="sub" font-size="10">D</tspan>ᵀ gᵥ</text><text x="175" y="194" class="tiny">Release Tiny VAE Decoder graph</text>
+    </g>
+    <g class="stage s4" transform="translate(1059 0)">
+      <text x="8" y="24" class="phase" fill="#ff6733">STAGE 4 · GENERATOR REPLAY</text><circle class="value" cx="43" cy="91" r="34"/><text class="label" x="43" y="96">Noise</text><path class="line flow" d="M77 91H105"/><rect class="module generator" x="109" y="53" width="132" height="76" rx="16"/><text class="label" x="175" y="86">Generator</text><text class="sub" x="175" y="105">trainable · replayed</text><path class="line flow" d="M241 91H269"/><circle class="value" cx="303" cy="91" r="34"/><text class="label" x="303" y="96">Latent</text><path class="backward flow" d="M303 132Q175 150 43 132"/><text x="175" y="172" class="note" fill="#ff6733">Gradient ∇θL = J<tspan baseline-shift="sub" font-size="10">G</tspan>ᵀ g_z</text><text x="175" y="194" class="tiny">Release Generator graph</text>
+    </g>
+  </g>
+  <text x="750" y="630" class="summary">No co-resident backward graphs · one module at a time</text>
+</svg>

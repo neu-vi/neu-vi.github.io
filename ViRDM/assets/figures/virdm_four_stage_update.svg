@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 520" role="img" aria-labelledby="title desc">
+  <title id="title">One ViRDM update in four stages</title>
+  <desc id="desc">A gradient-free stochastic-exit rollout builds a generated population, population RDM returns feature gradients, staged VJPs propagate them through the encoder and decoder, and selected generator exits are replayed with gradients.</desc>
+  <defs>
+    <marker id="gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#99a5b4"/></marker>
+    <marker id="orange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6Z" fill="#ff6733"/></marker>
+    <marker id="orange-small" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0 0L5 2.5L0 5Z" fill="#ff6733"/></marker>
+    <filter id="glow" x="-25%" y="-30%" width="150%" height="160%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      :root{--ink:#13233e;--muted:#748195;--line:#d9e0e8;--orange:#ff6733;--orange-soft:#fff0e9;--blue:#3478d4;--blue-soft:#edf5ff;--green:#208978;--green-soft:#ebf8f5;--purple:#8268c7;--cycle:12s}
+      text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:var(--ink)}.heading{font-family:Georgia,"Times New Roman",serif;font-size:42px;font-weight:600}.stageid{font-size:14px;font-weight:850;letter-spacing:.65px;fill:var(--ink)}.nograd{fill:var(--muted)}.withgrad{fill:var(--orange)}.title{font-size:18px;font-weight:820}.sub{font-size:12px;font-weight:680;fill:var(--muted)}.label{font-size:12px;font-weight:800;text-anchor:middle}.tiny{font-size:10px;font-weight:720;fill:var(--muted);text-anchor:middle}
+      .card{fill:#fafbfc;stroke:var(--line);stroke-width:2}.s1 .card{fill:#f5f6f8;stroke:#aeb7c3}.s2 .card,.s3 .card,.s4 .card{fill:#fffaf7;stroke:#ff8a5f}.module{fill:#fff;stroke:#bbc5d1;stroke-width:2}.generator{fill:var(--orange-soft);stroke:var(--orange)}.decoder{fill:var(--blue-soft);stroke:var(--blue)}.encoder{fill:var(--green-soft);stroke:var(--green)}.loss{fill:#f1eefb;stroke:var(--purple);stroke-width:2}.video{fill:#fff;stroke:#bbc5d1;stroke-width:2}.feature{fill:#ffb18f;stroke:none}.arrow{fill:none;stroke:#99a5b4;stroke-width:2.5;stroke-linecap:round;marker-end:url(#gray)}.flow{stroke-dasharray:9 6;animation:flow .55s linear infinite}.grad{fill:none;stroke:var(--orange);stroke-width:3;stroke-linecap:round;marker-end:url(#orange);stroke-dasharray:9 6;animation:flow .55s linear infinite}.grad-small{fill:none;stroke:var(--orange);stroke-width:2.4;stroke-linecap:round;marker-end:url(#orange-small);stroke-dasharray:8 5;animation:flow .55s linear infinite}.population circle.generated{fill:#ffb18f}.population circle.reference{fill:#789fe0}.stage{opacity:.25}.s1{animation:s1 var(--cycle) infinite}.s2{animation:s2 var(--cycle) infinite}.s3{animation:s3 var(--cycle) infinite}.s4{animation:s4 var(--cycle) infinite}.stage .card{transform-box:fill-box;transform-origin:center}.s1 .card,.s2 .card,.s3 .card,.s4 .card{filter:url(#glow)}
+      @keyframes flow{to{stroke-dashoffset:-15}}@keyframes s1{0%,23%{opacity:1}25%,100%{opacity:.25}}@keyframes s2{0%,24%,50%,100%{opacity:.25}25%,48%{opacity:1}}@keyframes s3{0%,49%,75%,100%{opacity:.25}50%,73%{opacity:1}}@keyframes s4{0%,74%{opacity:.25}75%,98%{opacity:1}100%{opacity:.25}}
+    </style>
+  </defs>
+  <rect width="1500" height="520" fill="#fff"/>
+  <text x="36" y="46" class="heading">One complete ViRDM update</text>
+
+  <g class="stage s1" transform="translate(36 82)">
+    <rect class="card" width="342" height="370" rx="22"/>
+    <text x="24" y="36" class="stageid">STAGE 1 <tspan class="nograd">(NO GRAD)</tspan></text><text x="24" y="58" class="stageid">STOCHASTIC-EXIT SELF-ROLLOUT</text>
+    <g transform="translate(29 91)"><rect class="module generator" width="98" height="52" rx="13"/><text class="label" x="49" y="23">Causal</text><text class="label" x="49" y="39">Generator</text><path class="arrow flow" d="M98 26H130"/><circle class="video" cx="157" cy="26" r="26"/><text class="label" x="157" y="31">Video</text><path class="arrow flow" d="M183 26H215"/><circle class="feature" cx="225" cy="26" r="9"/><text class="label" x="270" y="31">Feature</text></g>
+    <g transform="translate(29 174)"><rect class="module generator" width="98" height="52" rx="13"/><text class="label" x="49" y="23">Causal</text><text class="label" x="49" y="39">Generator</text><path class="arrow flow" d="M98 26H130"/><circle class="video" cx="157" cy="26" r="26"/><text class="label" x="157" y="31">Video</text><path class="arrow flow" d="M183 26H215"/><circle class="feature" cx="225" cy="26" r="9"/><text class="label" x="270" y="31">Feature</text></g>
+    <g transform="translate(29 257)"><rect class="module generator" width="98" height="52" rx="13"/><text class="label" x="49" y="23">Causal</text><text class="label" x="49" y="39">Generator</text><path class="arrow flow" d="M98 26H130"/><circle class="video" cx="157" cy="26" r="26"/><text class="label" x="157" y="31">Video</text><path class="arrow flow" d="M183 26H215"/><circle class="feature" cx="225" cy="26" r="9"/><text class="label" x="270" y="31">Feature</text></g>
+  </g>
+  <path class="arrow" d="M384 267H405"/>
+
+  <g class="stage s2" transform="translate(411 82)">
+    <rect class="card" width="342" height="370" rx="22"/>
+    <text x="24" y="36" class="stageid">STAGE 2 <tspan class="withgrad">(WITH GRAD)</tspan></text><text x="24" y="58" class="stageid">POPULATION VIDEO RDM BACKWARD</text>
+    <g class="population" transform="translate(26 125)">
+      <text x="70" y="8" class="tiny">GENERATED</text><circle class="generated" cx="30" cy="47" r="9"/><circle class="generated" cx="62" cy="30" r="9"/><circle class="generated" cx="91" cy="54" r="9"/><circle class="generated" cx="120" cy="34" r="9"/><circle class="generated" cx="63" cy="79" r="9"/><circle class="generated" cx="111" cy="88" r="9"/>
+      <text x="226" y="8" class="tiny">FIXED REFERENCE</text><circle class="reference" cx="180" cy="39" r="9"/><circle class="reference" cx="217" cy="28" r="9"/><circle class="reference" cx="253" cy="48" r="9"/><circle class="reference" cx="283" cy="29" r="9"/><circle class="reference" cx="210" cy="79" r="9"/><circle class="reference" cx="267" cy="83" r="9"/>
+    </g>
+    <path class="arrow flow" d="M96 216Q112 237 132 247"/><path class="arrow flow" d="M246 216Q230 237 210 247"/>
+    <rect class="loss" x="76" y="247" width="190" height="62" rx="15"/><text class="label" x="171" y="283">RDM Loss</text>
+    <path class="grad-small" d="M171 309V329"/><text x="171" y="353" class="label">Gradient gₕ</text>
+  </g>
+  <path class="arrow" d="M759 267H780"/>
+
+  <g class="stage s3" transform="translate(786 82)">
+    <rect class="card" width="342" height="370" rx="22"/>
+    <text x="24" y="36" class="stageid">STAGE 3 <tspan class="withgrad">(WITH GRAD)</tspan></text><text x="24" y="58" class="stageid">REP. ENCODER + TINY VAE VJPS</text>
+    <circle class="video" cx="55" cy="160" r="29"/><text class="label" x="55" y="157">gₕ</text><text class="tiny" x="55" y="174">upstream</text><path class="grad" d="M84 160H122"/><rect class="module encoder" x="126" y="128" width="88" height="64" rx="14"/><text class="label" x="170" y="157">Rep. Encoder</text><text class="tiny" x="170" y="175">replayed</text><path class="grad" d="M214 160H252"/><circle class="video" cx="281" cy="160" r="29"/><text class="label" x="281" y="157">gᵥ</text><text class="tiny" x="281" y="174">save</text>
+    <circle class="video" cx="55" cy="255" r="29"/><text class="label" x="55" y="252">gᵥ</text><text class="tiny" x="55" y="269">upstream</text><path class="grad" d="M84 255H122"/><rect class="module decoder" x="126" y="223" width="88" height="64" rx="14"/><text class="label" x="170" y="247">Tiny VAE</text><text class="label" x="170" y="263">Decoder</text><text class="tiny" x="170" y="279">replayed</text><path class="grad" d="M214 255H252"/><circle class="video" cx="281" cy="255" r="29"/><text class="label" x="281" y="252">g_z</text><text class="tiny" x="281" y="269">save</text>
+  </g>
+  <path class="arrow" d="M1134 267H1155"/>
+
+  <g class="stage s4" transform="translate(1161 82)">
+    <rect class="card" width="303" height="370" rx="22"/>
+    <text x="24" y="36" class="stageid">STAGE 4 <tspan class="withgrad">(WITH GRAD)</tspan></text><text x="24" y="58" class="stageid">SELECTED-EXIT GENERATOR REPLAY</text>
+    <rect x="87" y="84" width="130" height="30" rx="9" fill="#fff" stroke="#bbc5d1" stroke-width="1.5"/><text class="tiny" x="152" y="103">SAVED ROLLOUT STATE</text><path class="arrow flow" d="M152 114V147"/>
+    <circle class="video" cx="38" cy="195" r="27"/><text class="label" x="38" y="192">Noisy</text><text class="label" x="38" y="208">Latent</text><path class="arrow flow" d="M65 195H94"/>
+    <rect class="module generator" x="98" y="151" width="108" height="88" rx="16"/><text class="label" x="152" y="184">Causal</text><text class="label" x="152" y="201">Generator</text><text class="tiny" x="152" y="220">TRAINABLE</text><path class="arrow flow" d="M206 195H236"/>
+    <circle class="video" cx="267" cy="195" r="27"/><text class="label" x="267" y="192">Clean</text><text class="label" x="267" y="208">Latent</text>
+    <path class="grad" d="M244 218Q151 309 38 222"/><text class="tiny" x="151" y="294" style="fill:#ff6733">GRADIENT g_z</text>
+  </g>
+</svg>

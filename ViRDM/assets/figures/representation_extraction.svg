@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 610" role="img" aria-labelledby="title desc">
+  <title id="title">ViRDM joint representation extraction</title>
+  <desc id="desc">Phase one encodes a video with frozen V-JEPA 2.1 and text with frozen SigLIP2. Phase two normalizes and concatenates the two features into one joint video-text representation.</desc>
+  <defs>
+    <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#98a5b4"/></marker>
+    <marker id="arrow-flow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#5f6c7b"/></marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#ff6733"/></marker>
+    <filter id="soft-glow" x="-30%" y="-40%" width="160%" height="180%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      :root{--ink:#13233e;--muted:#788698;--line:#d9e0e8;--orange:#ff6733;--orange-soft:#fff0e9;--green:#208978;--green-soft:#ebf8f5;--purple:#7259b7;--purple-soft:#f1eefb;--cycle:10s}
+      text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:var(--ink)}
+      .phase-label{font-size:14px;font-weight:850;letter-spacing:1.35px}.label{font-size:18px;font-weight:800;text-anchor:middle}.sub{font-size:13px;font-weight:700;fill:var(--muted);text-anchor:middle}.small-label{font-size:13px;font-weight:800;text-anchor:middle}.feature-label{font-size:12px;font-weight:800;fill:var(--muted);text-anchor:middle;letter-spacing:.5px}
+      .phase-card{fill:#fafbfc;stroke:var(--line);stroke-width:2}.input{fill:#fff;stroke:#bac5d1;stroke-width:2}.video-encoder{fill:var(--green-soft);stroke:var(--green);stroke-width:2}.text-encoder{fill:var(--purple-soft);stroke:var(--purple);stroke-width:2}.concat{fill:var(--orange-soft);stroke:var(--orange);stroke-width:2.5}.feature{fill:#fff;stroke:#aeb9c7;stroke-width:2}.joint-feature{fill:var(--orange-soft);stroke:var(--orange);stroke-width:2.5}
+      .line{fill:none;stroke:#cbd2da;stroke-width:3;stroke-linecap:round;marker-end:url(#arrow-gray)}.merge-line{fill:none;stroke:#aeb9c5;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.active-line{fill:none;stroke:#5f6c7b;stroke-width:4;stroke-linecap:round;stroke-dasharray:18 10;marker-end:url(#arrow-flow);filter:drop-shadow(0 1px 2px rgba(19,35,62,.16));animation:flow .55s linear infinite}
+      .phase-one,.phase-two{transform-origin:center}.phase-one{animation:phaseOne var(--cycle) infinite}.phase-two{animation:phaseTwo var(--cycle) infinite}.phase-one .phase-label{fill:var(--green)}.phase-two .phase-label{fill:var(--orange)}
+      .active-outline{fill:none;stroke:var(--orange);stroke-width:3;filter:url(#soft-glow)}
+      @keyframes flow{to{stroke-dashoffset:-28}}
+      @keyframes phaseOne{0%,45%{opacity:1}50%,95%{opacity:.3}100%{opacity:1}}
+      @keyframes phaseTwo{0%,45%{opacity:.3}50%,95%{opacity:1}100%{opacity:.3}}
+      @media (prefers-reduced-motion:reduce){.phase-one,.phase-two,.active-line{animation:none;opacity:1}.active-line{stroke-dasharray:none}}
+    </style>
+  </defs>
+
+  <rect width="960" height="610" fill="#fff"/>
+
+  <g class="phase-one">
+    <rect class="phase-card" x="22" y="22" width="916" height="330" rx="24"/>
+    <text class="phase-label" x="52" y="58">PHASE 1 · EXTRACT MODALITY FEATURES</text>
+
+    <g transform="translate(58 82)">
+      <rect class="input" x="0" y="0" width="164" height="104" rx="19"/>
+      <rect x="24" y="23" width="55" height="39" rx="5" fill="#f2f4f7" stroke="#9eabb9"/>
+      <rect x="38" y="36" width="55" height="39" rx="5" fill="#fff0e9" stroke="#ff8c63"/>
+      <path d="M48 62l12-13 9 8 9-11 7 16z" fill="#ff9b77"/>
+      <text class="small-label" x="122" y="48">Video</text>
+      <text class="sub" x="122" y="68">v</text>
+      <path class="line" d="M164 52H232"/>
+      <path class="active-line" d="M164 52H232"/>
+
+      <rect class="video-encoder" x="238" y="5" width="226" height="94" rx="19"/>
+      <text class="label" x="351" y="43">V-JEPA 2.1</text>
+      <text class="sub" x="351" y="67">video encoder · frozen</text>
+      <path class="line" d="M464 52H772"/>
+      <path class="active-line" d="M464 52H772"/>
+
+      <circle class="feature" cx="820" cy="52" r="43"/>
+      <circle cx="807" cy="41" r="6" fill="#208978"/><circle cx="826" cy="34" r="5" fill="#50a99a"/><circle cx="835" cy="55" r="7" fill="#208978"/><circle cx="810" cy="63" r="5" fill="#75b6aa"/>
+      <text class="feature-label" x="820" y="115">VIDEO FEATURE</text>
+    </g>
+
+    <g transform="translate(58 216)">
+      <rect class="input" x="0" y="0" width="164" height="104" rx="19"/>
+      <rect x="22" y="24" width="66" height="50" rx="9" fill="#f1eefb" stroke="#907bc6"/>
+      <path d="M38 43h34M38 53h28M38 63h20" stroke="#7259b7" stroke-width="3" stroke-linecap="round"/>
+      <text class="small-label" x="122" y="48">Text</text>
+      <text class="sub" x="122" y="68">c</text>
+      <path class="line" d="M164 52H232"/>
+      <path class="active-line" d="M164 52H232"/>
+
+      <rect class="text-encoder" x="238" y="5" width="226" height="94" rx="19"/>
+      <text class="label" x="351" y="43">SigLIP2</text>
+      <text class="sub" x="351" y="67">text encoder · frozen</text>
+      <path class="line" d="M464 52H772"/>
+      <path class="active-line" d="M464 52H772"/>
+
+      <circle class="feature" cx="820" cy="52" r="43"/>
+      <circle cx="808" cy="40" r="6" fill="#7259b7"/><circle cx="828" cy="38" r="5" fill="#9a87cd"/><circle cx="835" cy="59" r="7" fill="#7259b7"/><circle cx="810" cy="65" r="5" fill="#b3a6d7"/>
+      <text class="feature-label" x="820" y="115">TEXT FEATURE</text>
+    </g>
+  </g>
+
+  <g class="phase-two">
+    <rect class="phase-card" x="22" y="375" width="916" height="219" rx="24"/>
+    <text class="phase-label" x="52" y="411">PHASE 2 · CONCATENATE INTO ONE JOINT FEATURE</text>
+
+    <circle class="feature" cx="138" cy="451" r="34"/>
+    <circle cx="127" cy="441" r="5" fill="#208978"/><circle cx="145" cy="437" r="5" fill="#50a99a"/><circle cx="152" cy="456" r="6" fill="#208978"/><circle cx="131" cy="462" r="5" fill="#75b6aa"/>
+    <text class="feature-label" x="138" y="499">VIDEO FEATURE</text>
+
+    <circle class="feature" cx="138" cy="535" r="34"/>
+    <circle cx="127" cy="525" r="5" fill="#7259b7"/><circle cx="145" cy="521" r="5" fill="#9a87cd"/><circle cx="152" cy="540" r="6" fill="#7259b7"/><circle cx="131" cy="546" r="5" fill="#b3a6d7"/>
+    <text class="feature-label" x="138" y="583">TEXT FEATURE</text>
+
+    <path class="merge-line" d="M172 451H224V535H172M224 493H250"/>
+    <path class="line" d="M250 493H820"/><path class="active-line" d="M250 493H820"/>
+    <text class="phase-label" x="535" y="478" text-anchor="middle">CONCAT</text>
+
+    <circle class="joint-feature" cx="875" cy="509" r="49"/>
+    <circle cx="860" cy="495" r="6" fill="#208978"/><circle cx="884" cy="491" r="6" fill="#7259b7"/><circle cx="894" cy="515" r="7" fill="#ff6733"/><circle cx="866" cy="524" r="6" fill="#f28b66"/><circle cx="877" cy="509" r="5" fill="#13233e"/>
+    <text class="feature-label" x="875" y="574">JOINT FEATURE</text>
+  </g>
+</svg>

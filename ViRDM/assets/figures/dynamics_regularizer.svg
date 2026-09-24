@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 520" role="img" aria-labelledby="title desc">
+  <title id="title">ViRDM flow-based dynamics regularizer</title>
+  <desc id="desc">Noise passes through the causal generator to form a video. A training-only branch uses frozen RAFT to aggregate optical flow into a video dynamics score and applies a one-sided threshold penalty only when motion is insufficient.</desc>
+  <defs>
+    <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#98a5b4"/></marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#ff6733"/></marker>
+    <filter id="glow" x="-30%" y="-40%" width="160%" height="180%"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      :root{--ink:#13233e;--muted:#748195;--line:#d9e0e8;--orange:#ff6733;--orange-soft:#fff0e9;--blue:#3478d4;--blue-soft:#edf5ff;--green:#208978;--green-soft:#ebf8f5;--cycle:9s}
+      text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:var(--ink)}
+      .heading{font-family:Georgia,"Times New Roman",serif;font-size:42px;font-weight:600}.lede{font-size:22px;fill:var(--muted)}.eyebrow{font-size:13px;font-weight:850;letter-spacing:1.4px;fill:var(--orange)}.label{font-size:17px;font-weight:800;text-anchor:middle}.sub{font-size:13px;font-weight:700;fill:var(--muted);text-anchor:middle}.threshold{font-size:19px;font-weight:850;letter-spacing:.7px;text-anchor:middle}.threshold-note{font-size:13px;font-weight:800;letter-spacing:.35px;fill:var(--muted);text-anchor:middle}.training{font-size:18px;font-weight:850;letter-spacing:1.15px;fill:var(--orange);text-anchor:middle}
+      .node{fill:#fff;stroke:#b9c4d0;stroke-width:2}.generator{fill:var(--orange-soft);stroke:var(--orange)}.raft{fill:var(--green-soft);stroke:var(--green)}.score{fill:var(--blue-soft);stroke:var(--blue)}.penalty{fill:#fff;stroke:var(--orange);stroke-width:2.5}.regularizer-box{fill:#fffaf7;stroke:#ff9b73;stroke-width:2.5;stroke-dasharray:10 7}.arrow{fill:none;stroke:#98a5b4;stroke-width:3;stroke-linecap:round;marker-end:url(#arrow-gray)}.grad{fill:none;stroke:var(--orange);stroke-width:3.5;stroke-linecap:round;marker-end:url(#arrow-orange)}.flow{stroke-dasharray:12 8;animation:flow .7s linear infinite}.flow-mark{stroke:var(--blue);stroke-width:4;stroke-linecap:round;marker-end:url(#arrow-gray)}
+      .p1,.p2,.p3{opacity:.28}.p1{animation:p1 var(--cycle) infinite}.p2{animation:p2 var(--cycle) infinite}.p3{animation:p3 var(--cycle) infinite}
+      @keyframes flow{to{stroke-dashoffset:-20}}@keyframes p1{0%,29%{opacity:1;filter:url(#glow)}33%,100%{opacity:.28;filter:none}}@keyframes p2{0%,32%,66%,100%{opacity:.28;filter:none}33%,62%{opacity:1;filter:url(#glow)}}@keyframes p3{0%,65%,100%{opacity:.28;filter:none}66%,96%{opacity:1;filter:url(#glow)}}
+    </style>
+  </defs>
+  <rect width="1500" height="520" rx="20" fill="#fff"/>
+  <text x="40" y="53" class="heading">ViRDM Flow-Based Dynamics Regularizer</text>
+  <text x="40" y="82" class="lede">A training-only corrective branch encourages sufficient motion—not unlimited motion.</text>
+
+  <g class="p1">
+    <circle class="node" cx="86" cy="236" r="43"/><text class="label" x="86" y="242">Noise</text>
+    <path class="arrow flow" d="M129 236H179"/>
+    <rect class="node generator" x="188" y="182" width="200" height="108" rx="20"/>
+    <text class="label" x="288" y="228">Causal Generator</text><text class="sub" x="288" y="252">trainable</text>
+    <path class="arrow flow" d="M388 236H438"/>
+    <g transform="translate(447 168)">
+      <rect class="node" width="190" height="136" rx="18"/>
+      <rect x="18" y="20" width="62" height="72" rx="8" fill="#edf2f7" stroke="#9caabb"/><rect x="64" y="29" width="62" height="72" rx="8" fill="#f5f7fa" stroke="#9caabb"/><rect x="110" y="38" width="62" height="72" rx="8" fill="#fff" stroke="#9caabb"/>
+      <path d="M35 69Q48 43 64 68T91 63" fill="none" stroke="#ff8b5f" stroke-width="4"/><path d="M80 78Q94 49 110 75T137 70" fill="none" stroke="#ff8b5f" stroke-width="4"/>
+      <text class="label" x="95" y="126">Generated Video</text>
+    </g>
+  </g>
+
+  <rect class="regularizer-box" x="675" y="116" width="785" height="270" rx="24"/>
+  <text class="eyebrow" x="706" y="146">OUR DYNAMICS REGULARIZER · TRAINING ONLY</text>
+  <path class="arrow flow" d="M637 236H718"/>
+
+  <g class="p2">
+    <rect class="node raft" x="727" y="184" width="183" height="104" rx="19"/>
+    <text class="label" x="818.5" y="226">Frozen RAFT</text><text class="sub" x="818.5" y="250">sampled frame pairs</text>
+    <path class="arrow flow" d="M910 236H953"/>
+    <g transform="translate(963 174)">
+      <rect class="node score" width="170" height="124" rx="19"/>
+      <path class="flow-mark" d="M25 38l28 -13"/><path class="flow-mark" d="M69 47l37 -20"/><path class="flow-mark" d="M35 76l42 8"/><path class="flow-mark" d="M94 79l42 -18"/>
+      <text class="label" x="85" y="109">Flow Score s(v̂)</text>
+    </g>
+  </g>
+
+  <path class="arrow flow" d="M1133 236H1172"/>
+  <g class="p3">
+    <rect class="penalty" x="1181" y="169" width="230" height="143" rx="20"/>
+    <text class="threshold" x="1296" y="217">One-Sided Threshold</text>
+    <text class="threshold-note" x="1296" y="255">Penalizes insufficient motion</text>
+    <text class="threshold-note" x="1296" y="278">Zero once the threshold is met</text>
+    <path class="grad flow" d="M1296 312V351H288V302"/>
+  </g>
+
+  <text class="training" x="750" y="458">CORRECTS UNDER-DYNAMIC SAMPLES · NO INFERENCE COST</text>
+</svg>

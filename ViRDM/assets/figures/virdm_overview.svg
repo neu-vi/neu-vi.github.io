@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 650" role="img" aria-labelledby="title desc">
+  <title id="title">DMD and ViRDM update comparison</title>
+  <desc id="desc">Three always-visible DMD phases are highlighted in sequence. ViRDM uses one generator and a fixed representation distribution.</desc>
+  <style>
+    :root { --ink:#13233e; --muted:#7c899b; --line:#d9dee6; --orange:#ff6733; --orange-soft:#fff0e9; --blue:#2f7ee6; --blue-soft:#edf5ff; --purple:#7259b7; --purple-soft:#f2effb; --green:#208978; --green-soft:#ebf8f5; --cycle:8.4s; }
+    text { font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill:var(--ink); }
+    .row-title { font-family:Georgia,"Times New Roman",serif; font-size:32px; font-weight:600; }
+    .dmd-title { font-size:42px; }
+    .row-sub { font-size:14px; fill:var(--muted); }
+    .phase-panel { fill:#fbfcfd; stroke:var(--line); stroke-width:2; }
+    .phase-group { opacity:1; }
+    .phase-title { font-size:12px; font-weight:850; letter-spacing:1.2px; fill:var(--muted); }
+    .phase-group.p1 .phase-panel { animation:panel1 var(--cycle) ease-in-out infinite; }
+    .phase-group.p2 .phase-panel { animation:panel2 var(--cycle) ease-in-out infinite; }
+    .phase-group.p3 .phase-panel { animation:panel3 var(--cycle) ease-in-out infinite; }
+    .phase-group.p1 .phase-title { animation:title1 var(--cycle) ease-in-out infinite; }
+    .phase-group.p2 .phase-title { animation:title2 var(--cycle) ease-in-out infinite; }
+    .phase-group.p3 .phase-title { animation:title3 var(--cycle) ease-in-out infinite; }
+    .node { fill:#fff; stroke:var(--line); stroke-width:1.8; }
+    .generator { fill:var(--orange-soft); stroke:var(--orange); }
+    .teacher { fill:var(--blue-soft); stroke:#94bced; }
+    .critic { fill:var(--purple-soft); stroke:#b2a0dc; }
+    .loss { fill:var(--green-soft); stroke:#81beb3; }
+    .label { font-size:16px; font-weight:800; text-anchor:middle; }
+    .label-sm { font-size:13px; font-weight:800; text-anchor:middle; }
+    .trainable { font-size:10px; font-weight:850; letter-spacing:1px; fill:var(--orange); text-anchor:middle; }
+    .critic-trainable { fill:var(--purple); }
+    .arrow { fill:none; stroke:#919dac; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; marker-end:url(#arrow); stroke-dasharray:14 9; animation:flow .8s linear infinite; }
+    .axis { fill:none; stroke:#c8ced7; stroke-width:1.4; }
+    .curve-blue { fill:none; stroke:var(--blue); stroke-width:3; }
+    .curve-orange { fill:none; stroke:var(--orange); stroke-width:3; stroke-dasharray:7 6; }
+    .curve-label { font-size:10px; font-weight:750; text-anchor:middle; }
+    .fixed-label { fill:var(--orange); }
+    .generated-label { fill:var(--blue); }
+    .divider { stroke:#e0e4ea; stroke-width:1.7; stroke-dasharray:6 9; }
+    .legend { fill:#fff; stroke:var(--line); stroke-width:2; }
+    .legend-title { font-size:10px; font-weight:850; letter-spacing:1.3px; fill:var(--muted); text-anchor:middle; }
+    .legend-value { font-size:26px; font-weight:850; text-anchor:middle; }
+    @keyframes flow { from { stroke-dashoffset:0; } to { stroke-dashoffset:-23; } }
+    @keyframes panel1 { 0%,29%{fill:#fff7f2;stroke:var(--orange);stroke-width:4;filter:drop-shadow(0 0 10px rgba(255,103,51,.32))} 34%,100%{fill:#fbfcfd;stroke:var(--line);stroke-width:2;filter:none} }
+    @keyframes panel2 { 0%,29%{fill:#fbfcfd;stroke:var(--line);stroke-width:2;filter:none} 34%,63%{fill:#fff7f2;stroke:var(--orange);stroke-width:4;filter:drop-shadow(0 0 10px rgba(255,103,51,.32))} 68%,100%{fill:#fbfcfd;stroke:var(--line);stroke-width:2;filter:none} }
+    @keyframes panel3 { 0%,63%{fill:#fbfcfd;stroke:var(--line);stroke-width:2;filter:none} 68%,96%{fill:#fff7f2;stroke:var(--orange);stroke-width:4;filter:drop-shadow(0 0 10px rgba(255,103,51,.32))} 100%{fill:#fbfcfd;stroke:var(--line);stroke-width:2;filter:none} }
+    @keyframes title1 { 0%,29%{fill:var(--orange)} 34%,100%{fill:var(--muted)} }
+    @keyframes title2 { 0%,29%{fill:var(--muted)} 34%,63%{fill:var(--orange)} 68%,100%{fill:var(--muted)} }
+    @keyframes title3 { 0%,63%{fill:var(--muted)} 68%,96%{fill:var(--orange)} 100%{fill:var(--muted)} }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1l7 4-7 4" fill="none" stroke="#919dac" stroke-width="1.7"/></marker>
+  </defs>
+
+  <rect width="1400" height="650" fill="#fff"/>
+
+  <text class="row-title dmd-title" x="50" y="61">DMD-based post-training</text>
+  <text class="row-sub" x="50" y="88">Three phases in every training iteration</text>
+
+  <g class="phase-group p1">
+    <rect class="phase-panel" x="50" y="116" width="328" height="174" rx="18"/>
+    <text class="phase-title" x="72" y="143">PHASE 1 · GENERATE</text>
+    <rect class="node generator" x="72" y="169" width="169" height="83" rx="14"/>
+    <text class="label-sm" x="156" y="202">Causal Generator</text><text class="trainable" x="156" y="226">TRAINABLE</text>
+    <path class="arrow flow" d="M241 210h34"/>
+    <rect class="node" x="276" y="176" width="80" height="68" rx="12"/>
+    <text class="label" x="316" y="216">Video</text>
+  </g>
+
+  <g class="phase-group p2">
+    <rect class="phase-panel" x="394" y="116" width="610" height="174" rx="18"/>
+    <text class="phase-title" x="416" y="143">PHASE 2 · DMD LOSS</text>
+    <rect class="node" x="416" y="176" width="78" height="68" rx="12"/>
+    <text class="label" x="455" y="216">Video</text>
+    <path class="arrow" d="M494 210h30v-31h28"/><path class="arrow" d="M494 210h30v37h28"/>
+    <rect class="node teacher" x="553" y="151" width="166" height="58" rx="12"/>
+    <text class="label-sm" x="636" y="185">14B Teacher</text>
+    <rect class="node critic" x="553" y="218" width="166" height="58" rx="12"/>
+    <text class="label-sm" x="636" y="252">1.3B Critic</text>
+    <path class="arrow" d="M719 180h39v30h41"/><path class="arrow" d="M719 247h39v-37h41"/>
+    <rect class="node loss" x="800" y="176" width="160" height="68" rx="14"/>
+    <text class="label" x="880" y="216">DMD Loss</text>
+  </g>
+
+  <g class="phase-group p3">
+    <rect class="phase-panel" x="1020" y="116" width="330" height="174" rx="18"/>
+    <text class="phase-title" x="1042" y="143">PHASE 3 · CRITIC UPDATE</text>
+    <rect class="node generator" x="1038" y="169" width="108" height="83" rx="14"/>
+    <text class="label-sm" x="1092" y="203">Causal</text><text class="label-sm" x="1092" y="221">Generator</text>
+    <path class="arrow" d="M1146 210h16"/>
+    <rect class="node" x="1163" y="177" width="58" height="66" rx="11"/>
+    <text class="label-sm" x="1192" y="215">Video</text>
+    <path class="arrow" d="M1221 210h16"/>
+    <rect class="node critic" x="1238" y="169" width="94" height="83" rx="12"/>
+    <text class="label-sm" x="1285" y="203">Critic</text><text class="trainable critic-trainable" x="1285" y="226">TRAINABLE</text>
+  </g>
+
+  <line class="divider" x1="50" y1="329" x2="1350" y2="329"/>
+  <text class="row-title" x="50" y="380" fill="#ff6733">ViRDM</text>
+  <text class="row-sub" x="50" y="406">One direct representation-distribution-matching path</text>
+
+  <g class="phase-group p1">
+    <rect class="phase-panel" x="50" y="433" width="400" height="126" rx="18"/>
+    <text class="phase-title" x="72" y="458">PHASE 1 · GENERATE</text>
+    <rect class="node generator" x="72" y="472" width="188" height="70" rx="14"/>
+    <text class="label-sm" x="166" y="501">Causal Generator</text><text class="trainable" x="166" y="524">TRAINABLE</text>
+    <path class="arrow" d="M260 507h36"/>
+    <rect class="node" x="297" y="472" width="130" height="70" rx="14"/>
+    <text class="label" x="362" y="513">Video</text>
+  </g>
+
+  <g class="phase-group p2">
+    <rect class="phase-panel" x="466" y="433" width="884" height="126" rx="18"/>
+    <text class="phase-title" x="488" y="458">PHASE 2 · RDM LOSS</text>
+    <rect class="node" x="488" y="472" width="92" height="70" rx="13"/>
+    <text class="label-sm" x="534" y="513">Video</text>
+    <path class="arrow" d="M580 507h28"/>
+    <rect class="node teacher" x="609" y="472" width="158" height="70" rx="13"/>
+    <text class="label-sm" x="688" y="513">Representation</text>
+    <path class="arrow" d="M767 507h27"/>
+    <rect class="node" x="795" y="464" width="326" height="86" rx="14"/>
+    <path class="axis" d="M812 517h292M835 517v-39"/>
+    <path class="curve-orange" transform="translate(-7 0)" d="M843 515c38-2 43-35 92-35s53 33 105 35"/>
+    <path class="curve-blue" transform="translate(7 0)" d="M843 515c44 0 51-20 106-20s53 18 91 20"/>
+    <text class="curve-label fixed-label" x="865" y="540">fixed distribution</text>
+    <text class="curve-label generated-label" x="1015" y="540">generated distribution</text>
+    <path class="arrow" d="M1121 507h28"/>
+    <rect class="node loss" x="1150" y="472" width="178" height="70" rx="13"/>
+    <text class="label" x="1239" y="513">RDM Loss</text>
+  </g>
+
+  <g aria-label="Resource comparison">
+    <rect class="legend" x="251" y="578" width="416" height="58" rx="16"/>
+    <text class="legend-title" x="459" y="600">DIFFUSION MODELS IN TRAINING</text>
+    <text class="legend-value" x="459" y="627"><tspan fill="#7259b7">3</tspan><tspan fill="#7d899b">  →  </tspan><tspan fill="#ff6733">1</tspan><tspan font-size="13" fill="#7d899b">  MODELS</tspan></text>
+    <rect class="legend" x="733" y="578" width="416" height="58" rx="16"/>
+    <text class="legend-title" x="941" y="600">PEAK MEMORY / GPU · 8×A100</text>
+    <text class="legend-value" x="941" y="627"><tspan fill="#7259b7">77.1 GB</tspan><tspan fill="#7d899b">  →  </tspan><tspan fill="#ff6733">48.3 GB</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ViRDM removes the online teacher and critic from few-step causal video post-training by matching fixed representation distributions.">
+  <meta name="theme-color" content="#fffaf5">
+  <title>ViRDM — Few-Step Causal Video Generation</title>
+  <link rel="stylesheet" href="assets/css/site.css?v=59">
+</head>
+<body>
+  <aside class="floating-toc" aria-label="Page contents">
+    <div class="floating-toc-head"><span>Contents</span><b id="toc-current">01</b></div>
+    <div class="floating-toc-list">
+      <div class="floating-toc-progress" aria-hidden="true"><i id="toc-progress"></i></div>
+      <a href="#top" data-section="top"><span>01</span><strong>Title</strong></a>
+      <a href="#showcase" data-section="showcase"><span>02</span><strong>Showcase</strong></a>
+      <a href="#motivation" data-section="motivation"><span>03</span><strong>Motivation</strong></a>
+      <a href="#challenges" data-section="challenges"><span>04</span><strong>Challenges</strong></a>
+      <a href="#rdm-objective" data-section="rdm-objective"><span>05</span><strong>ViRDM Objective</strong></a>
+      <a href="#efficient-training" data-section="efficient-training"><span>06</span><strong>Efficient Training</strong></a>
+      <a href="#video-recipe" data-section="video-recipe"><span>07</span><strong>Video Recipe</strong></a>
+      <a href="#motion-enhancement" data-section="motion-enhancement"><span>08</span><strong>Motion Enhancement</strong></a>
+      <a href="#results" data-section="results"><span>09</span><strong>Main Results</strong></a>
+      <a href="#beyond-causal-4-step" data-section="beyond-causal-4-step"><span>10</span><strong>Beyond Four Steps</strong></a>
+      <a href="#references" data-section="references"><span>11</span><strong>References</strong></a>
+      <a href="#cite" data-section="cite"><span>12</span><strong>Cite</strong></a>
+    </div>
+  </aside>
+
+  <nav class="nav" aria-label="Main navigation">
+    <a class="brand" href="#top">ViRDM</a>
+    <div class="nav-links">
+      <a href="#showcase">Showcase</a>
+      <a href="#motivation">Motivation</a>
+      <a href="#challenges">Challenges</a>
+      <a href="#rdm-objective">ViRDM Objective</a>
+      <a href="#efficient-training">Efficient Training</a>
+      <a href="#video-recipe">Video Recipe</a>
+      <a href="#motion-enhancement">Motion Enhancement</a>
+      <a href="#results">Results</a>
+      <a href="#beyond-causal-4-step">Beyond Causal 4-Step</a>
+      <a href="#references">References</a>
+      <a href="#cite">Cite</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <header class="hero shell">
+      <p class="eyebrow">Representation Distribution Matching · Few-Step Causal Video</p>
+      <h1><span>ViRDM</span></h1>
+      <p class="paper-title">Taming Representation Distribution Matching for<br>Few-Step Causal Video Generation</p>
+      <p class="authors"><a href="https://cr8br0ze.github.io/" target="_blank" rel="noreferrer">Zichong Meng</a>, <a href="https://chongjiange.github.io/" target="_blank" rel="noreferrer">Chongjian Ge</a>, <a href="https://paulchhuang.github.io/" target="_blank" rel="noreferrer">Chun-Hao P. Huang</a>, <a href="https://yzhou359.github.io/" target="_blank" rel="noreferrer">Yang Zhou</a><sup>&dagger;</sup>, <a href="https://jianghz.me/" target="_blank" rel="noreferrer">Huaizu Jiang</a><sup>&dagger;</sup></p>
+      <p class="affiliations">Northeastern University · Adobe Research</p>
+      <p class="authors-note"><sup>&dagger;</sup> Equal advising · Technical Report</p>
+      <div class="hero-actions" aria-label="Project links">
+        <a class="button button-primary" href="#showcase">See showcase</a>
+        <span class="button disabled">Paper · coming soon</span>
+        <a class="button" href="https://github.com/neu-vi/ViRDM" target="_blank" rel="noreferrer">Code ↗</a>
+        <a class="button" href="https://huggingface.co/cr8br0ze/ViRDM" target="_blank" rel="noreferrer">Models ↗</a>
+      </div>
+
+      <div class="hero-rule"></div>
+      <div class="hero-summary">
+        <p class="hero-tldr"><span>TL;DR</span> ViRDM enables teacher- and critic-free post-training for few-step causal video generation by matching generated videos directly to a fixed video-text representation distribution. With only 20 generator updates, it reaches 84.87 VBench Total while reducing peak memory from 77.1 to 48.3 GB per GPU and post-training time from 22 to 2 hours on eight A100 GPUs.</p>
+        <div class="key-point-list" aria-label="Headline results">
+          <article><i aria-hidden="true">↯</i><p><strong>Fewer updates.</strong> 120 → 20 generator updates</p></article>
+          <article><i aria-hidden="true">↑</i><p><strong>Better quality.</strong> 84.51 → 84.87 Total Score</p></article>
+          <article><i aria-hidden="true">◷</i><p><strong>Faster post-training.</strong> 22 → 2 hours</p></article>
+          <article><i aria-hidden="true">↓</i><p><strong>Less memory.</strong> 77.1 → 48.3 GB per GPU</p></article>
+          <article><i aria-hidden="true">1</i><p><strong>Feasible on one GPU.</strong> 68.5 GB on one A100 GPU</p></article>
+        </div>
+      </div>
+    </header>
+
+    <nav class="jump-nav shell" aria-label="Project sections">
+      <a href="#showcase"><i aria-hidden="true">✦</i><span>Showcase</span></a>
+      <a href="#motivation"><i aria-hidden="true">?</i><span>Motivation</span></a>
+      <a href="#challenges"><i aria-hidden="true">◇</i><span>Challenges</span></a>
+      <a href="#rdm-objective"><i aria-hidden="true">◎</i><span>ViRDM Objective</span></a>
+      <a href="#efficient-training"><i aria-hidden="true">⇲</i><span>Efficient Training</span></a>
+      <a href="#video-recipe"><i aria-hidden="true">▣</i><span>Video Recipe</span></a>
+      <a href="#motion-enhancement"><i aria-hidden="true">∿</i><span>Motion Enhancement</span></a>
+      <a href="#results"><i aria-hidden="true">↑</i><span>Main Results</span></a>
+      <a href="#beyond-causal-4-step"><i aria-hidden="true">→</i><span>Beyond Four Steps</span></a>
+    </nav>
+
+    <section class="showcase-section" id="showcase">
+      <div class="shell">
+        <div class="section-head showcase-head">
+          <h2>0. ViRDM Generation Showcase</h2>
+        </div>
+        <div class="showcase-grid" id="showcase-grid"></div>
+        <button class="showcase-toggle" id="showcase-toggle" type="button" aria-expanded="false">Show all 30</button>
+      </div>
+    </section>
+
+    <section class="section shell" id="motivation">
+      <div class="section-head">
+        <h2>1. Motivation</h2>
+      </div>
+
+      <div class="overview-copy">
+        <article>
+          <span>Why</span>
+          <div>
+            <h3>DMD-based methods keep three diffusion models active.</h3>
+            <p>Existing causal post-training methods (e.g., Self-Forcing and Causal Forcing) rely on a frozen 14B score teacher, a learned 1.3B critic, and the 1.3B generator. This teacher–critic stack makes every update expensive in both memory and compute.</p>
+          </div>
+        </article>
+        <article>
+          <span>Idea</span>
+          <div>
+            <h3>Replace the teacher and critic with a fixed representation distribution.</h3>
+            <p>Image RDM suggests a simpler route: precompute the real representation distribution once, then train only the generator by directly matching its generated distribution to that fixed target.</p>
+          </div>
+        </article>
+      </div>
+
+      <figure class="overview-diagram idea-teaser">
+        <object data="assets/figures/virdm_overview.svg?v=16" type="image/svg+xml" aria-label="Animated comparison of DMD-based post-training and ViRDM"></object>
+      </figure>
+    </section>
+
+    <section class="section findings-section" id="challenges">
+      <div class="shell">
+      <div class="challenge-intro">
+        <h2>2. Challenges</h2>
+      </div>
+
+      <div class="transfer-question">
+        <p class="section-index">The transfer problem</p>
+        <h3>Image RDM does not directly transfer to few-step causal video.</h3>
+        <p class="transfer-detail">Video introduces a multi-step autoregressive rollout, a distinct optimization regime, and temporal behavior that the image recipe was never designed to constrain. These expose three video-specific barriers.</p>
+      </div>
+
+      <div class="barrier-heading">
+        <h3>Three barriers exposed by the image-to-video RDM transfer:</h3>
+      </div>
+
+      <div class="finding-grid">
+        <article class="finding">
+          <span class="finding-number">01</span>
+          <h3>The end-to-end gradient path is memory-intractable</h3>
+          <p>Backpropagating through a multi-step autoregressive rollout, VAE decoder, and representation encoder requires the full composite graph to remain resident and cannot fit at the target video resolution.</p>
+        </article>
+        <article class="finding">
+          <span class="finding-number">02</span>
+          <h3>The image RDM optimization regime does not transfer</h3>
+          <p>Image RDM relies on very large fresh populations and can begin from a bidirectional model. At video scale, those populations are prohibitively expensive and the same initialization fails to recover a causal transport.</p>
+        </article>
+        <article class="finding">
+          <span class="finding-number">03</span>
+          <h3>Representation distributions underconstrain temporal dynamics</h3>
+          <p>Image features largely capture appearance, while video features do not reliably distinguish moderate from strong motion.</p>
+        </article>
+      </div>
+      </div>
+    </section>
+
+    <section class="method-band rdm-method-band" id="rdm-objective">
+      <div class="shell">
+        <div class="section-head">
+          <h2 class="method-title">3. ViRDM Objective</h2>
+        </div>
+
+        <section class="rdm-intro" aria-label="Video RDM definition">
+          <div class="rdm-definition-grid">
+            <article class="rdm-representation-panel">
+              <p class="rdm-kicker">Representation extraction</p>
+              <h4>How we extract joint representations</h4>
+              <p class="rdm-panel-lede">Frozen video and text encoders first extract modality-specific features; ViRDM then concatenates them into the joint feature used for distribution matching.</p>
+
+              <div class="rdm-representation-animation">
+                <object data="assets/figures/representation_extraction.svg?v=9" type="image/svg+xml" aria-label="Two-phase extraction of joint video-text representations using V-JEPA 2.1 and SigLIP2"></object>
+              </div>
+
+              <ul class="rdm-find-list">
+                <li><span>FIXED</span><p><strong>Encode the target once.</strong> The reference contains 6,505 real video–text pairs and remains frozen throughout post-training.</p></li>
+                <li><span>JOINT</span><p><strong>Match video and text jointly.</strong> V-JEPA 2.1 video features and normalized SigLIP2 text features make visual quality and prompt fidelity part of the same objective.</p></li>
+              </ul>
+            </article>
+
+            <article class="rdm-comparison-panel">
+              <p class="rdm-kicker">Distribution comparison</p>
+              <h4>How the distributions are compared</h4>
+              <p class="rdm-panel-lede">Generated samples are attracted toward the fixed reference distribution while the within-generation term keeps them from collapsing.</p>
+
+              <svg class="rdm-manifold" viewBox="0 0 600 280" role="img" aria-label="Animated three-term distribution comparison: generated-generated repulsion, generated-reference attraction, and a constant reference-reference term">
+                <defs>
+                  <marker id="rdm-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L7,4 L0,8 Z" fill="#d65b31"></path>
+                  </marker>
+                  <marker id="rdm-arrow-gen" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto-start-reverse">
+                    <path d="M0,0 L7,4 L0,8 Z" fill="#d65b31"></path>
+                  </marker>
+                </defs>
+                <g class="rdm-cycle-captions" aria-hidden="true">
+                  <text class="rdm-term-caption rdm-phase-one" x="300" y="29" text-anchor="middle">GEN–GEN · REPULSION</text>
+                  <text class="rdm-term-caption rdm-phase-two" x="300" y="29" text-anchor="middle">GEN–REF · ATTRACTION</text>
+                  <text class="rdm-term-caption rdm-phase-three" x="300" y="29" text-anchor="middle">REF–REF · CONSTANT</text>
+                </g>
+                <path class="rdm-manifold-line" d="M28 225 C128 148 217 144 302 184 C390 225 463 223 572 144"></path>
+                <path class="rdm-reference-link rdm-phase-three" d="M28 225 C128 148 217 144 302 184 C390 225 463 223 572 144"></path>
+                <text class="rdm-svg-label target-label" x="455" y="250" text-anchor="middle">reference distribution</text>
+                <g class="rdm-target-points">
+                  <circle cx="95" cy="184" r="6"></circle><circle cx="190" cy="155" r="6"></circle><circle cx="290" cy="178" r="6"></circle><circle cx="395" cy="219" r="6"></circle><circle cx="505" cy="184" r="6"></circle>
+                </g>
+                <g class="rdm-generated-points">
+                  <circle cx="130" cy="78" r="8"></circle><circle cx="292" cy="70" r="8"></circle><circle cx="455" cy="85" r="8"></circle>
+                </g>
+                <g class="rdm-attraction-arrows rdm-phase-two">
+                  <line x1="130" y1="90" x2="112" y2="165"></line><line x1="292" y1="82" x2="290" y2="163"></line><line x1="455" y1="97" x2="486" y2="165"></line>
+                </g>
+                <g class="rdm-phase-one">
+                  <line class="rdm-repulsion-arrow" x1="148" y1="68" x2="273" y2="68"></line>
+                  <line class="rdm-repulsion-arrow" x1="310" y1="69" x2="436" y2="82"></line>
+                </g>
+                <text class="rdm-svg-label generated-label" x="28" y="73">generated</text>
+              </svg>
+
+              <div class="rdm-loss-summary" aria-label="The three terms of the MMD loss">
+                <div class="rdm-loss-title"><strong>RDM LOSS</strong><i>=</i></div>
+                <div class="rdm-loss-terms">
+                  <span><i></i><small>GEN–GEN</small> REPULSION</span>
+                  <span><i>+</i><small>GEN–REF</small> ATTRACTION</span>
+                  <span><i>+</i><small>REF–REF</small> CONSTANT</span>
+                </div>
+              </div>
+
+              <ul class="rdm-find-list rdm-mmd-note">
+                <li><span>MMD</span><p><strong>Three terms, one distribution match.</strong> Following RDM, ViRDM compares the generated and reference distributions with a three-term MMD objective.</p></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <section class="method-band efficient-training-band" id="efficient-training">
+      <div class="shell">
+        <div class="section-head">
+          <h2 class="method-title">4. Memory-Feasible ViRDM Training</h2>
+          <p class="lede">ViRDM makes training memory-feasible through stochastic exits and staged vector–Jacobian products.</p>
+        </div>
+
+        <section class="method-chapter">
+          <article class="method-unit">
+            <div class="method-copy">
+              <p class="method-number">4.1</p>
+              <h4>Stochastic Exits for Few-Step Video RDM</h4>
+              <div class="method-prose"><p>RDM requires only a clean endpoint, with no intermediate supervision. We therefore follow Self-Forcing’s consistency-sampling rollout, in which each denoising step directly predicts the clean endpoint. We sample one stochastic exit, run preceding steps without gradients, and backpropagate only through the clean prediction at the selected exit.</p></div>
+            </div>
+            <div class="animation-frame rollout-animation">
+              <object data="assets/figures/stochastic_exit.svg?v=12" type="image/svg+xml" aria-label="Animated stochastic-exit rollout"></object>
+            </div>
+          </article>
+
+          <article class="method-unit">
+            <div class="method-copy">
+              <p class="method-number">4.2</p>
+              <h4>Staged VJPs Avoid Co-Resident Backward Graphs</h4>
+              <p>Naive end-to-end backpropagation requires the generator, decoder, and representation-encoder graphs to coexist in memory. ViRDM factors the backward pass into staged VJPs, materializing each upstream gradient before releasing the current graph, so only one module’s backward graph is resident at a time.</p>
+            </div>
+            <div class="animation-frame vjp-compare-animation">
+              <object data="assets/figures/staged_vjp_compare.svg?v=12" type="image/svg+xml" aria-label="Animated comparison of end-to-end backward and staged vector-Jacobian products"></object>
+            </div>
+            <figure class="memory-analysis" aria-labelledby="memory-analysis-title">
+              <figcaption>
+                <strong id="memory-analysis-title">Peak Memory for One Complete ViRDM Update</strong>
+                <p>Measured for 81-frame, 832×480 videos with one-video-per-GPU microbatches on 80 GB A100 GPUs.</p>
+              </figcaption>
+              <div class="memory-bar-chart" role="img" aria-label="Peak memory per GPU: naive end-to-end training exceeds 80 GB, while ViRDM uses 48.3 GB per GPU on eight GPUs and 68.5 GB on one GPU">
+                <div class="memory-axis" aria-hidden="true"><span>80</span><span>60</span><span>40</span><span>20</span><span>0 GB</span></div>
+                <div class="memory-bar-plot">
+                  <div class="memory-gridlines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                  <div class="memory-bars">
+                    <article class="memory-bar-item oom-bar" style="--bar-height:100%"><strong>OOM</strong><div class="memory-bar"><i></i></div><p>Naive</p><small>Full rollout · Wan VAE<br>End-to-End · 8 GPUs</small></article>
+                    <article class="memory-bar-item feasible-bar" style="--bar-height:85.625%"><strong>68.5 GB</strong><div class="memory-bar"><i></i></div><p>Ours · 1 GPU</p><small>Stochastic Exit · Tiny VAE Decoder<br>Staged VJPs</small></article>
+                    <article class="memory-bar-item best-bar" style="--bar-height:60.375%"><strong>48.3 GB</strong><div class="memory-bar"><i></i></div><p>Ours · 8 GPUs</p><small>Stochastic Exit · Tiny VAE Decoder<br>Staged VJPs</small></article>
+                  </div>
+                </div>
+              </div>
+            </figure>
+            <div class="animation-frame virdm-update-animation">
+              <object data="assets/figures/virdm_four_stage_update.svg?v=18" type="image/svg+xml" aria-label="Animated four-stage ViRDM update"></object>
+            </div>
+          </article>
+        </section>
+
+      </div>
+    </section>
+
+    <section class="section shell recipe-section" id="video-recipe">
+      <div class="section-head">
+        <h2>5. Video-Specific RDM Recipe</h2>
+        <p class="lede">Few-step causal video changes both the useful population scale and the initialization required for RDM.</p>
+      </div>
+      <div class="recipe-grid">
+        <article class="recipe-card">
+          <p class="method-number">5.1</p>
+          <h4>How Many Fresh Generated Videos Are Needed?</h4>
+          <p>Unlike image RDM, video RDM already works with small fresh populations, and its quality–efficiency trade-off largely saturates at <strong>B=64 videos</strong>.</p>
+          <figure class="population-efficiency">
+            <p class="efficiency-summary"><strong>Increasing batch size increases accumulation and update time, but delivers far less improvement than expected.</strong></p>
+            <div class="efficiency-legend"><span><i class="measured"></i>Measured score</span><span><i class="expected"></i>Expected if the B=8→64 return continued</span></div>
+            <div class="efficiency-plots">
+              <figure><h5>Total</h5><object data="assets/figures/population_total.svg?v=5" type="image/svg+xml" aria-label="Total score versus accumulation"></object></figure>
+              <figure><h5>Quality</h5><object data="assets/figures/population_quality.svg?v=5" type="image/svg+xml" aria-label="Quality score versus accumulation"></object></figure>
+              <figure><h5>Semantic</h5><object data="assets/figures/population_semantic.svg?v=5" type="image/svg+xml" aria-label="Semantic score versus accumulation"></object></figure>
+            </div>
+          </figure>
+        </article>
+        <article class="recipe-card">
+          <p class="method-number">5.2</p>
+          <h4>Causal Initialization Is Essential</h4>
+          <p>RDM effectively refines a causal transport, but does not reliably create one from a bidirectional model in only 20 updates. We adopt the causal initialization families from Causal Forcing.</p>
+          <div class="population-lines initialization-lines" aria-label="Total, quality, and semantic scores by initialization">
+            <div class="metric-block total"><h5>Total</h5><div class="score-line"><span>Bidirectional</span><i style="--score:23.2%"></i><b>65.80</b></div><div class="score-line"><span>Teacher Forcing</span><i style="--score:92.84%"></i><b>83.21</b></div><div class="score-line"><span>Causal CD</span><i style="--score:91.96%"></i><b>82.99</b></div><div class="score-line default"><span>Causal ODE <em>default</em></span><i style="--score:93.64%"></i><b>83.41</b></div></div>
+            <div class="metric-block quality"><h5>Quality</h5><div class="score-line"><span>Bidirectional</span><i style="--score:19.1%"></i><b>68.82</b></div><div class="score-line"><span>Teacher Forcing</span><i style="--score:95.25%"></i><b>84.05</b></div><div class="score-line"><span>Causal CD</span><i style="--score:94.6%"></i><b>83.92</b></div><div class="score-line default"><span>Causal ODE <em>default</em></span><i style="--score:95.55%"></i><b>84.11</b></div></div>
+            <div class="metric-block semantic"><h5>Semantic</h5><div class="score-line"><span>Bidirectional</span><i style="--score:11.63%"></i><b>53.72</b></div><div class="score-line"><span>Teacher Forcing</span><i style="--score:93.28%"></i><b>79.85</b></div><div class="score-line"><span>Causal CD</span><i style="--score:91.41%"></i><b>79.25</b></div><div class="score-line default"><span>Causal ODE <em>default</em></span><i style="--score:95.66%"></i><b>80.61</b></div></div>
+            <div class="metric-block dynamic"><h5>Dynamic Degree</h5><div class="score-line"><span>Bidirectional<small>incoherent drift</small></span><i style="--score:75.93%"></i><b>51.39</b></div><div class="score-line"><span>Teacher Forcing</span><i style="--score:21.2%"></i><b>43.18</b></div><div class="score-line"><span>Causal CD</span><i style="--score:49.6%"></i><b>47.44</b></div><div class="score-line default"><span>Causal ODE <em>default</em></span><i style="--score:57.4%"></i><b>48.61</b></div></div>
+          </div>
+        </article>
+        <figure class="initialization-video-figure" aria-labelledby="initialization-video-caption">
+          <figcaption id="initialization-video-caption">
+            <strong>Qualitative Comparison of Different Initializations</strong>
+            <p>Directly starting from the bidirectional model causes severe drift under chunkwise causal generation. Teacher forcing prevents this failure and preserves the scene, but produces substantially weaker dynamics; causal few-step initializations maintain coherence while supporting stronger temporal evolution.</p>
+          </figcaption>
+          <div class="initialization-video-row">
+            <div class="initialization-video-item" data-method="Bidirectional" data-prompt="A slow-motion shot of a fiery volcanic landscape, with molten lava erupting from deep craters. The camera flies through the lava, capturing the intense heat and dramatic splashes as they hit the lens. The lighting is cinematic and moody, casting dramatic shadows and highlighting the vivid orange and red hues. The color grade is high-contrast and dramatic, emphasizing the raw power of the eruption. The background features towering cliffs and dense smoke, creating a sense of awe and danger. A dynamic overhead view, providing a thrilling and immersive experience."><video src="assets/videos/initialization/bidirectional/volcano.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Bidirectional initialization, volcanic eruption"></video></div>
+            <div class="initialization-video-item" data-method="Teacher Forcing" data-prompt="A slow-motion shot of a fiery volcanic landscape, with molten lava erupting from deep craters. The camera flies through the lava, capturing the intense heat and dramatic splashes as they hit the lens. The lighting is cinematic and moody, casting dramatic shadows and highlighting the vivid orange and red hues. The color grade is high-contrast and dramatic, emphasizing the raw power of the eruption. The background features towering cliffs and dense smoke, creating a sense of awe and danger. A dynamic overhead view, providing a thrilling and immersive experience."><video src="assets/videos/initialization/teacher_forcing/volcano.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Teacher forcing initialization, volcanic eruption"></video></div>
+            <div class="initialization-video-item" data-method="Causal CD" data-prompt="A slow-motion shot of a fiery volcanic landscape, with molten lava erupting from deep craters. The camera flies through the lava, capturing the intense heat and dramatic splashes as they hit the lens. The lighting is cinematic and moody, casting dramatic shadows and highlighting the vivid orange and red hues. The color grade is high-contrast and dramatic, emphasizing the raw power of the eruption. The background features towering cliffs and dense smoke, creating a sense of awe and danger. A dynamic overhead view, providing a thrilling and immersive experience."><video src="assets/videos/initialization/causal_cd/volcano.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Causal CD initialization, volcanic eruption"></video></div>
+            <div class="initialization-video-item default" data-method="Causal ODE · default" data-prompt="A slow-motion shot of a fiery volcanic landscape, with molten lava erupting from deep craters. The camera flies through the lava, capturing the intense heat and dramatic splashes as they hit the lens. The lighting is cinematic and moody, casting dramatic shadows and highlighting the vivid orange and red hues. The color grade is high-contrast and dramatic, emphasizing the raw power of the eruption. The background features towering cliffs and dense smoke, creating a sense of awe and danger. A dynamic overhead view, providing a thrilling and immersive experience."><video src="assets/videos/initialization/causal_ode/volcano.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Causal ODE initialization, volcanic eruption"></video></div>
+          </div>
+          <div class="initialization-video-row">
+            <div class="initialization-video-item" data-method="Bidirectional" data-prompt="A realistic style paper origami dragon riding a boat through waves, with intricate folds and textures. The dragon has a fierce expression, its eyes glowing with intensity, and its scales shimmering in the sunlight. It is perched on the edge of the boat, wings partially spread, ready to take flight. The boat bobs up and down with the waves, creating a dynamic motion. The water is choppy, with ripples and splashes around the boat, adding to the sense of movement. The background features a clear blue sky with fluffy clouds, and a few seagulls flying overhead. A mid-shot capturing the dragon's powerful stance and the boat's motion."><video src="assets/videos/initialization/bidirectional/dragon.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Bidirectional initialization, origami dragon at sea"></video></div>
+            <div class="initialization-video-item" data-method="Teacher Forcing" data-prompt="A realistic style paper origami dragon riding a boat through waves, with intricate folds and textures. The dragon has a fierce expression, its eyes glowing with intensity, and its scales shimmering in the sunlight. It is perched on the edge of the boat, wings partially spread, ready to take flight. The boat bobs up and down with the waves, creating a dynamic motion. The water is choppy, with ripples and splashes around the boat, adding to the sense of movement. The background features a clear blue sky with fluffy clouds, and a few seagulls flying overhead. A mid-shot capturing the dragon's powerful stance and the boat's motion."><video src="assets/videos/initialization/teacher_forcing/dragon.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Teacher forcing initialization, origami dragon at sea"></video></div>
+            <div class="initialization-video-item" data-method="Causal CD" data-prompt="A realistic style paper origami dragon riding a boat through waves, with intricate folds and textures. The dragon has a fierce expression, its eyes glowing with intensity, and its scales shimmering in the sunlight. It is perched on the edge of the boat, wings partially spread, ready to take flight. The boat bobs up and down with the waves, creating a dynamic motion. The water is choppy, with ripples and splashes around the boat, adding to the sense of movement. The background features a clear blue sky with fluffy clouds, and a few seagulls flying overhead. A mid-shot capturing the dragon's powerful stance and the boat's motion."><video src="assets/videos/initialization/causal_cd/dragon.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Causal CD initialization, origami dragon at sea"></video></div>
+            <div class="initialization-video-item default" data-method="Causal ODE · default" data-prompt="A realistic style paper origami dragon riding a boat through waves, with intricate folds and textures. The dragon has a fierce expression, its eyes glowing with intensity, and its scales shimmering in the sunlight. It is perched on the edge of the boat, wings partially spread, ready to take flight. The boat bobs up and down with the waves, creating a dynamic motion. The water is choppy, with ripples and splashes around the boat, adding to the sense of movement. The background features a clear blue sky with fluffy clouds, and a few seagulls flying overhead. A mid-shot capturing the dragon's powerful stance and the boat's motion."><video src="assets/videos/initialization/causal_ode/dragon.mp4" controls muted loop autoplay playsinline preload="metadata" aria-label="Causal ODE initialization, origami dragon at sea"></video></div>
+          </div>
+        </figure>
+        <article class="dynamics-recipe-card">
+          <div class="dynamics-recipe-head">
+            <div class="recipe-so-far"><h4>The Recipe So Far</h4><p>The recipe so far leads Total without Dynamic Degree, while motion remains the residual gap.</p></div>
+          </div>
+          <div class="dynamics-ablation-grid baseline-grid">
+            <section class="ablation-metric"><h5>Total w/o Dynamic Degree</h5><div class="ablation-line self"><span>Self Forcing</span><i style="--score:67%"></i><b>85.34</b></div><div class="ablation-line causal"><span>Causal Forcing</span><i style="--score:32%"></i><b>84.64</b></div><div class="ablation-line ours"><span>ViRDM · no dyn.</span><i style="--score:88.5%"></i><b>85.77</b></div></section>
+            <section class="ablation-metric"><h5>Dynamic Degree</h5><div class="ablation-line self"><span>Self Forcing</span><i style="--score:56.95%"></i><b>67.78</b></div><div class="ablation-line causal"><span>Causal Forcing</span><i style="--score:95.83%"></i><b>83.33</b></div><div class="ablation-line ours"><span>ViRDM · no dyn.</span><i style="--score:9.03%"></i><b>48.61</b></div></section>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section motion-gap-section" id="motion-enhancement">
+      <div class="shell">
+        <div class="section-head">
+          <h2>6. Closing the Residual Dynamics Gap</h2>
+        </div>
+
+        <article class="motion-chapter">
+          <header class="motion-chapter-head">
+            <span>6.1</span>
+            <div><h3>Image Marginals Miss Dynamics; Video Representations Capture It Nonlinearly</h3></div>
+          </header>
+          <div class="motion-evidence-grid">
+            <figure class="sensitivity-panel">
+              <figcaption><strong>Does the Representation Capture Motion?</strong><p>We test motion sensitivity by freezing different percentages of each video.<br>The image representation distribution barely responds to motion changes.<br>The video representation distribution responds nonlinearly and cannot reliably distinguish moderate from high motion.</p></figcaption>
+              <object data="assets/figures/temporal_sensitivity.svg?v=4" type="image/svg+xml" aria-label="RDM loss versus percentage of each video frozen in time"></object>
+            </figure>
+            <section class="controlled-panel" aria-label="Table 6 image versus video representation comparison">
+              <header><h4>ViRDM Trained on Image Marginals vs. Video Marginals</h4><p class="panel-summary">Video marginals provide the missing temporal signal, raising Dynamic Degree by <strong>30.55 points</strong> (18.06 → 48.61) while improving Total and Quality.</p></header>
+              <div class="controlled-metrics">
+                <div class="controlled-metric total"><h5>Total</h5><div class="controlled-line image"><span>Image</span><i style="--score:35%"></i><b>82.70</b></div><div class="controlled-line video"><span>Video</span><i style="--score:70.5%"></i><b>83.41</b></div></div>
+                <div class="controlled-metric quality"><h5>Quality</h5><div class="controlled-line image"><span>Image</span><i style="--score:38.7%"></i><b>83.16</b></div><div class="controlled-line video"><span>Video</span><i style="--score:70.3%"></i><b>84.11</b></div></div>
+                <div class="controlled-metric semantic"><h5>Semantic</h5><div class="controlled-line image"><span>Image</span><i style="--score:44%"></i><b>80.88</b></div><div class="controlled-line video"><span>Video</span><i style="--score:30.5%"></i><b>80.61</b></div></div>
+                <div class="controlled-metric dynamic"><h5>Dynamic Degree</h5><div class="controlled-line image"><span>Image</span><i style="--score:22.6%"></i><b>18.06</b></div><div class="controlled-line video"><span>Video</span><i style="--score:60.8%"></i><b>48.61</b></div></div>
+              </div>
+            </section>
+          </div>
+          <figure class="figure4-video-figure">
+            <figcaption><strong>Representation Choice Changes Temporal Behavior</strong><p>Image marginals preserve frame appearance but produce little temporal evolution.<br>Video marginals create clearer motion while maintaining the scene and subject.</p></figcaption>
+            <div class="figure4-video-grid">
+              <div class="figure4-video-item image" data-method="Image Marginal" data-prompt="Along a rainforest suspension bridge, a biologist in a yellow poncho and field vest fills the foreground in HDR 4K with wet leaves and bright insects. First, she checks a notebook, raises binoculars, and freezes as a toucan calls from the canopy. Then she lowers the binoculars, points excitedly, and walks forward carefully while the camera follows, revealing dripping vines, sunlit mist, and a deep green world that feels endless and alive. far from any noise. with the subject filling frame."><video src="assets/videos/representation/image/rainforest.mp4" controls muted loop autoplay playsinline preload="metadata"></video></div>
+              <div class="figure4-video-item video" data-method="Video Marginal" data-prompt="Along a rainforest suspension bridge, a biologist in a yellow poncho and field vest fills the foreground in HDR 4K with wet leaves and bright insects. First, she checks a notebook, raises binoculars, and freezes as a toucan calls from the canopy. Then she lowers the binoculars, points excitedly, and walks forward carefully while the camera follows, revealing dripping vines, sunlit mist, and a deep green world that feels endless and alive. far from any noise. with the subject filling frame."><video src="assets/videos/representation/video/rainforest.mp4" controls muted loop autoplay playsinline preload="metadata"></video></div>
+              <div class="figure4-video-item image" data-method="Image Marginal" data-prompt="Autumn morning on a moorland trail, a woman in a long tweed coat and emerald scarf stands close to camera in cinematic 4K. She checks a brass compass, steps forward into drifting fog, then pauses as wind tugs her hair and heather bends low. The camera tracks beside her profile, revealing a distant stone ruin emerging for a moment, then dissolving again into mist. Sharp fabric texture, true tones, and subtle film grain create an ancient, mesmerizing atmosphere without any ritual cues."><video src="assets/videos/representation/image/moorland.mp4" controls muted loop autoplay playsinline preload="metadata"></video></div>
+              <div class="figure4-video-item video" data-method="Video Marginal" data-prompt="Autumn morning on a moorland trail, a woman in a long tweed coat and emerald scarf stands close to camera in cinematic 4K. She checks a brass compass, steps forward into drifting fog, then pauses as wind tugs her hair and heather bends low. The camera tracks beside her profile, revealing a distant stone ruin emerging for a moment, then dissolving again into mist. Sharp fabric texture, true tones, and subtle film grain create an ancient, mesmerizing atmosphere without any ritual cues."><video src="assets/videos/representation/video/moorland.mp4" controls muted loop autoplay playsinline preload="metadata"></video></div>
+            </div>
+          </figure>
+        </article>
+
+        <article class="motion-chapter">
+          <header class="motion-chapter-head">
+            <span>6.2</span>
+            <div><h3>A Simple Flow-Based Dynamics Regularizer</h3><p>A small flow-based correction using frozen RAFT closes the remaining gap without degrading other dimensions.</p></div>
+          </header>
+          <figure class="dynamics-regularizer-animation">
+            <object data="assets/figures/dynamics_regularizer.svg?v=12" type="image/svg+xml" aria-label="Animated ViRDM dynamics regularizer from generated video through frozen RAFT to a one-sided threshold penalty"></object>
+          </figure>
+          <section class="controlled-panel controlled-panel-wide" aria-label="Table 6 video representation with and without dynamics regularization">
+            <header><h4>Ours w/o Dyn. Reg. vs. Ours w/ Dyn. Reg.</h4></header>
+            <div class="controlled-metrics">
+              <div class="controlled-metric total"><h5>Total</h5><div class="controlled-line plain"><span>Ours w/o Dyn. Reg.</span><i style="--score:35.3%"></i><b>83.41</b></div><div class="controlled-line regularized"><span>Ours w/ Dyn. Reg.</span><i style="--score:71.8%"></i><b>84.87</b></div></div>
+              <div class="controlled-metric quality"><h5>Quality</h5><div class="controlled-line plain"><span>Ours w/o Dyn. Reg.</span><i style="--score:27.8%"></i><b>84.11</b></div><div class="controlled-line regularized"><span>Ours w/ Dyn. Reg.</span><i style="--score:70.6%"></i><b>85.82</b></div></div>
+              <div class="controlled-metric semantic"><h5>Semantic</h5><div class="controlled-line plain"><span>Ours w/o Dyn. Reg.</span><i style="--score:30.5%"></i><b>80.61</b></div><div class="controlled-line regularized"><span>Ours w/ Dyn. Reg.</span><i style="--score:54.5%"></i><b>81.09</b></div></div>
+              <div class="controlled-metric dynamic"><h5>Dynamic Degree</h5><div class="controlled-line plain"><span>Ours w/o Dyn. Reg.</span><i style="--score:21.5%"></i><b>48.61</b></div><div class="controlled-line regularized"><span>Ours w/ Dyn. Reg.</span><i style="--score:80%"></i><b>72.02</b></div></div>
+            </div>
+          </section>
+          <figure class="figure4-video-figure">
+            <figcaption><strong>Qualitative Comparison between ViRDM w/ and w/o Dynamics Regularization</strong></figcaption>
+            <div class="dynamics-compare-grid" id="dynamics-compare-grid"></div>
+            <button class="results-candidate-toggle" id="dynamics-compare-toggle" type="button" aria-expanded="false">Show all</button>
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="results">
+      <div class="section-head">
+        <h2>7. Main Results</h2>
+        <p class="lede results-lede">ViRDM achieves better video quality with 11× less post-training time and 28.8 GB less memory per GPU.</p>
+      </div>
+
+      <article class="results-panel">
+        <header><h3>VBench Comparison on Four-Step Causal Video Generation Methods</h3></header>
+        <div class="scoreboard-grid" role="img" aria-label="Four-step VBench Total, Quality, and Semantic comparison">
+          <section class="scoreboard">
+            <h4>Total</h4>
+            <div class="score-row"><span>CausVid</span><i style="--score: 24%"></i><strong>81.15</strong></div>
+            <div class="score-row"><span>Self-Forcing</span><i style="--score: 72%"></i><strong>84.20</strong></div>
+            <div class="score-row"><span>Causal Forcing</span><i style="--score: 77%"></i><strong>84.51</strong></div>
+            <div class="score-row ours"><span>ViRDM</span><i style="--score: 83%"></i><strong>84.87</strong></div>
+          </section>
+          <section class="scoreboard">
+            <h4>Quality</h4>
+            <div class="score-row"><span>CausVid</span><i style="--score: 18%"></i><strong>83.99</strong></div>
+            <div class="score-row"><span>Self-Forcing</span><i style="--score: 48%"></i><strong>84.90</strong></div>
+            <div class="score-row"><span>Causal Forcing</span><i style="--score: 64%"></i><strong>85.36</strong></div>
+            <div class="score-row ours"><span>ViRDM</span><i style="--score: 80%"></i><strong>85.82</strong></div>
+          </section>
+          <section class="scoreboard">
+            <h4>Semantic</h4>
+            <div class="score-row"><span>CausVid</span><i style="--score: 12%"></i><strong>69.79</strong></div>
+            <div class="score-row"><span>Self-Forcing</span><i style="--score: 92%"></i><strong>81.39</strong></div>
+            <div class="score-row"><span>Causal Forcing</span><i style="--score: 90%"></i><strong>81.09</strong></div>
+            <div class="score-row ours"><span>ViRDM</span><i style="--score: 90%"></i><strong>81.09</strong></div>
+          </section>
+        </div>
+
+      </article>
+
+      <section class="main-results-study" id="study">
+        <header class="main-results-study-copy">
+          <p class="section-index">User Study</p>
+          <h3>People prefer ViRDM.</h3>
+          <p>Across 25 participants and 30 prompts, ViRDM leads the matched four-way comparison and is preferred over the variant without dynamics regularization.</p>
+        </header>
+
+        <div class="main-results-study-charts">
+          <article class="study-chart-card">
+            <header><span>(a)</span><div><h4>Matched Four-Step Methods</h4><p>20 prompts · four-way preference</p></div></header>
+            <section class="study-metric">
+              <h5>Text Alignment</h5>
+              <div class="study-line ours"><span>ViRDM</span><i><em style="--preference:40.4%"></em></i><b>40.4%</b></div>
+              <div class="study-line self"><span>Self-Forcing</span><i><em style="--preference:32.6%"></em></i><b>32.6%</b></div>
+              <div class="study-line"><span>Causal Forcing</span><i><em style="--preference:20.2%"></em></i><b>20.2%</b></div>
+              <div class="study-line faint"><span>CausVid</span><i><em style="--preference:6.8%"></em></i><b>6.8%</b></div>
+            </section>
+            <section class="study-metric">
+              <h5>Visual Quality</h5>
+              <div class="study-line ours"><span>ViRDM</span><i><em style="--preference:43.0%"></em></i><b>43.0%</b></div>
+              <div class="study-line self"><span>Self-Forcing</span><i><em style="--preference:32.6%"></em></i><b>32.6%</b></div>
+              <div class="study-line"><span>Causal Forcing</span><i><em style="--preference:20.6%"></em></i><b>20.6%</b></div>
+              <div class="study-line faint"><span>CausVid</span><i><em style="--preference:3.8%"></em></i><b>3.8%</b></div>
+            </section>
+          </article>
+
+          <article class="study-chart-card">
+            <header><span>(b)</span><div><h4>Dynamics Regularization</h4><p>10 prompts · pairwise preference</p></div></header>
+            <section class="study-metric compact">
+              <h5>Text Alignment</h5>
+              <div class="study-line ours"><span>ViRDM</span><i><em style="--preference:60.8%"></em></i><b>60.8%</b></div>
+              <div class="study-line faint"><span>w/o Dyn. Reg.</span><i><em style="--preference:39.2%"></em></i><b>39.2%</b></div>
+            </section>
+            <section class="study-metric compact">
+              <h5>Visual Quality</h5>
+              <div class="study-line ours"><span>ViRDM</span><i><em style="--preference:76.4%"></em></i><b>76.4%</b></div>
+              <div class="study-line faint"><span>w/o Dyn. Reg.</span><i><em style="--preference:23.6%"></em></i><b>23.6%</b></div>
+            </section>
+            <section class="study-metric compact">
+              <h5>Dynamics</h5>
+              <div class="study-line ours"><span>ViRDM</span><i><em style="--preference:85.6%"></em></i><b>85.6%</b></div>
+              <div class="study-line faint"><span>w/o Dyn. Reg.</span><i><em style="--preference:14.4%"></em></i><b>14.4%</b></div>
+            </section>
+          </article>
+        </div>
+      </section>
+
+      <div class="resource-grid">
+        <article><span>Training stack</span><div class="resource-change"><b>3 models</b><i>→</i><strong>1 generator</strong></div><p>Teacher- and critic-free</p></article>
+        <article><span>Peak memory / GPU</span><div class="resource-change"><b>77.1 GB</b><i>→</i><strong>48.3 GB</strong></div><p>−28.8 GB on A100</p></article>
+        <article><span>Post-training time</span><div class="resource-change"><b>22 h</b><i>→</i><strong>2 h</strong></div><p>Eight A100 GPUs</p></article>
+      </div>
+
+      <section class="results-candidate-gallery" aria-labelledby="results-candidate-title">
+        <div class="results-candidate-head">
+          <h3 id="results-candidate-title">Qualitative Comparison Between Matched Four-Step Methods</h3>
+        </div>
+        <div class="results-candidate-grid" id="results-candidate-grid"></div>
+        <button class="results-candidate-toggle" id="results-candidate-toggle" type="button" aria-expanded="false">Show all</button>
+      </section>
+    </section>
+
+    <section class="section shell" id="beyond-causal-4-step">
+      <div class="section-head">
+        <h2>8. Extension Beyond Four-Step Causal Generation</h2>
+      </div>
+      <div class="extension-compare-grid">
+        <article class="extension-panel">
+          <header>
+            <p>Causal</p>
+            <h3>1 / 2 / 4 Steps</h3>
+            <span>We follow ASD, and the first block remains four-step.</span>
+          </header>
+          <div class="extension-metrics">
+            <section class="extension-metric">
+              <h4>Total</h4>
+              <div class="extension-line step1"><span>1 step</span><i style="--score:70%"></i><b>84.27</b></div>
+              <div class="extension-line step2"><span>2 steps</span><i style="--score:76%"></i><b>84.42</b></div>
+              <div class="extension-line step4"><span>4 steps</span><i style="--score:88%"></i><b>84.87</b></div>
+            </section>
+            <section class="extension-metric">
+              <h4>Quality</h4>
+              <div class="extension-line step1"><span>1 step</span><i style="--score:70%"></i><b>85.04</b></div>
+              <div class="extension-line step2"><span>2 steps</span><i style="--score:81%"></i><b>85.44</b></div>
+              <div class="extension-line step4"><span>4 steps</span><i style="--score:89%"></i><b>85.82</b></div>
+            </section>
+            <section class="extension-metric">
+              <h4>Semantic</h4>
+              <div class="extension-line step1"><span>1 step</span><i style="--score:89%"></i><b>81.17</b></div>
+              <div class="extension-line step2"><span>2 steps</span><i style="--score:72%"></i><b>80.35</b></div>
+              <div class="extension-line step4"><span>4 steps</span><i style="--score:87%"></i><b>81.09</b></div>
+            </section>
+          </div>
+        </article>
+        <article class="extension-panel">
+          <header>
+            <p>Bidirectional</p>
+            <h3>1 / 2 / 4 Steps</h3>
+            <span>The complete video is generated as one block.</span>
+          </header>
+          <div class="extension-metrics">
+            <section class="extension-metric">
+              <h4>Total</h4>
+              <div class="extension-line step1"><span>1 step</span><i style="--score:48%"></i><b>83.12</b></div>
+              <div class="extension-line step2"><span>2 steps</span><i style="--score:92%"></i><b>84.53</b></div>
+              <div class="extension-line step4"><span>4 steps</span><i style="--score:94%"></i><b>84.56</b></div>
+            </section>
+            <section class="extension-metric">
+              <h4>Quality</h4>
+              <div class="extension-line step1"><span>1 step</span><i style="--score:58%"></i><b>84.61</b></div>
+              <div class="extension-line step2"><span>2 steps</span><i style="--score:84%"></i><b>85.48</b></div>
+              <div class="extension-line step4"><span>4 steps</span><i style="--score:94%"></i><b>85.84</b></div>
+            </section>
+            <section class="extension-metric">
+              <h4>Semantic</h4>
+              <div class="extension-line step1"><span>1 step</span><i style="--score:44%"></i><b>77.16</b></div>
+              <div class="extension-line step2"><span>2 steps</span><i style="--score:94%"></i><b>80.72</b></div>
+              <div class="extension-line step4"><span>4 steps</span><i style="--score:76%"></i><b>79.43</b></div>
+            </section>
+          </div>
+        </article>
+      </div>
+
+      <figure class="bidirectional-extension-figure">
+        <figcaption><strong>Qualitative Showcase of Four-Step Bidirectional Generation</strong></figcaption>
+        <div class="bidirectional-extension-videos" id="bidirectional-extension-videos"></div>
+      </figure>
+    </section>
+
+    <section class="section references-section" id="references">
+      <div class="shell">
+        <div class="section-head">
+          <h2>9. References</h2>
+        </div>
+        <ol class="reference-list">
+          <li id="ref-dmd"><span>1</span><div><strong>One-step Diffusion with Distribution Matching Distillation</strong><p>T. Yin et al. · CVPR 2024</p><a href="https://arxiv.org/abs/2311.18828" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-dmd2"><span>2</span><div><strong>Improved Distribution Matching Distillation for Fast Image Synthesis</strong><p>T. Yin et al. · NeurIPS 2024</p><a href="https://arxiv.org/abs/2405.14867" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-rdm"><span>3</span><div><strong>Representation Distribution Matching for One-Step Visual Generation</strong><p>L. Feng et al. · arXiv 2026</p><a href="https://arxiv.org/abs/2607.02375" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-consistency"><span>4</span><div><strong>Consistency Models</strong><p>Y. Song et al. · ICML 2023</p><a href="https://arxiv.org/abs/2303.01469" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-self-forcing"><span>5</span><div><strong>Self Forcing: Bridging the Train-Test Gap in Autoregressive Video Diffusion</strong><p>X. Huang et al. · NeurIPS 2025</p><a href="https://arxiv.org/abs/2506.08009" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-causal-forcing"><span>6</span><div><strong>Causal Forcing: Autoregressive Diffusion Distillation Done Right for High-Quality Real-Time Interactive Video Generation</strong><p>H. Zhu et al. · ICML 2026</p><a href="https://arxiv.org/abs/2602.02214" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-dinov2"><span>7</span><div><strong>DINOv2: Learning Robust Visual Features without Supervision</strong><p>M. Oquab et al. · TMLR 2024</p><a href="https://arxiv.org/abs/2304.07193" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-vjepa"><span>8</span><div><strong>V-JEPA 2.1: Unlocking Dense Features in Video Self-Supervised Learning</strong><p>L. Mur-Labadia et al. · arXiv 2026</p><a href="https://arxiv.org/abs/2603.14482" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-raft"><span>9</span><div><strong>RAFT: Recurrent All-Pairs Field Transforms for Optical Flow</strong><p>Z. Teed and J. Deng · ECCV 2020</p><a href="https://arxiv.org/abs/2003.12039" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-vbench"><span>10</span><div><strong>VBench: Comprehensive Benchmark Suite for Video Generative Models</strong><p>Z. Huang et al. · arXiv 2023</p><a href="https://arxiv.org/abs/2311.17982" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-asd"><span>11</span><div><strong>Towards One-Step Causal Video Generation via Adversarial Self-Distillation</strong><p>Y. Yang et al. · ICLR 2026</p><a href="https://arxiv.org/abs/2511.01419" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-causvid"><span>12</span><div><strong>From Slow Bidirectional to Fast Autoregressive Video Diffusion Models</strong><p>T. Yin et al. · CVPR 2025</p><a href="https://arxiv.org/abs/2412.07772" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-wan"><span>13</span><div><strong>Wan: Open and Advanced Large-Scale Video Generative Models</strong><p>Team Wan et al. · arXiv 2025</p><a href="https://arxiv.org/abs/2503.20314" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+          <li id="ref-tiny-vae"><span>14</span><div><strong>TAEHV: Tiny AutoEncoder for Hunyuan Video</strong><p>O. Boer Bohan · 2025</p><a href="https://github.com/madebyollin/taehv" target="_blank" rel="noreferrer">Project ↗</a></div></li>
+          <li id="ref-siglip2"><span>15</span><div><strong>SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features</strong><p>M. Tschannen et al. · 2025</p><a href="https://arxiv.org/abs/2502.14786" target="_blank" rel="noreferrer">Paper ↗</a></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section shell citation" id="cite">
+      <div class="section-head">
+        <h2>10. BibTeX</h2>
+      </div>
+      <div class="code-block">
+        <button id="copy-bibtex" type="button">Copy</button>
+        <pre id="bibtex">@article{meng2026virdm,
+  title   = {ViRDM: Taming Representation Distribution Matching for
+             Few-Step Causal Video Generation},
+  author  = {Meng, Zichong and Ge, Chongjian and Huang, Chun-Hao P. and Zhou, Yang and Jiang, Huaizu},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell"><strong>ViRDM</strong></div>
+  </footer>
+  <script src="assets/data/demos.js"></script>
+  <script src="assets/js/site.js?v=27"></script>
+</body>
+</html>
