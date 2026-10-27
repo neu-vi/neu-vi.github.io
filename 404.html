@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    const target = "https://neu-3dvi.github.io" + window.location.pathname + window.location.search + window.location.hash;
+    window.location.replace(target);
+  </script>
+</head>
+<body>
+  <p>Redirecting to <a id="link" href="https://neu-3dvi.github.io">neu-3dvi.github.io</a>...</p>
+  <script>
+    document.getElementById("link").href = "https://neu-3dvi.github.io" + window.location.pathname + window.location.search + window.location.hash;
+  </script>
+</body>
+</html>
